@@ -4,22 +4,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'primary': {
-          100: '#E2E2D5',
-          200: '#888883',
-          300: '#4D4D4D',
-          400: '#272727',
-        },
-        'juan': {
-          100: '#E2E2D5',
-          200: '#888883',
-          300: '#4D4D4D',
-          400: '#272727',
-        },
+        'accent': '#FD9E80',
+        'primary': '#242633',
+        'background': '#EBEBEB',
       },
-      fontFamily: {
-        'body': ['Nunito']
-      }
+      backgroundImage: {
+        'hero-pattern': "url('/img/hero-pattern.svg')",
+        'footer-texture': "url('/img/footer-texture.png')",
+      },
     },
   },
   plugins: [],
