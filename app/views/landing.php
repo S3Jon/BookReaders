@@ -24,7 +24,7 @@
     <div class="min-h-[90vh] px-10 flex items-center justify-center bg-cover bg-center bg-[url('https://cdn.pixabay.com/photo/2016/08/24/16/20/books-1617327_1280.jpg')]">
         <div class="text-center bg-slate-700 px-20 py-12 rounded card">
             <div class="flex flex-col max-w-[42rem]">
-                <img src="img/logo_black.svg" class="min-h-20" alt="BookReaders_logo">
+                <img src="img/logo_black.svg" class="h-20" alt="BookReaders_logo">
                 <p class="mt-7 text-xl">
                 ¡Únete a nuestra comunidad de lectores! 
                 </p>
@@ -60,9 +60,6 @@
                             <li class="mb-4">
                                 <a href="#" class="hover:underline">Política de privacidad</a>
                             </li>
-                            <!-- <li>
-                                <a href="#" class="hover:underline">FAQ</a>
-                            </li> -->
                         </ul>
                     </div>
                     <div class="mt-6">
