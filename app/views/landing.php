@@ -15,7 +15,7 @@
                     <a href="landing" class="text-xl font-semibold text-slate-200 hover:text-blue-400">Inicio</a>
                     <a href="explorar" class="text-xl font-semibold text-slate-200 hover:text-blue-400">Explorar</a>
                     <a href="adminpanel" class="text-xl font-semibold text-slate-200 hover:text-blue-400">Contacto</a>
-                    <a href="registro" class="text-xl font-semibold px-6 py-2 rounded bg-accent text-primary hover:text-white">Regístrate</a>
+                    <a href="register" class="text-xl font-semibold px-6 py-2 rounded bg-accent text-primary hover:text-white">Regístrate</a>
                 </div>
             </div>
         </nav>
@@ -24,7 +24,7 @@
     <div class="min-h-[90vh] px-10 flex items-center justify-center bg-cover bg-center bg-[url('https://cdn.pixabay.com/photo/2016/08/24/16/20/books-1617327_1280.jpg')]">
         <div class="text-center bg-slate-700 px-20 py-12 rounded card">
             <div class="flex flex-col max-w-[42rem]">
-                <img src="img/logo_black.svg" class="h-20" alt="BookReaders_logo">
+                <img src="img/logo_black.svg" class="min-h-20" alt="BookReaders_logo">
                 <p class="mt-7 text-xl">
                 ¡Únete a nuestra comunidad de lectores! 
                 </p>
@@ -33,7 +33,7 @@
                 Regístrate ahora para acceder a todo el contenido y formar parte de esta apasionante comunidad. ¡No te lo pierdas!
                 </p>
                 <div class="flex flex-col justify-center items-center gap-3">
-                    <a href="registro" class="text-xl w-fit font-semibold px-6 py-2 rounded bg-accent text-primary hover:text-white">Quiero registrarme</a>
+                    <a href="register" class="text-xl w-fit font-semibold px-6 py-2 rounded bg-accent text-primary hover:text-white">Quiero registrarme</a>
                     <a href="explorar" class="text-xl w-fit px-6 py-2 rounded text-primary hover:underline">prefiero<span class="font-semibold"> Explorar</span></a>
                 </div>
             </div>
@@ -43,15 +43,13 @@
     <footer class="bg-primary w-full"> 
         <div class="mx-auto w-full max-w-screen-xl p-8">
             <div class="md:flex md:justify-evenly md:gap-40">
-                <div class="mb-6 md:mb-0">
-                    <a href="home" class="flex items-center">
-                        <img src="img/logo_white.svg" class="h-17 text-white" alt="Logo BookReaders" />
-                        <span class="self-center text-2xl font-semibold whitespace-nowrap text-white"></span>
-                    </a>
-                </div>
-                <div class="my-5 grid grid-cols-2 md:gap-20 lg:gap-20 sm:grid-cols-3">
+                <div class="grid grid-cols-2 md:gap-20 lg:gap-32 sm:grid-cols-3 justify-items-center">
                     <div>
-                        <h2 class="mb-6 text-sm font-semibold uppercase text-white">Recursos</h2>
+                        <div class="mb-4">
+                            <a href="home" class="flex items-center min-h-16">
+                                <img src="img/logo_white.svg" class="min-h-16" alt="Logo BookReaders" />
+                            </a>
+                        </div>
                         <ul class="text-gray-400 font-medium">
                             <li class="mb-4">
                                 <a href="#" class="hover:underline">Sobre nosotros</a>
@@ -62,24 +60,30 @@
                             <li class="mb-4">
                                 <a href="#" class="hover:underline">Política de privacidad</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="#" class="hover:underline">FAQ</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
-                    <div>
-                        <h2 class="mb-6 text-sm font-semibold uppercase text-white">Información</h2>
+                    <div class="mt-6">
+                        <h2 class="mb-9 text-sm font-semibold uppercase text-white">Información</h2>
                         <ul class="text-gray-400 font-medium">
                             <li class="mb-4">
+                                <a href="#" class="hover:underline">Contacto</a>
+                            </li>
+                            <li class="mb-4">
+                                <a href="#" class="hover:underline">FAQ</a>
+                            </li>
+                            <!-- <li class="mb-4">
                                 <a href="#" class="hover:underline">info@bookreaders.com</a>
                             </li>
                             <li class="mb-4">
-                                <a href="#" class="hover:underline">621 19 16 94</a>
-                            </li>
+                                <a href="#" class="hover:underline">tlf: 621 19 16 94</a>
+                            </li> -->
                         </ul>
                     </div>
-                    <div>
-                        <h2 class="mb-6 text-sm font-semibold uppercase text-white">Redes Sociales</h2>
+                    <div class="mt-6">
+                        <h2 class="mb-9 text-sm font-semibold uppercase text-white">Redes Sociales</h2>
                         <ul class="text-gray-400 font-medium">
                             <li class="mb-4">
                                 <a href="#" class="flex items-center gap-3 hover:underline">
