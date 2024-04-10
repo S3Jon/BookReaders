@@ -850,6 +850,10 @@ video {
   gap: 1rem;
 }
 
+.gap-0 {
+  gap: 0px;
+}
+
 .self-center {
   align-self: center;
 }
@@ -1363,6 +1367,14 @@ body{
     justify-content: center;
   }
 
+  .sm\:justify-items-center {
+    justify-items: center;
+  }
+
+  .sm\:gap-20 {
+    gap: 5rem;
+  }
+
   .sm\:text-center {
     text-align: center;
   }
@@ -1400,6 +1412,10 @@ body{
 
   .md\:justify-evenly {
     justify-content: space-evenly;
+  }
+
+  .md\:justify-items-center {
+    justify-items: center;
   }
 
   .md\:gap-20 {

@@ -43,7 +43,7 @@
     <footer class="bg-primary w-full"> 
         <div class="mx-auto w-full max-w-screen-xl p-8">
             <div class="md:flex md:justify-evenly md:gap-40">
-                <div class="grid grid-cols-2 md:gap-20 lg:gap-32 sm:grid-cols-3 justify-items-center">
+                <div class="grid grid-cols-1 md:gap-20 lg:gap-32 sm:grid-cols-3 justify-items-baseline sm:justify-items-center">
                     <div>
                         <div class="mb-4">
                             <a href="home" class="flex items-center min-h-16">
@@ -74,12 +74,6 @@
                             <li class="mb-4">
                                 <a href="#" class="hover:underline">FAQ</a>
                             </li>
-                            <!-- <li class="mb-4">
-                                <a href="#" class="hover:underline">info@bookreaders.com</a>
-                            </li>
-                            <li class="mb-4">
-                                <a href="#" class="hover:underline">tlf: 621 19 16 94</a>
-                            </li> -->
                         </ul>
                     </div>
                     <div class="mt-6">
