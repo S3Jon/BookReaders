@@ -7,14 +7,14 @@
     <title>Document</title>
 </head>
 <body>
-    <header class="">
+    <header>
         <nav class="bg-primary p-8">
             <div class="flex items-center justify-between mx-4">
                 <a href="landing"><img src="img/logo_white.svg" class="h-11" alt="BookReaders_logo"></a>
                 <div class="flex items-center gap-10">
                     <a href="landing" class="text-xl font-semibold text-slate-200 hover:text-blue-400">Inicio</a>
                     <a href="explorar" class="text-xl font-semibold text-slate-200 hover:text-blue-400">Explorar</a>
-                    <a href="adminpanel" class="text-xl font-semibold text-slate-200 hover:text-blue-400">Contacto</a>
+                    <a href="contacto" class="text-xl font-semibold text-slate-200 hover:text-blue-400">Contacto</a>
                     <a href="register" class="text-xl font-semibold px-6 py-2 rounded bg-accent text-primary hover:text-white">Regístrate</a>
                 </div>
             </div>
@@ -22,7 +22,7 @@
     </header>
 
     <div class="min-h-[90vh] px-10 flex items-center justify-center bg-cover bg-center bg-[url('https://cdn.pixabay.com/photo/2016/08/24/16/20/books-1617327_1280.jpg')]">
-        <div class="text-center bg-slate-700 px-20 py-12 rounded card">
+        <div class="text-center bg-slate-700 px-20 py-12 rounded backdrop-blur-[5px] bg-white/90">
             <div class="flex flex-col max-w-[42rem]">
                 <img src="img/logo_black.svg" class="h-20" alt="BookReaders_logo">
                 <p class="mt-7 text-xl">
@@ -46,7 +46,7 @@
                 <div class="grid grid-cols-1 md:gap-20 lg:gap-32 sm:grid-cols-3 justify-items-baseline sm:justify-items-center">
                     <div>
                         <div class="mb-4">
-                            <a href="home" class="flex items-center min-h-16">
+                            <a href="landing" class="flex items-center min-h-16">
                                 <img src="img/logo_white.svg" class="min-h-16" alt="Logo BookReaders" />
                             </a>
                         </div>

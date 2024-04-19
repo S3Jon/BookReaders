@@ -3,9 +3,9 @@
 $request = $_SERVER['REQUEST_URI'];
 
 switch ($request) {
-    case '/BookReaders/' :
-        // Esta sera la landing page
-        require '../app/views/login.php';
+    //TODO Se modificara esto para mejorar la navegacion
+    case '/BookReaders/':
+        require '../app/views/landing.php';
         break;
     default:    
         $request = str_replace('/BookReaders/', '', $request);

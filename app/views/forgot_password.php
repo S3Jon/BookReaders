@@ -8,11 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = new models\User();
     $authController = new controllers\AuthController($user);
 
-    if ($authController->login()) {
-        header('Location: home');
-    } else {
-        $errorMessage = "Usuario o contraseña incorrectos";
-    }
+    //TODO Implementar la lógica para enviar un correo electrónico al usuario con un enlace para cambiar la contraseña
 }
 
 ?>
@@ -23,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/styles.css">
-    <title>Login</title>
+    <title>Forgot password</title>
 </head>
 <body>
     <div class="min-h-screen px-10 flex items-center justify-center bg-cover bg-center bg-[url('https://cdn.pixabay.com/photo/2016/08/24/16/20/books-1617327_1280.jpg')]">
@@ -33,14 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <hr class="border-2 border-white w-[22rem] mb-4">                
                 <div class="mt-7 w-full">
                     <form action="" method="POST">
-                        <div class="mb-4">
-                            <input placeholder="Correo electrónico" type="email" class="p-3 rounded w-full bg-background" id="username" name="username" required>
-                        </div>
+                        <p class="mb-7 text-xl text-background">
+                            Ingresa tu correo electrónico y te enviaremos un <br>enlace para cambiar tu contraseña
+                        </p>
                         <div class="mb-10">
-                            <input placeholder="Contraseña" type="password" class="p-3 rounded w-full bg-background" id="password" name="password" required>
-                        </div>                        
+                            <input placeholder="Correo electrónico" type="email" class="p-3 rounded w-full bg-background" id="username" name="username" required>
+                        </div>                 
                         <div class="flex justify-center">
-                            <button type="submit" class="text-xl w-fit font-semibold px-6 py-2 rounded bg-accent text-black hover:text-slate-700">Iniciar sesion</button>
+                            <button type="submit" class="text-xl w-fit font-semibold px-6 py-2 rounded bg-accent text-black hover:text-slate-700">Restaurar contraseña</button>
                         </div>
 
                         <?php
@@ -51,9 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </form>
                 </div>
                 
-                <div class="flex mt-7 flex-col justify-center items-center gap-1">                    
-                    <a href="register" class="text-xl w-fit py-2 rounded text-background ">¿No tienes cuenta? <span class="font-semibold hover:underline">Regístrate</span></a>
-                    <a href="forgot_password" class="text-xl w-fit py-2 rounded text-background ">¿Olvidaste tu contraseña? <span class="font-semibold hover:underline">Cambiar contraseña</span></a>
+                <div class="flex mt-7 flex-col justify-center items-center gap-1">
+                    <a href="login" class="text-xl w-fit py-2 rounded text-background ">Volver a <span class="font-semibold hover:underline">Iniciar sesión</span></a>
                     <a href="landing" class="text-xl w-fit py-2 rounded text-background hover:underline font-semibold">Volver al inicio</a>
                 </div>
             </div>

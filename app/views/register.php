@@ -56,51 +56,49 @@ if (!empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['pass
     <title>Register</title>
 </head>
 <body>
-    <div class="flex justify-center items-center h-screen">
-        <div class="bg-white p-8 rounded shadow-2xl w-1/3">
-            <h2 class="text-3xl font-bold mb-4">Register</h2>
-            <form action="" method="POST">
-                <div class="mb-4">
-                    <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Nombre de usuario</label>
-                    <input type="text" class="border-2 border-gray-400 p-2 w-full" id="username" name="username" required>
-                </div>
-                <div class="mb-4">
-                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                    <input type="email" class="border-2 border-gray-400 p-2 w-full" id="email" name="email" required>
-                </div>
-                <div class="mb-4">
-                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
-                    <input type="password" class="border-2 border-gray-400 p-2 w-full" id="password" name="password" required>
-                </div>
-                <div class="mb-4">
-                    <label for="repeatPassword" class="block text-gray-700 text-sm font-bold mb-2">Repetir contraseña</label>
-                    <input type="password" class="border-2 border-gray-400 p-2 w-full" id="repeatPassword" name="repeatPassword" required>
-                </div>
-                <div class="mb-4">
-                    <label for="role" class="block text-gray-700 text-sm font-bold mb-2">Rol</label>
-                    <select name="role" id="role" class="border-2 border-gray-400 p-2 w-full">
-                        <option value="user">Usuario</option>
-                        <option value="admin">Administrador</option>
-                    </select>
-                </div>
-                <div class="flex justify-center">
-                    <button type="submit"class="bg-blue-500 text-white p-2 w-full">Register</button>
-                </div>
+    <div class="min-h-screen px-10 flex items-center justify-center bg-cover bg-center bg-[url('https://cdn.pixabay.com/photo/2016/08/24/16/20/books-1617327_1280.jpg')]">
+        <div class="text-center px-20 py-12 rounded backdrop-blur-[9px] bg-primary/[0.95]">
+            <div class="flex items-center flex-col max-w-[42rem] bg-transparent">
+                <img src="img/logo_white.svg" class="h-20 pl-4" alt="BookReaders_logo">
+                <hr class="border-2 border-white w-[22rem] mb-4">
+                <p class="mt-7 text-xl text-background">
+                ¡Únete a nuestra comunidad de lectores! 
+                </p>
+                <div class="mt-7 w-full">
+                    <form action="" method="POST">
+                        <div class="mb-4">
+                            <input placeholder="Nombre de usuario" type="text" class="p-3 rounded w-full bg-background" id="username" name="username" required>
+                        </div>
+                        <div class="mb-4">
+                            <input placeholder="Correo electrónico" type="email" class="p-3 rounded w-full bg-background" id="email" name="email" required>
+                        </div>
+                        <div class="mb-4">
+                            <input placeholder="Contraseña" type="password" class="p-3 rounded w-full bg-background" id="password" name="password" required>
+                        </div>
+                        <div class="mb-10">
+                            <input placeholder="Repetir contraseña" type="password" class="p-3 rounded w-full bg-background" id="repeatPassword" name="repeatPassword" required>
+                        </div>
+                        <div class="flex justify-center">
+                            <button href="register" class="text-xl w-fit font-semibold px-6 py-2 rounded bg-accent text-black hover:text-slate-700">Registrarme</button>
+                        </div>
 
-                <?php
-                if (!empty($successMessage)) {
-                    echo "<div class='text-green-600 mt-4'>$successMessage</div>";
-                } else if (!empty($errorMessage)) {
-                    echo "<div class='text-red-600 mt-4'>$errorMessage</div>";
-                }
-                ?>
-
-                <div class="text-center mt-3">
-                    <a href="login" class="text-indigo-600">Iniciar sesión</a>
+                        <?php
+                        if (!empty($successMessage)) {
+                            echo "<div class='text-green-600 mt-4'>$successMessage</div>";
+                        } else if (!empty($errorMessage)) {
+                            echo "<div class='text-red-600 mt-4'>$errorMessage</div>";
+                        }
+                        ?>
+                    </form>
                 </div>
-            </form>
+                
+                <div class="flex mt-7 flex-col justify-center items-center gap-1">
+                    <a href="login" class="text-xl w-fit py-2 rounded text-background ">¿Ya tienes cuenta? <span class="font-semibold hover:underline">Inicia sesión</span></a>
+                    <a href="landing" class="text-xl w-fit py-2 rounded text-background hover:underline font-semibold">Volver al inicio</a>
+                </div>
+            </div>
         </div>
-    </div>    
+    </div>     
 </body>
 
 </html>
