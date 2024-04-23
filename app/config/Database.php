@@ -54,11 +54,14 @@ class Database{
     public function createUsersTable(){
         try {
             $sql = "CREATE TABLE IF NOT EXISTS users (
-                user_id INT AUTO_INCREMENT PRIMARY KEY,
-                email VARCHAR(255) NOT NULL,
-                username VARCHAR(255) NOT NULL,
+                id_user INT AUTO_INCREMENT PRIMARY KEY,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                username VARCHAR(255) UNIQUE NOT NULL,
                 password VARCHAR(255) NOT NULL,
-                role VARCHAR(50) DEFAULT 'user',
+                role ENUM('user','admin') DEFAULT 'user',
+                name VARCHAR(255),
+                profile_image VARCHAR(255),
+                metadata JSON,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )";
@@ -93,6 +96,109 @@ class Database{
             }
         } catch(PDOException $e) {
             echo "Error al crear el usuario administrador: " . $e->getMessage();
+        }
+    }
+
+    // create followers table
+    public function createFollowersTable(){
+        try {
+            $sql = "CREATE TABLE IF NOT EXISTS followers (
+                id_follower INT AUTO_INCREMENT PRIMARY KEY,
+                id_user INT NOT NULL,
+                id_followed INT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                FOREIGN KEY (id_user) REFERENCES users(id_user),
+                FOREIGN KEY (id_followed) REFERENCES users(id_user),
+                UNIQUE (id_user, id_followed)
+            )";
+            $this->conn->exec($sql);
+            // echo "Tabla de seguidores creada exitosamente.";
+        } catch(PDOException $e) {
+            echo "Error al crear la tabla de seguidores: " . $e->getMessage();
+        }
+    }
+
+    // create books table
+    public function createBooksTable(){
+        try {
+            $sql = "CREATE TABLE IF NOT EXISTS books (
+                id_book INT AUTO_INCREMENT PRIMARY KEY,
+                isbn VARCHAR(255) UNIQUE NOT NULL,
+                title VARCHAR(255) NOT NULL,
+                author VARCHAR(255) NOT NULL,
+                genre VARCHAR(255) NOT NULL,
+                editorial VARCHAR(255) NOT NULL,
+                image VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )";
+            $this->conn->exec($sql);
+            // echo "Tabla de libros creada exitosamente.";
+        } catch(PDOException $e) {
+            echo "Error al crear la tabla de libros: " . $e->getMessage();
+        }
+    }
+
+    // create reviews table
+    public function createReviewsTable(){
+        try {
+            $sql = "CREATE TABLE IF NOT EXISTS reviews (
+                id_review INT AUTO_INCREMENT PRIMARY KEY,
+                id_user INT NOT NULL,
+                isbn VARCHAR(255) NOT NULL,
+                rating INT NOT NULL,
+                comment TEXT NOT NULL,
+                visibility ENUM('public','private') DEFAULT 'private',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                FOREIGN KEY (id_user) REFERENCES users(id_user),
+                FOREIGN KEY (isbn) REFERENCES books(isbn)
+            )";
+            $this->conn->exec($sql);
+            // echo "Tabla de reseñas creada exitosamente.";
+        } catch(PDOException $e) {
+            echo "Error al crear la tabla de reseñas: " . $e->getMessage();
+        }
+    }
+
+    // create userlists table
+    public function createListsTable(){
+        try {
+            $sql = "CREATE TABLE IF NOT EXISTS lists (
+                id_list INT AUTO_INCREMENT PRIMARY KEY,
+                id_user INT NOT NULL,
+                list_name VARCHAR(255) NOT NULL,
+                type ENUM('favorite', 'read', 'want_to_read','reading','dropped') DEFAULT NULL,
+                visibility ENUM('public','private') DEFAULT 'private',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                FOREIGN KEY (id_user) REFERENCES users(id_user)
+            )";
+            $this->conn->exec($sql);
+            // echo "Tabla de listas de usuario creada exitosamente.";
+        } catch(PDOException $e) {
+            echo "Error al crear la tabla de listas de usuario: " . $e->getMessage();
+        }
+    }
+
+    // create booklists table
+    public function createBooksInListsTable(){
+        try {
+            $sql = "CREATE TABLE IF NOT EXISTS books_in_lists (
+                id_bookInList INT AUTO_INCREMENT PRIMARY KEY,
+                id_list INT NOT NULL,
+                isbn VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                FOREIGN KEY (id_list) REFERENCES lists(id_list),
+                FOREIGN KEY (isbn) REFERENCES books(isbn),
+                UNIQUE (id_list, isbn)
+            )";
+            $this->conn->exec($sql);
+            // echo "Tabla de listas de libros creada exitosamente.";
+        } catch(PDOException $e) {
+            echo "Error al crear la tabla de listas de libros: " . $e->getMessage();
         }
     }
 }

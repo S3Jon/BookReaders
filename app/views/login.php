@@ -8,6 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = new models\User();
     $authController = new controllers\AuthController($user);
 
+    echo $_POST['email'];
+    echo $_POST['password'];
+
     if ($authController->login()) {
         header('Location: home');
     } else {
@@ -34,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="mt-7 w-full">
                     <form action="" method="POST">
                         <div class="mb-4">
-                            <input placeholder="Correo electrónico" type="email" class="p-3 rounded w-full bg-background" id="username" name="username" required>
+                            <input placeholder="Correo electrónico" type="email" class="p-3 rounded w-full bg-background" id="email" name="email" required>
                         </div>
                         <div class="mb-10">
                             <input placeholder="Contraseña" type="password" class="p-3 rounded w-full bg-background" id="password" name="password" required>
