@@ -1,7 +1,7 @@
 <?php
 // Verifica si se ha enviado un archivo
 if(isset($_FILES["profile_image"]) && $_FILES["profile_image"]["error"] == 0){
-    $target_dir = "../uploads/"; // Directorio donde se almacenarán las imágenes
+    $target_dir = "uploads/"; // Directorio donde se almacenarán las imágenes
 
     // Verifica si el directorio no existe y lo crea
     if (!file_exists($target_dir)) {
