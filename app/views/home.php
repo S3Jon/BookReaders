@@ -21,6 +21,8 @@ if ($sessiont < 3) {
 
 ?>
 
+<?php include_once 'partials/header.php'; ?>
+
 <div class="container mx-auto mt-5 ">
     <div class="md:w-1/2 md:mx-auto">
         <div class="card">
@@ -44,3 +46,5 @@ if ($sessiont < 3) {
         </div>
     </div>
 </div>
+
+<?php include_once 'partials/footer.php'; ?>
