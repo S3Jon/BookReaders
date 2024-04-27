@@ -20,6 +20,8 @@ $database->createListsTable();
 
 $database->createBooksInListsTable();
 
+$database->createUserFollowListsTable();
+
 // Create default admin user
 $database->createDefaultAdminUser();
 

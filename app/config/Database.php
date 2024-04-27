@@ -201,6 +201,26 @@ class Database{
             echo "Error al crear la tabla de listas de libros: " . $e->getMessage();
         }
     }
+
+    // create userfollowlists table
+    public function createUserFollowListsTable(){
+        try {
+            $sql = "CREATE TABLE IF NOT EXISTS user_follow_lists (
+                id_followList INT AUTO_INCREMENT PRIMARY KEY,
+                id_user INT NOT NULL,
+                id_list INT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                FOREIGN KEY (id_user) REFERENCES users(id_user),
+                FOREIGN KEY (id_list) REFERENCES lists(id_list),
+                UNIQUE (id_user, id_list)
+            )";
+            $this->conn->exec($sql);
+            // echo "Tabla de listas de usuario seguidas creada exitosamente.";
+        } catch(PDOException $e) {
+            echo "Error al crear la tabla de listas de usuario seguidas: " . $e->getMessage();
+        }
+    }
 }
 
 ?>
