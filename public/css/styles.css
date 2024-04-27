@@ -681,6 +681,11 @@ video {
   height: 100vh;
 }
 
+.h-fit {
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
 .min-h-16 {
   min-height: 4rem;
 }
@@ -890,6 +895,10 @@ video {
   fill: #9ca3af;
 }
 
+.fill-slate-200 {
+  fill: #e2e8f0;
+}
+
 .p-3 {
   padding: 0.75rem;
 }
@@ -976,6 +985,11 @@ video {
 
 .text-xl {
   font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
   line-height: 1.75rem;
 }
 
@@ -1106,6 +1120,15 @@ video {
 .hover\:bg-red-600:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(220 38 38 / var(--tw-bg-opacity));
+}
+
+.hover\:bg-blue-700:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
+}
+
+.hover\:fill-blue-400:hover {
+  fill: #60a5fa;
 }
 
 .hover\:text-blue-400:hover {

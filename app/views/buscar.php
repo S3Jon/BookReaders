@@ -73,16 +73,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['query']) && !empty($_P
 
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscador de Libros</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body class="bg-slate-400 font-sans">
-
 <div class="container mx-auto px-4 py-8">
 
     <h1 class="text-3xl font-bold mb-8">Buscador</h1>
@@ -138,6 +128,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['query']) && !empty($_P
         </div>
     <?php endif; ?>
 </div>
-
-</body>
-</html>

@@ -51,20 +51,8 @@ if(isset($_FILES["profile_image"]) && $_FILES["profile_image"]["error"] == 0){
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styles.css">
-    <title>Document</title>
-</head>
-<body>
-    <form action="" method="post" enctype="multipart/form-data">
-        <input type="file" name="profile_image" accept="image/*">
-        <input type="submit" value="Subir Imagen" name="submit">
-        <input type="reset" value="Limpiar">
-    </form>
-</body>
-</html>
-
+<form action="" method="post" enctype="multipart/form-data">
+    <input type="file" name="profile_image" accept="image/*">
+    <input type="submit" value="Subir Imagen" name="submit">
+    <input type="reset" value="Limpiar">
+</form>
