@@ -5,6 +5,8 @@ session_start();
 //TODO - esto es fix temporal, mejorar sistema
 //mensaje inicio
 
+var_dump($_SESSION['userData']);
+
 
 if (isset($_SESSION['userData']) && !empty($_SESSION['userData']['username'])) {
 	$sessiont = $_SESSION['userData']['role'] == 'admin' ? 2 : 1;
