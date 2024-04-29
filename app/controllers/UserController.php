@@ -123,4 +123,15 @@ class UserController
 		//TODO - Funcional pero mal implementado
 		return $this->userModel->isEmailExistsForUpdate($user_id, $email);
 	}
+
+	//mirar MODEL xfa
+	public function getUserNameById($user_id)
+	{
+		if ($user_id == null) 
+		{
+			echo "El ID de usuario no puede estar vacío";
+			return false;
+		}
+		return $this->userModel->getUserNameById($user_id);
+	}
 }

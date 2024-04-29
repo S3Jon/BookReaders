@@ -6,6 +6,7 @@ use PDO;
 require_once "../app/config/Database.php";
 
 use config\Database;
+use PDOException;
 
 class User
 {  
@@ -203,5 +204,19 @@ class User
 
         return $stmt->rowCount() > 0;
     }
+
+	//Esto puede ser un terrible agujero de seguridad, repasar
+	public function getUserNameById($user_id)
+	{
+		try {
+			$stmt = $this->conn->prepare("SELECT username FROM users WHERE id_user = :user_id");
+			$stmt->bindParam(':user_id', $user_id);
+			$stmt->execute();
+			return implode($stmt->fetch(PDO::FETCH_ASSOC));
+		} catch (PDOException $e) {
+			echo "Error al obtener el nombre de usuario por ID: " . $e->getMessage();
+			die();
+		}
+	}
 }
 ?>
