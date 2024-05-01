@@ -34,4 +34,9 @@ class ListController
 		}
 		return $this->listModel->createList($id_user, $list_name, $visibility);
 	}
+
+	public function exploreLists($id_list)
+	{
+		return $this->listModel->getListById($id_list);
+	}
 }

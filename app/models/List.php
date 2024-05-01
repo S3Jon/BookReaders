@@ -69,6 +69,20 @@ class ListModel //List está reservado por PHP
 		}
 	}
 
+	public function getListById($id_list)
+	{
+		try {
+			$query = 'SELECT * FROM ' . $this->table . ' WHERE id_list = :id_list';
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_list', $id_list);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al recuperar los datos de la lista: " . $e->getMessage();
+		}
+
+	}
+
 	//Para un futuro
 	/* 
 	public function getListByUID($id_user)
@@ -77,22 +91,6 @@ class ListModel //List está reservado por PHP
 			$query = 'SELECT * FROM ' . $this->table . ' WHERE id_user = :id_user';
 			$stmt = $this->conn->prepare($query);
 			$stmt->bindParam(':id_user', $id_user);
-			$stmt->execute();
-			return $stmt->fetchAll(PDO::FETCH_ASSOC);
-		} catch (PDOException $e) {
-			echo $e->getMessage();
-		}
-	}
-	*/
-
-	//WIP
-	/*
-	public function getBooksInList($id_list)
-	{
-		try {
-			$query = 'SELECT [WIP- BOOKLIST] FROM ' . $this->table . ' WHERE id_list = :id_list';
-			$stmt = $this->conn->prepare($query);
-			$stmt->bindParam(':id_list', $id_list);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
