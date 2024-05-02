@@ -36,7 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <input type="hidden" name="id_list" value="<?= $list['id_list'] ?>">
                                 <button type="submit" class="underline text-lg font-semibold text-gray-900" name="submit_button"><?= $list['list_name'] ?></button>
                             </form>
-                            <p class="text-sm text-gray-600"><?= $userController->getUsernameById($list['id_user']) ?></p>
+							<form action="profile_list" method="POST">
+								<input type="hidden" name="id_user" value="<?= $list['id_user'] ?>">
+								<button type="submit" class="text-sm text-gray-600" name="submit_button"><?= $userController->getUsernameById($list['id_user']) ?></button>
+							</form>
                             <p class="text-sm text-gray-600"><?= $list['visibility'] ?></p>
                             <p class="text-sm text-gray-600"><?= $list['created_at'] ?></p>
                         </div>

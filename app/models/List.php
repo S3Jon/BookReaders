@@ -84,6 +84,33 @@ class ListModel //List está reservado por PHP
 
 	}
 
+	public function getUserBasicLists($id_user)
+	{
+		try {
+			$query = 'SELECT * FROM ' . $this->table . ' WHERE id_user = :id_user AND type IS NOT NULL';
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_user', $id_user);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al recuperar las listas básicas del usuario"; $e->getMessage();
+		}
+	}
+
+	//esta devuelve todas sus listas; list.php ya mira si es publica/privada y el que la mira es el propietario
+	public function getUserLists($id_user)
+	{
+		try {
+			$query = 'SELECT * FROM ' . $this->table . ' WHERE id_user = :id_user AND type IS NULL';
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_user', $id_user);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al recuperar las listas del usuario"; $e->getMessage();
+		}
+	}
+
 	public function createBasicLists($id_user)
 	{
 		$visDB = 'public';
