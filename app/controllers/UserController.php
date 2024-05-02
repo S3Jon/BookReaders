@@ -1,15 +1,24 @@
 <?php
 
+
 namespace controllers;
+
 use models\User;
+use models\ListModel;
+use controllers\ListController;
+
+require_once "../app/models/User.php";
+require_once "../app/models/List.php";
+require_once "../app/controllers/ListController.php";
 
 class UserController
 {
     private $userModel;
+	private $listModel;
 
     public function __construct(User $user)
     {
-        $this->userModel = new $user;
+        $this->userModel = $user;
     }
 
     public function createUser($username, $email, $password, $role)
@@ -19,8 +28,11 @@ class UserController
         $this->userModel->password = $password;
         $this->userModel->role = $role;
 
-        if ($this->userModel->createUser()) 
+		$createdUserId = $this->userModel->createUser();
+        if ($createdUserId != false) 
 		{
+			$listController = new ListController(new ListModel());
+			$listController->createBasicLists($createdUserId);
             return true;
         } 
 		else 

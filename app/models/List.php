@@ -32,7 +32,8 @@ class ListModel //List está reservado por PHP
 	{
 		try {
 			//temporalmente ordernar por fecha de creacion, luego se ordenara por seguidores
-			$query = 'SELECT * FROM ' . $this->table . ' WHERE visibility = "public" ORDER BY created_at DESC';
+			//type IS NULL para que no muestre listas básicas, las creadas por usuarios tendrán type NULL
+			$query = 'SELECT * FROM ' . $this->table . ' WHERE visibility = "public" AND type IS NULL ORDER BY created_at DESC'; 
 			$stmt = $this->conn->prepare($query);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -81,6 +82,27 @@ class ListModel //List está reservado por PHP
 			echo "Error al recuperar los datos de la lista: " . $e->getMessage();
 		}
 
+	}
+
+	public function createBasicLists($id_user)
+	{
+		$visDB = 'public';
+		$typeDB = ['favorite', 'read', 'want_to_read', 'reading', 'dropped'];
+		$listNameDB = ['Libros favoritos', 'Leídos', 'Por Leer', 'Leyendo', 'Abandonados'];
+		try {
+			$query = 'INSERT INTO ' . $this->table . ' (id_user, list_name, type, visibility) VALUES (:id_user, :list_name, :type, :visibility)';
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_user', $id_user);
+			$stmt->bindParam(':visibility', $visDB);
+			for ($i = 0; $i < count($typeDB); $i++) {
+				$stmt->bindParam(':list_name', $listNameDB[$i]);
+				$stmt->bindParam(':type', $typeDB[$i]);
+				$stmt->execute();
+			}
+			return true;
+		} catch (PDOException $e) {
+			echo "Error al crear las listas básicas"; $e->getMessage();
+		}
 	}
 
 	//Para un futuro

@@ -182,6 +182,33 @@ class Database{
         }
     }
 
+	public function insertDummyLists(){
+		try {
+			$stmt = $this->conn->prepare("SELECT * FROM lists WHERE list_name = 'ADMIN_DUMMY_LIST'");
+			$stmt->execute();
+			$dummyListsExist = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			if (!$dummyListsExist) {
+				$adminID = 1;
+				$dummyListsNames = ['Lista 1 (publica)', 'Lista 2 (privada)', 'Lista 3 (Si no hay lista 2 va bien)', 'Lista 4', 'ADMIN_DUMMY_LIST'];
+				$dummyListsVisibility = ['public', 'private', 'public', 'public', 'private'];
+
+				$stmt = $this->conn->prepare("INSERT INTO lists (id_user, list_name, visibility) VALUES (:id_user, :list_name, :visibility)");
+				$stmt->bindParam(':id_user', $adminID); //default 1, porque solo vamos a tener admin asegurado
+				for($i = 0; $i < count($dummyListsNames); $i++){
+					$stmt->bindParam(':list_name', $dummyListsNames[$i]);
+					$stmt->bindParam(':visibility', $dummyListsVisibility[$i]);
+					$stmt->execute();
+				}
+				// echo "Listas de usuario dummy creadas exitosamente.";
+			} else {
+				// echo "Las listas de usuario dummy ya existen en la base de datos.";
+			}
+			}catch(PDOException $e) {
+				echo "Error al crear las listas de usuario dummy: " . $e->getMessage();
+		}
+	}
+
     // create booklists table
     public function createBooksInListsTable(){
         try {

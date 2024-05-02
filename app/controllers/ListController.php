@@ -35,6 +35,15 @@ class ListController
 		return $this->listModel->createList($id_user, $list_name, $visibility);
 	}
 
+	public function createBasicLists($id_user)
+	{
+		if ($id_user == null) {
+			echo "El ID de usuario no puede estar vacío";
+			return false;
+		}
+		return $this->listModel->createBasicLists($id_user);
+	}
+
 	public function exploreLists($id_list)
 	{
 		return $this->listModel->getListById($id_list);

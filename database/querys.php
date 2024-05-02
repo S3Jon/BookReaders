@@ -18,6 +18,8 @@ $database->createReviewsTable();
 
 $database->createListsTable();
 
+$database->insertDummyLists();
+
 $database->createBooksInListsTable();
 
 $database->createUserFollowListsTable();

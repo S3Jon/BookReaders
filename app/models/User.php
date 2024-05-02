@@ -56,7 +56,8 @@ class User
 
             // Ejecutar la consulta
             if($stmt->execute()) {
-                return true;
+				$user_id = $this->conn->lastInsertId();
+                return $user_id;
             }
             
             return false;
