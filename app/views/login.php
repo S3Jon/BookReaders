@@ -8,9 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = new models\User();
     $authController = new controllers\AuthController($user);
 
-    echo $_POST['email'];
-    echo $_POST['password'];
-
     if ($authController->login()) {
         header('Location: home');
     } else {

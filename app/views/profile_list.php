@@ -20,8 +20,8 @@ $listasc = $listController->getUserLists($user_ID);
 
 <div class="my-14 container mx-auto min-h-screen">
 	<div class="w-3/4 mx-auto">
+		<p class="text-2xl font-semibold text-gray-900">Listas Básicas</p>
 		<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-10 mt-10">
-			<p class="text-2xl font-semibold text-gray-900">Listas Básicas</p>
 			<?php foreach ($listasb as $key => $list): ?>
 				<div class="container">
 					<div class="bg-white shadow-md rounded-lg max-w-sm w-full">
@@ -42,8 +42,11 @@ $listasc = $listController->getUserLists($user_ID);
 					</div>
 				</div>
 			<?php endforeach; ?>
-			<p class="text-2xl font-semibold text-gray-900">Listas Creadas por el Usuario</p>
-			<?php foreach ($listasc as $key => $list): ?>
+		
+		</div>
+		<div class="w-2/3 m-auto">
+		<p class="text-2xl font-semibold text-gray-900">Listas Creadas por el Usuario</p>
+		<?php foreach ($listasc as $key => $list): ?>
 				<div class="container">
 					<div class="bg-white shadow-md rounded-lg max-w-sm w-full">
 						<div class="p-4">
