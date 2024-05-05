@@ -16,6 +16,7 @@ $BILController = new models\BILtest();
 $listaInfo = $listController->exploreLists($_POST['id_list']);
 $BILInfo = $BILController->getlistbooks($_POST['id_list']);
 
+
 $nombreLista = isset($listaInfo['list_name']) ? $listaInfo['list_name'] : 'Error al cargar el titulo';
 $propietarioLista = $userController->getUsernameById($listaInfo['id_user']);
 $visibilidadLista = isset($listaInfo['visibility']) ? $listaInfo['visibility'] : 'Error al cargar la visibilidad';

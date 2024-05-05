@@ -32,6 +32,15 @@ class BILtest
 		$stmt->execute();
 		$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		return $row;
-	} 
+	}
+
+	public function getBILCount($id_list){
+		$query = "SELECT COUNT(*) FROM " . $this->table_name . " WHERE id_list = :id_list";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':id_list', $id_list);
+		$stmt->execute();
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+		return $row;
+	}
 }
 ?>
