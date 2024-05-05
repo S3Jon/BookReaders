@@ -36,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="container">
                     <div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full">
 						<div class="flex fex-col gap-1">
-							<div class="justify-end my-4 ml-4">
-								<img src="img/fk_placeholder.png" alt="book" class="w-14 h-14" >
+							<div class="justify-self-center my-4 ml-4">
+								<img src="img/fk_placeholder.png" alt="book" class="object-cover w-40">
 							</div>
 							<div class="p-4">
 								<form action="list" method="POST">
