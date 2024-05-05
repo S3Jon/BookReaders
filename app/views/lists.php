@@ -31,6 +31,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <div class="my-14 container mx-auto min-h-screen">
     <div class="w-3/4 mx-auto">
+		<!-- Print todas las listas-->
+		<div class="flex justify-between">
+			<div>
+				<h1 class="text-3xl font-bold text-gray-900">Explorar listas creadas por la comunidad</h1>
+			</div>
+			<!-- absolutamente robado parte 365 -->
+			<div class="w-2/3 md:mx-auto">
+        		<div class="flex items-center w-full gap-20">
+					<form class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
+						<input type="text" class="w-full py-2 bg-transparent outline-none"
+						placeholder=" Busca lista por nombre o usuario"> <!--lol-->
+						<button type="submit"><img src="img/lupa.svg" alt=""></button>
+					</form>
+        		</div>
+				<hr class="w-48 h-2 mx-auto my-1 bg-gray-100 border-2 rounded md:my-10 dark:bg-gray-700">
+			</div>
+		</div>
         <div class="grid grid-cols-2 justify-items-center gap-10 mt-10">
             <?php foreach ($listasp as $key => $list): ?>
                 <div class="container">
@@ -59,8 +76,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 									<div class="flex items-center gap-2 my-3 ml-1">
 										<img src="img/bookStack.svg" alt="bils" class="w-4 h-4">
 										<p class="text-sm text-black font-semibold"><?= implode($BILController->getBILCount($list['id_list'])) ?></p>
-									</div>
-									<p class="text-sm text-black">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vel magna eu arcu commodo ...</p>
+									</div> 
+									<!-- implementar una manera de limitar longitud de descripción -->
+									<p class="text-sm text-black">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vel magna eu arcu commodo ...</p> <!--si la descripción cambia de tamaño literalmente explota-->
 								</div>
 							</div>
 						</div>
