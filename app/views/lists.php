@@ -45,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 						<button type="submit"><img src="img/lupa.svg" alt=""></button>
 					</form>
         		</div>
-				<hr class="w-48 h-2 mx-auto my-1 bg-gray-100 border-2 rounded md:my-10 dark:bg-gray-700">
 			</div>
 		</div>
         <div class="grid grid-cols-2 justify-items-center gap-10 mt-10">
@@ -78,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 								</div> 
 								<!-- implementar una manera de limitar longitud de descripción -->
 								<div>
-									<p class="text-sm text-black">wdadawdadw.</p> <!--si la descripción cambia de tamaño literalmente explota-->
+									<p class="text-sm text-black"></p> <!--si la descripción cambia de tamaño literalmente explota-->
 								</div>
 							</div>
 						</div>
