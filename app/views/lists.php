@@ -52,33 +52,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php foreach ($listasp as $key => $list): ?>
                 <div class="container">
                     <div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full">
-						<div class="flex fex-col gap-1">
-							<div class="justify-self-center my-4 ml-4">
+						<div class="flex fex-row gap-1">
+							<div class="justify-self-center my-4 ml-4 w-[105px]">
 								<img src="img/fk_placeholder.png" alt="book" class="object-cover w-40">
 							</div>
-							<div class="p-4">
+							<div class="p-4 flex flex-col">
 								<form action="list" method="POST">
 									<input type="hidden" name="id_list" value="<?= $list['id_list'] ?>">
 									<button type="submit" class="text-lg font-extrabold text-gray-900" name="submit_button"><?= $list['list_name'] ?></button>
 								</form>
+								<div class="flex items-center gap-2 my-2 ml-1">
+									<img src="img/users.svg" alt="user" class="w-4 h-4">
+									<form action="profile_list" method="POST">
+										<input type="hidden" name="id_user" value="<?= $list['id_user'] ?>">
+										<button type="submit" class="text-sm text-black font-semibold" name="submit_button"><?= $userController->getUsernameById($list['id_user']) ?></button>
+									</form>
+								</div>
+								<div class="flex items-center gap-2 my-2 ml-1">
+									<img src="img/followers.svg" alt="followers" class="w-4 h-4">
+									<p class="text-sm text-black font-semibold"># Seguidores</p> <!-- TODO: Implementar seguidores -->	
+								</div>
+								<div class="flex items-center gap-2 my-2 ml-1">
+									<img src="img/bookStack.svg" alt="bils" class="w-4 h-4">
+									<p class="text-sm text-black font-semibold"><?= implode($BILController->getBILCount($list['id_list'])) ?></p>
+								</div> 
+								<!-- implementar una manera de limitar longitud de descripción -->
 								<div>
-									<div class="flex items-center gap-2 my-3 ml-1">
-										<img src="img/users.svg" alt="user" class="w-4 h-4">
-										<form action="profile_list" method="POST">
-											<input type="hidden" name="id_user" value="<?= $list['id_user'] ?>">
-											<button type="submit" class="text-sm text-black font-semibold" name="submit_button"><?= $userController->getUsernameById($list['id_user']) ?></button>
-										</form>
-									</div>
-									<div class="flex items-center gap-2 my-3 ml-1">
-										<img src="img/followers.svg" alt="followers" class="w-4 h-4">
-										<p class="text-sm text-black font-semibold"># Seguidores</p> <!-- TODO: Implementar seguidores -->	
-									</div>
-									<div class="flex items-center gap-2 my-3 ml-1">
-										<img src="img/bookStack.svg" alt="bils" class="w-4 h-4">
-										<p class="text-sm text-black font-semibold"><?= implode($BILController->getBILCount($list['id_list'])) ?></p>
-									</div> 
-									<!-- implementar una manera de limitar longitud de descripción -->
-									<p class="text-sm text-black">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vel magna eu arcu commodo ...</p> <!--si la descripción cambia de tamaño literalmente explota-->
+									<p class="text-sm text-black">wdadawdadw.</p> <!--si la descripción cambia de tamaño literalmente explota-->
 								</div>
 							</div>
 						</div>
