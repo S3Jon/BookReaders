@@ -17,6 +17,7 @@ $UFLController = new models\UFLModel();
 $BILController = new models\BILModel();
 
 $listasp = $listController->getPublicLists();
+$top50 = $UFLController->getMostFollowed();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['delete'])) {
@@ -45,6 +46,12 @@ function formatFollowers($id_list, $UFLController)
 <?php include_once 'partials/header.php'; ?>
 
 <div class="my-14 container mx-auto min-h-screen">
+	<h1>Most Followed Lists</h1>
+    <ul>
+        <?php foreach ($top50 as $list50) : ?>
+            <li>List ID: <?= $list50['id_list'] ?></li>
+        <?php endforeach; ?>
+    </ul>
     <div class="w-3/4 mx-auto">
 		<!-- Print todas las listas-->
 		<div class="flex justify-between">

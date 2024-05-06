@@ -72,4 +72,21 @@ class UFLModel
 		$followcount = $stmt->fetch(PDO::FETCH_ASSOC);
 		return $followcount['num_seguidores'];
 	}
+
+	public function getMostFollowed()
+	{
+		//$tabla_listas = "lists";
+		$query = "SELECT lists.id_list 
+		FROM lists 
+		LEFT JOIN user_follow_lists ON lists.id_list = user_follow_lists.id_list 
+		WHERE lists.visibility = 'public' 
+		AND lists.type IS NULL
+		GROUP BY lists.id_list 
+		ORDER BY COUNT(user_follow_lists.id_list) DESC 
+		LIMIT 50;";
+		$stmt = $this->conn->prepare($query);
+		$stmt->execute();
+		$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $row;
+	}
 }
