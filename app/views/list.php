@@ -6,13 +6,13 @@ require_once '../app/controllers/ListController.php';
 require_once '../app/models/List.php';
 //TODO: Modificar en el futuro;  fase test
 require_once '../app/models/test_book.php';
-require_once '../app/models/test_bookinlist.php';
+require_once '../app/models/BookInList.php';
 //En el futuro incluir controlador/modelo de libros
 
 $listController = new controllers\ListController(new models\ListModel());
 $userController = new controllers\UserController(new models\User());
 $bookController = new models\Booktest();
-$BILController = new models\BILtest();
+$BILController = new models\BILModel();
 $listaInfo = $listController->exploreLists($_POST['id_list']);
 $BILInfo = $BILController->getlistbooks($_POST['id_list']);
 

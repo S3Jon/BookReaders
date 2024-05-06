@@ -8,7 +8,7 @@ require_once "../app/config/Database.php";
 use config\Database;
 use PDOException;
 
-class BILtest
+class BILModel
 {  
     private $conn;
     private $table_name = "books_in_lists";

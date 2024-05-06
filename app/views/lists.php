@@ -4,15 +4,17 @@ require_once "../app/models/List.php";
 require_once "../app/controllers/ListController.php";
 require_once "../app/models/User.php";
 require_once "../app/controllers/UserController.php";
+require_once "../app/models/UserFollowLists.php";
 //TODO- Actualizar fuente de BooksInList
-require_once "../app/models/test_bookinlist.php";
+require_once "../app/models/BookInList.php";
 
 session_start();
 
 $listController = new controllers\ListController(new models\ListModel());
 $userController = new controllers\UserController(new models\User());
+$UFLController = new models\UFLModel();
 //TODO- Actualizar fuente de BooksInList
-$BILController = new models\BILTest();
+$BILController = new models\BILModel();
 
 $listasp = $listController->getPublicLists();
 
@@ -23,6 +25,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['create'])) {
         $listController->createList($_SESSION['user_id'], $_POST['list_name'], $_POST['visibility']);
     }
+}
+
+function formatFollowers($id_list, $UFLController)
+{
+	$num_seguidores = $UFLController->getFollowers($id_list);
+	if ($num_seguidores == 1)
+	{
+		return $num_seguidores . " Seguidor";
+	}
+	else
+	{
+		return $num_seguidores . " Seguidores";
+	}
 }
 
 ?>
@@ -69,15 +84,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 								</div>
 								<div class="flex items-center gap-2 my-2 ml-1">
 									<img src="img/followers.svg" alt="followers" class="w-4 h-4">
-									<p class="text-sm text-black font-semibold"># Seguidores</p> <!-- TODO: Implementar seguidores -->	
+									<p class="text-sm text-black font-semibold"><?= formatFollowers($list['id_list'], $UFLController)?></p> <!-- Mover el seguidor/seguidores a una funcion perhaps -->	
 								</div>
 								<div class="flex items-center gap-2 my-2 ml-1">
 									<img src="img/bookStack.svg" alt="bils" class="w-4 h-4">
 									<p class="text-sm text-black font-semibold"><?= implode($BILController->getBILCount($list['id_list'])) ?></p>
 								</div> 
-								<!-- implementar una manera de limitar longitud de descripción -->
-								<div>
-									<p class="text-sm text-black"></p> <!--si la descripción cambia de tamaño literalmente explota-->
+								<!-- implementar descirpción de listas -->
+								<div class="w-[400px] max-w-[400px]">
+									<p class="text-sm text-black break-words">wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</p> <!--si la descripción cambia de tamaño literalmente explota-->
 								</div>
 							</div>
 						</div>
