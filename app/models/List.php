@@ -60,7 +60,7 @@ class ListModel //List está reservado por PHP
 		try {
 			$query = 'INSERT INTO ' . $this->table . ' (id_user, list_name, visibility) VALUES (:id_user, :list_name, :visibility)';
 			$stmt = $this->conn->prepare($query);
-			$stmt->bindParam(':id_user', 1); //default 1, cambiar a futuro
+			$stmt->bindParam(':id_user', $id_user); //default 1, cambiar a futuro
 			$stmt->bindParam(':list_name', $list_name);
 			$stmt->bindParam(':visibility', $visibility);
 			$stmt->execute();

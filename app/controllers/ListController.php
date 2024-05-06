@@ -17,6 +17,15 @@ class ListController
 		return $this->listModel->getPublicLists();
 	}
 
+	public function getListById($id_list)
+	{
+		if ($id_list == null) {
+			echo "El ID de la lista no puede estar vacío";
+			return false;
+		}
+		return $this->listModel->getListById($id_list);
+	}
+
 	public function deleteList($id_list)
 	{
 		if ($id_list == null) {
@@ -65,5 +74,10 @@ class ListController
 	public function exploreLists($id_list)
 	{
 		return $this->listModel->getListById($id_list);
+	}
+	
+	public function getListName($id_list)
+	{
+		return $this->listModel->getListName($id_list);
 	}
 }

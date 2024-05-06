@@ -16,8 +16,11 @@ $UFLController = new models\UFLModel();
 //TODO- Actualizar fuente de BooksInList
 $BILController = new models\BILModel();
 
-$listasp = $listController->getPublicLists();
+$listasp;
 $top50 = $UFLController->getMostFollowed();
+foreach ($top50 as $key => $list) {
+	$listasp[$key] = $listController->getListById($list['id_list']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['delete'])) {
