@@ -16,9 +16,9 @@ $users = $userController->readAllUsers();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete_user'])) {
-        $user_id = $_POST['user_id'];
+        $id_user = $_POST['id_user'];
         
-        if ($userController->deleteUser($user_id)) {
+        if ($userController->deleteUser($id_user)) {
             echo "Usuario eliminado con éxito.";
             header("Location: adminpanel");
             exit;
@@ -48,13 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php echo $user['username']; ?> - <?php echo $user['email']; ?>
                         <span class="ml-2 text-gray-500"> -> <?php echo $user['role']; ?></span>
                         <form class="inline-block ml-2" action="edit_user" method="post">
-                            <input type="hidden" name="user_id" value="<?php echo $user['id_user']; ?>">
+                            <input type="hidden" name="id_user" value="<?php echo $user['id_user']; ?>">
                             <?php if ($user['username'] !== 'admin' && $user['username'] !== $_SESSION['userData']['username']): ?>
                                 <button type="submit" name="edit_user" class="px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-600">Editar</button>
                             <?php endif; ?>
                         </form>
                         <form class="inline-block ml-2" action="adminpanel" method="post">
-                            <input type="hidden" name="user_id" value="<?php echo $user['id_user']; ?>">
+                            <input type="hidden" name="id_user" value="<?php echo $user['id_user']; ?>">
                             <?php if ($user['username'] !== 'admin' && $user['username'] !== $_SESSION['userData']['username']): ?>
                                 <button type="submit" onclick="return confirm('¿Seguro que quieres eliminar este usuario?');" name="delete_user" class="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Eliminar</button>
                             <?php endif; ?>

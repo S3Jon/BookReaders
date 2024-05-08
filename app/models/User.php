@@ -73,7 +73,7 @@ class User
     {
         try {
             //Prepare the query to get a user by their ID
-            $stmt = $this->conn->prepare("SELECT * FROM users WHERE user_id = :user_id");
+            $stmt = $this->conn->prepare("SELECT * FROM users WHERE id_user = :user_id");
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
 
@@ -130,7 +130,7 @@ class User
             }
 
             //Prepare the query to update user information
-            $stmt = $this->conn->prepare("UPDATE users SET username = COALESCE(:username, username), email = COALESCE(:email, email), password = COALESCE(:password, password), role = COALESCE(:role, role) WHERE user_id = :user_id");
+            $stmt = $this->conn->prepare("UPDATE users SET username = COALESCE(:username, username), email = COALESCE(:email, email), password = COALESCE(:password, password), role = COALESCE(:role, role) WHERE id_user = :user_id");
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':email', $email);
             $password = password_hash($password, PASSWORD_DEFAULT);
@@ -151,7 +151,7 @@ class User
     {
         try {
             //Prepare the query to delete a user by their ID
-            $stmt = $this->conn->prepare("DELETE FROM users WHERE user_id = :user_id");
+            $stmt = $this->conn->prepare("DELETE FROM users WHERE id_user = :user_id");
             $stmt->bindParam(':user_id', $user_id);
             $stmt->execute();
 
@@ -186,7 +186,7 @@ class User
     public function isUsernameExistsForUpdate($user_id, $username)
     {
         //TODO - Diria que es el mismo que el de arriba isUsernameExists. Lo revisamos
-        $stmt = $this->conn->prepare("SELECT * FROM users WHERE username = :username AND user_id != :user_id");
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE username = :username AND id_user != :user_id");
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':user_id', $user_id);
         $stmt->execute();
@@ -198,7 +198,7 @@ class User
     public function isEmailExistsForUpdate($user_id, $email)
     {
         //TODO - Diria que es el mismo que el de arriba isEmailExists. Lo revisamos
-        $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = :email AND user_id != :user_id");
+        $stmt = $this->conn->prepare("SELECT * FROM users WHERE email = :email AND id_user != :user_id");
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':user_id', $user_id);
         $stmt->execute();
