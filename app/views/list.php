@@ -73,7 +73,13 @@ else { ?>
 										<p class="text-sm text-gray-600"><?= implode($bookController->getBookAuthor($book['isbn'])) ?></p>
 										<p class="text-sm text-gray-600"><?= implode($bookController->getBookGenre($book['isbn'])) ?></p>
 										//eliminar libro de la lista 
-
+										<?php if ($listOS): ?>
+											<form action="delete_book" method="POST">
+												<input type="hidden" name="id_list" value="<?= $_POST['id_list'] ?>">
+												<input type="hidden" name="isbn" value="<?= $book['isbn'] ?>">
+												<button type="submit" class="underline text-sm text-gray-600">Eliminar libro</button>
+											</form>
+										<?php endif; ?>
 									</div>
 								</div>
 							</div>
