@@ -44,6 +44,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			echo "Error al eliminar el libro.";
 		}
 	}
+	if (isset($_POST['delete_list'])) {
+		$id_list = $_POST['id_list'];
+		if ($listController->deleteList($id_list)) {
+			header("Location: lists");
+			exit;
+		} else {
+			echo "Error al eliminar la lista.";
+		}
+	}
 	else if (isset($_POST['follow_list'])) {
 		if (!isset($_SESSION['userData'])) //Por redundancia, aunque no debería pasar
 		{

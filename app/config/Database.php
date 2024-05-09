@@ -108,8 +108,8 @@ class Database{
                 id_followed INT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                FOREIGN KEY (id_user) REFERENCES users(id_user),
-                FOREIGN KEY (id_followed) REFERENCES users(id_user),
+                FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
+                FOREIGN KEY (id_followed) REFERENCES users(id_user) ON DELETE CASCADE,
                 UNIQUE (id_user, id_followed)
             )";
             $this->conn->exec($sql);
@@ -152,8 +152,8 @@ class Database{
                 visibility ENUM('public','private') DEFAULT 'private',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                FOREIGN KEY (id_user) REFERENCES users(id_user),
-                FOREIGN KEY (isbn) REFERENCES books(isbn)
+                FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
+                FOREIGN KEY (isbn) REFERENCES books(isbn) ON DELETE CASCADE
             )";
             $this->conn->exec($sql);
             // echo "Tabla de reseñas creada exitosamente.";
@@ -173,7 +173,7 @@ class Database{
                 visibility ENUM('public','private') DEFAULT 'private',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                FOREIGN KEY (id_user) REFERENCES users(id_user)
+                FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE
             )";
             $this->conn->exec($sql);
             // echo "Tabla de listas de usuario creada exitosamente.";
@@ -218,8 +218,8 @@ class Database{
                 isbn VARCHAR(255) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                FOREIGN KEY (id_list) REFERENCES lists(id_list),
-                FOREIGN KEY (isbn) REFERENCES books(isbn),
+                FOREIGN KEY (id_list) REFERENCES lists(id_list) ON DELETE CASCADE,
+                FOREIGN KEY (isbn) REFERENCES books(isbn) ON DELETE CASCADE,
                 UNIQUE (id_list, isbn)
             )";
             $this->conn->exec($sql);
@@ -238,8 +238,8 @@ class Database{
                 id_list INT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                FOREIGN KEY (id_user) REFERENCES users(id_user),
-                FOREIGN KEY (id_list) REFERENCES lists(id_list),
+                FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
+                FOREIGN KEY (id_list) REFERENCES lists(id_list) ON DELETE CASCADE,
                 UNIQUE (id_user, id_list)
             )";
             $this->conn->exec($sql);

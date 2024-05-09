@@ -8,7 +8,11 @@
 	<?php if ($listOS): ?>
 		<form action="edit_list" method="POST">
 			<input type="hidden" name="id_list" value="<?= $_POST['id_list'] ?>">
-			<button type="submit" class="underline text-sm text-gray-600">Editar lista</button>
+			<button type="submit" class="px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-600">Editar lista</button>
+		</form>
+		<form action="list" method="POST">
+			<input type="hidden" name="id_list" value="<?= $_POST['id_list'] ?>">
+			<button type="submit" name="delete_list" onclick="return confirm('¿Seguro que quieres eliminar esta lista?');" class="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Eliminar lista</button>
 		</form>
 	<?php else: ?>
 		<?php if (!isset($_SESSION['userData'])): ?>
