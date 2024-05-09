@@ -132,6 +132,32 @@ class ListModel //List está reservado por PHP
 		}
 	}
 
+	public function getListName($id_list)
+	{
+		try {
+			$query = 'SELECT list_name FROM ' . $this->table . ' WHERE id_list = :id_list';
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_list', $id_list);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al recuperar el nombre de la lista"; $e->getMessage();
+		}
+	}
+
+	public function getListOwnerID($id_list)
+	{
+		try {
+			$query = 'SELECT id_user FROM ' . $this->table . ' WHERE id_list = :id_list';
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_list', $id_list);
+			$stmt->execute();
+			return $stmt->fetch(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al recuperar el propietario de la lista"; $e->getMessage();
+		}
+	}
+
 	//Para un futuro
 	/* 
 	public function getListByUID($id_user)

@@ -80,4 +80,9 @@ class ListController
 	{
 		return $this->listModel->getListName($id_list);
 	}
+
+	public function getListOwnerID($id_list)
+	{
+		return $this->listModel->getListOwnerID($id_list);
+	}
 }

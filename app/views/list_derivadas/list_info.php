@@ -1,5 +1,8 @@
 <h1 class="text-lg font-semibold text-gray-900"><?= $nombreLista ?></h1>
-	<p class="text-sm text-gray-600">Propietario: <?= $propietarioLista ?></p>
+	<form action="profile_list" method="POST">
+		<input type="hidden" name="id_user" value="<?= implode($listController->getListOwnerID($IDforJS)) ?>">
+		<button type="submit" class="underline text-sm text-gray-600"><?= $propietarioLista ?></button>
+	</form>
 	<p class="text-sm text-gray-600">Visibilidad: <?= $visibilidadLista ?></p>
 	<p class="text-sm text-gray-600">Seguidores: <?= $UFLController->getFollowers($IDforJS) ?></p>
 	<?php if ($listOS): ?>
