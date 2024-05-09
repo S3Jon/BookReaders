@@ -10,6 +10,8 @@ require_once '../app/models/BookInList.php';
 require_once '../app/models/UserFollowLists.php';
 //En el futuro incluir controlador/modelo de libros
 
+session_start();
+
 $listController = new controllers\ListController(new models\ListModel());
 $userController = new controllers\UserController(new models\User());
 $bookController = new models\Booktest();
@@ -17,29 +19,35 @@ $BILController = new models\BILModel();
 $UFLController = new models\UFLModel();
 
 
-$listaInfo = $listController->exploreLists($_POST['id_list']);
-$BILInfo = $BILController->getlistbooks($_POST['id_list']);
-$IDforJS = $_POST['id_list']; //Para poder usarlo en JS
 
+//get
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+	if (isset($_GET['id'])) {
+		$id_list = $_GET['id'];
+		
+		$listaInfo = $listController->exploreLists($id_list);
+		$BILInfo = $BILController->getlistbooks($id_list);
+		$IDforJS = $id_list; //Para poder usarlo en JS
+		$nombreLista = isset($listaInfo['list_name']) ? $listaInfo['list_name'] : 'Error al cargar el titulo';
+		$propietarioLista = $userController->getUsernameById($listaInfo['id_user']);
+		$visibilidadLista = isset($listaInfo['visibility']) ? $listaInfo['visibility'] : 'Error al cargar la visibilidad';
 
-$nombreLista = isset($listaInfo['list_name']) ? $listaInfo['list_name'] : 'Error al cargar el titulo';
-$propietarioLista = $userController->getUsernameById($listaInfo['id_user']);
-$visibilidadLista = isset($listaInfo['visibility']) ? $listaInfo['visibility'] : 'Error al cargar la visibilidad';
-session_start();
-
-//Medida extra de seguridad: Si la lista no es pública y no tienes sesión/tu id de user no coincide, no puedes ver la lista
-$listOS = false; //List OwnerShip
-if (isset($_SESSION['userData']) && ($_SESSION['userData']['id_user'] == $listaInfo['id_user']))
-{
-	$listOS = true;
+		//Medida extra de seguridad: Si la lista no es pública y no tienes sesión/tu id de user no coincide, no puedes ver la lista
+		$listOS = false; //List OwnerShip
+		if (isset($_SESSION['userData']) && ($_SESSION['userData']['id_user'] == $listaInfo['id_user']))
+		{
+			$listOS = true;
+		}
+	}
 }
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if (isset($_POST['delete_book'])) {
 		$id_list = $_POST['id_list'];
 		$isbn = $_POST['isbn'];
 		if ($BILController->removeBook($IDforJS, $isbn)) {
-			echo "<script> window.onload = function() { recargaLista(); } </script>";
+			echo "<script> window.onload = function() { reset(); } </script>";
 		} else {
 			echo "Error al eliminar el libro.";
 		}
@@ -135,6 +143,10 @@ else { ?>
 <?php include_once 'partials/footer.php'; ?>
 
 <script>
+	function reset() {
+		const element = document.getElementById('book' + isbn);
+		element.parentNode.removeChild(element);
+	}
 	function recargaLista() {
 		var form = document.createElement("form");
 		form.method = "POST";

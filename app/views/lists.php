@@ -75,10 +75,7 @@ function formatFollowers($id_list, $UFLController)
 								<img src="img/fk_placeholder.png" alt="book" class="object-cover w-40">
 							</div>
 							<div class="p-4 flex flex-col">
-								<form action="list" method="POST">
-									<input type="hidden" name="id_list" value="<?= $list['id_list'] ?>">
-									<button type="submit" class="text-lg font-extrabold text-gray-900" name="submit_button"><?= $list['list_name'] ?></button>
-								</form>
+                                <a href="list.php?id=<?= $list['id_list'] ?>" class="text-lg font-extrabold text-gray-900"><?= $list['list_name'] ?></a>
 								<div class="flex items-center gap-2 my-2 ml-1">
 									<img src="img/users.svg" alt="user" class="w-4 h-4">
 									<form action="profile_list" method="POST">

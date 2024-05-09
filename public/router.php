@@ -1,14 +1,34 @@
 <?php
 
-$request = $_SERVER['REQUEST_URI'];
+$request_uri = $_SERVER['REQUEST_URI'];
 
-switch ($request) {
+// Parseamos la URL para obtener el path y los query parameters
+$url_components = parse_url($request_uri);
+$path = $url_components['path'];
+$query_params = isset($url_components['query']) ? $url_components['query'] : '';
+
+switch ($path) {
     //TODO Se modificara esto para mejorar la navegacion
     case '/BookReaders/':
         require '../app/views/landing.php';
         break;
-    default:    
-        $request = str_replace('/BookReaders/', '', $request);
+    case '/BookReaders/list.php':
+        if (!empty($query_params)) {
+            // Parseamos los parámetros de la query
+            parse_str($query_params, $params);
+            // Verificamos si se proporcionó el parámetro 'id'
+            if(isset($params['id'])) {
+                // Accedemos al valor del parámetro 'id'
+                $id_list = $params['id'];
+                // Luego puedes hacer algo con el ID, como cargar la vista correspondiente o procesar la información
+                require '../app/views/list.php';
+                // Importante: Finalizamos el switch para evitar que se ejecute el case default
+                exit();
+            }
+        }
+        break;
+    default:
+        $request = str_replace('/BookReaders/', '', $path);
         $filename = '../app/views/' . $request . '.php';
 
         if (file_exists($filename)) {
