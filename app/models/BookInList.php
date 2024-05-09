@@ -42,5 +42,28 @@ class BILModel
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 		return $row;
 	}
+
+	//Llamarla desde la pagina de los libros; a menos que queramos añadir libros desde la lista con un buscador o algo?
+	public function addBook($id_list, $isbn){
+		$query = "INSERT INTO " . $this->table_name . " (id_list, isbn) VALUES (:id_list, :isbn)";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':id_list', $id_list);
+		$stmt->bindParam(':isbn', $isbn);
+		$stmt->execute();
+	}
+
+	public function removeBook($id_list, $isbn){
+		$query = "DELETE FROM " . $this->table_name . " WHERE id_list = :id_list AND isbn = :isbn";
+		$stmt = $this->conn->prepare($query);
+		$stmt->bindParam(':id_list', $id_list);
+		$stmt->bindParam(':isbn', $isbn);
+		$stmt->execute();
+		if ($stmt->rowCount() > 0){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }
 ?>

@@ -13,8 +13,11 @@ $listController = new controllers\ListController(new models\ListModel());
 $userController = new controllers\UserController(new models\User());
 $bookController = new models\Booktest();
 $BILController = new models\BILModel();
+
+
 $listaInfo = $listController->exploreLists($_POST['id_list']);
 $BILInfo = $BILController->getlistbooks($_POST['id_list']);
+$IDforJS = $_POST['id_list']; //Para poder usarlo en JS
 
 
 $nombreLista = isset($listaInfo['list_name']) ? $listaInfo['list_name'] : 'Error al cargar el titulo';
@@ -27,6 +30,18 @@ $listOS = false; //List OwnerShip
 if (isset($_SESSION['userData']) && ($_SESSION['userData']['id_user'] == $listaInfo['id_user']))
 {
 	$listOS = true;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	if (isset($_POST['delete_book'])) {
+		$id_list = $_POST['id_list'];
+		$isbn = $_POST['isbn'];
+		if ($BILController->removeBook($IDforJS, $isbn)) {
+			echo "<script> window.onload = function() { recargaLista(); } </script>";
+		} else {
+			echo "Error al eliminar el libro.";
+		}
+	}
 }
 
 ?>
@@ -73,11 +88,11 @@ else { ?>
 										<p class="text-sm text-gray-600"><?= implode($bookController->getBookAuthor($book['isbn'])) ?></p>
 										<p class="text-sm text-gray-600"><?= implode($bookController->getBookGenre($book['isbn'])) ?></p>
 										<?php if ($listOS): ?>
-										<form action="delete_book" method="POST" class="btn btn-danger">
-											<input type="hidden" name="id_list" value="<?= $_POST['id_list'] ?>">
-											<input type="hidden" name="isbn" value="<?= $book['isbn'] ?>">
-											<button type="submit" class="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Eliminar libro</button>
-										</form>
+											<form action="list" method="POST">
+												<input type="hidden" name="id_list" value="<?= $_POST['id_list'] ?>">
+												<input type="hidden" name="isbn" value="<?= $book['isbn'] ?>">
+												<button type="submit" onclick="return confirm('¿Seguro que quieres eliminar este libro?');" name="delete_book" class="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Eliminar libro</button>
+											</form>
 										<?php endif; ?>
 									</div>
 								</div>
@@ -91,3 +106,18 @@ else { ?>
 <?php } ?>
 
 <?php include_once 'partials/footer.php'; ?>
+
+<script>
+	function recargaLista() {
+		var form = document.createElement("form");
+		form.method = "POST";
+		form.action = "";
+		var input = document.createElement("input");
+		input.type = "hidden";
+		input.name = "id_list";
+		input.value = "<?php echo $IDforJS; ?>";
+		form.appendChild(input);
+		document.body.appendChild(form);
+		form.submit();
+	}
+</script>
