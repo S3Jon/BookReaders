@@ -7,12 +7,14 @@ require_once '../app/models/List.php';
 //TODO: Modificar en el futuro;  fase test
 require_once '../app/models/test_book.php';
 require_once '../app/models/BookInList.php';
+require_once '../app/models/UserFollowLists.php';
 //En el futuro incluir controlador/modelo de libros
 
 $listController = new controllers\ListController(new models\ListModel());
 $userController = new controllers\UserController(new models\User());
 $bookController = new models\Booktest();
 $BILController = new models\BILModel();
+$UFLController = new models\UFLModel();
 
 
 $listaInfo = $listController->exploreLists($_POST['id_list']);
@@ -42,13 +44,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			echo "Error al eliminar el libro.";
 		}
 	}
+	else if (isset($_POST['follow_list'])) {
+		if (!isset($_SESSION['userData'])) //Por redundancia, aunque no debería pasar
+		{
+			header('Location: login');
+
+		}
+		else
+		{
+			$UFLController->followList($_SESSION['userData']['id_user'], $_POST['id_list']);
+			echo "<script> window.onload = function() { recargaLista(); } </script>";
+		}
+	}
+	else if (isset($_POST['unfollow_list'])) {
+		$UFLController->unfollowList($_SESSION['userData']['id_user'], $_POST['id_list']);
+		echo "<script> window.onload = function() { recargaLista(); } </script>";
+	}
 }
 
 ?>
 
 <?php include_once 'partials/header.php'; ?>
 
-<?php if ($visibilidadLista != "public" && !$listOS) { include 'list_partials/list_forbidden.php'; }
+<?php if ($visibilidadLista != "public" && !$listOS) { include 'list_derivadas/list_forbidden.php'; }
 else { ?>
 	<div class="my-14 container mx-auto min-h-screen">
 		<div class="w-3/4 mx-auto">
@@ -71,12 +89,12 @@ else { ?>
 				<div>
 					<div class="bg-white shadow-md rounded-lg max-w-sm w-full">
 						<div class="p-4">
-							<?php include 'list_partials/list_info.php'; ?>
+							<?php include 'list_derivadas/list_info.php'; ?>
 						</div>
 					</div>
 				</div>
 				<div>
-					<div class ="grid grid-cols-4 justify-items-center gap-25 mt-10">
+					<div class ="grid grid-cols-4 justify-items-start gap-4">
 						<?php foreach ($BILInfo as $key => $book): ?>
 							<div class="container w-40">
 								<div class="bg-white shadow-md rounded-lg max-w-sm w-full">
