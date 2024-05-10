@@ -99,6 +99,43 @@ class Database{
         }
     }
 
+	public function createExtraUsers(){
+		try {
+			$stmt = $this->conn->prepare("SELECT * FROM users");
+			$stmt->execute();
+			$existingUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			if (count($existingUsers) < 10) {
+				$extraUsers = [
+					['username' => 'user1', 'email' => 'user1@user1.user1', 'password' => password_hash('user1', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'user2', 'email' => 'user2@user2.user2', 'password' => password_hash('user2', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'user3', 'email' => 'user3@user3.user3', 'password' => password_hash('user3', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'user4', 'email' => 'user4@user4.user4', 'password' => password_hash('user4', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'user5', 'email' => 'user5@user5.user5', 'password' => password_hash('user5', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'user6', 'email' => 'user6@user6.user6', 'password' => password_hash('user6', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'user7', 'email' => 'user7@user7.user7', 'password' => password_hash('user7', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'pedro', 'email' => 'pedro@pedro.pedro', 'password' => password_hash('pedro', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'juan', 'email' => 'juan@juan.juan', 'password' => password_hash('juan', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'maria', 'email' => 'maria@maria.maria', 'password' => password_hash('maria', PASSWORD_DEFAULT), 'role' => 'user']
+				];
+				
+				$stmt = $this->conn->prepare("INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)");
+				foreach($extraUsers as $user){
+					$stmt->bindParam(':username', $user['username']);
+					$stmt->bindParam(':email', $user['email']);
+					$stmt->bindParam(':password', $user['password']);
+					$stmt->bindParam(':role', $user['role']);
+					$stmt->execute();
+				}
+		} else {
+			// echo "Ya existen usuarios extra en la base de datos.";
+		}
+		} catch(PDOException $e) {
+			echo "Error al crear los usuarios extra: " . $e->getMessage();
+		
+		}
+	}
+
     // create followers table
     public function createFollowersTable(){
         try {
@@ -184,7 +221,7 @@ class Database{
 
 	public function insertDummyLists(){
 		try {
-			$stmt = $this->conn->prepare("SELECT * FROM lists WHERE list_name = 'ADMIN_DUMMY_LIST'");
+			$stmt = $this->conn->prepare("SELECT * FROM lists");
 			$stmt->execute();
 			$dummyListsExist = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -204,7 +241,7 @@ class Database{
 			} else {
 				// echo "Las listas de usuario dummy ya existen en la base de datos.";
 			}
-			}catch(PDOException $e) {
+			} catch(PDOException $e) {
 				echo "Error al crear las listas de usuario dummy: " . $e->getMessage();
 		}
 	}
@@ -248,6 +285,51 @@ class Database{
             echo "Error al crear la tabla de listas de usuario seguidas: " . $e->getMessage();
         }
     }
+
+	public function createDefaultListFollows(){
+		try {
+			$stmt = $this->conn->prepare("SELECT * FROM user_follow_lists");
+			$stmt->execute();
+			$defaultListFollowsExist = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			if (!$defaultListFollowsExist) {
+				$stmt = $this->conn->prepare("SELECT id_user FROM users WHERE role = 'user'");
+				$stmt->execute();
+				$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE list_name = 'Lista 1 (publica)'");
+				$stmt->execute();
+				$lista_1 = $stmt->fetch(PDO::FETCH_ASSOC);
+				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE list_name = 'Lista 3 (Si no hay lista 2 va bien)'");
+				$stmt->execute();
+				$lista_3 = $stmt->fetch(PDO::FETCH_ASSOC);
+				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE list_name = 'Lista 4'");
+				$stmt->execute();
+				$lista_4 = $stmt->fetch(PDO::FETCH_ASSOC);
+
+				$stmt = $this->conn->prepare("INSERT INTO user_follow_lists (id_user, id_list) VALUES (:id_user, :id_list)");
+				for ($i = 0; $i < count($users); $i++) {
+					$stmt->bindParam(':id_user', $users[$i]['id_user']);
+					$stmt->bindParam(':id_list', $lista_1['id_list']);
+					$stmt->execute();
+				}
+				for ($i = 0; $i < (count($users) - 1); $i++) {
+					$stmt->bindParam(':id_user', $users[$i]['id_user']);
+					$stmt->bindParam(':id_list', $lista_4['id_list']);
+					$stmt->execute();
+				}
+				for ($i = 0; $i < (count($users) - 2); $i++) {
+					$stmt->bindParam(':id_user', $users[$i]['id_user']);
+					$stmt->bindParam(':id_list', $lista_3['id_list']);
+					$stmt->execute();
+				}
+				// echo "Listas de usuario seguidas por defecto creadas exitosamente.";
+			} else {
+				// echo "Las listas de usuario seguidas por defecto ya existen en la base de datos.";
+			}
+			} catch(PDOException $e) {
+				echo "Error al crear las listas de usuario seguidas por defecto: " . $e->getMessage();
+		}
+	}
 }
 
 ?>

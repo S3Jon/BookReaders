@@ -27,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 		
 		$listaInfo = $listController->exploreLists($id_list);
 		$BILInfo = $BILController->getlistbooks($id_list);
-		$IDforJS = $id_list; //Para poder usarlo en JS
 		$nombreLista = isset($listaInfo['list_name']) ? $listaInfo['list_name'] : 'Error al cargar el titulo';
 		$propietarioLista = $userController->getUsernameById($listaInfo['id_user']);
 		$visibilidadLista = isset($listaInfo['visibility']) ? $listaInfo['visibility'] : 'Error al cargar la visibilidad';
@@ -39,23 +38,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 			$listOS = true;
 		}
 	}
+	else {
+		header('Location: lists');
+		exit;
+	}
 }
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	$id_list = $_POST['id_list'];
 	if (isset($_POST['delete_book'])) {
-		$id_list = $_POST['id_list'];
 		$isbn = $_POST['isbn'];
-		if ($BILController->removeBook($IDforJS, $isbn)) {
-			echo "<script> window.onload = function() { reset(); } </script>";
+		if ($BILController->removeBook($id_list, $isbn)) {
+			header("Location: list?id=$id_list");
 		} else {
 			echo "Error al eliminar el libro.";
 		}
 	}
 	if (isset($_POST['delete_list'])) {
-		$id_list = $_POST['id_list'];
 		if ($listController->deleteList($id_list)) {
-			header("Location: lists");
+			header("Location: list?id=$id_list");
 			exit;
 		} else {
 			echo "Error al eliminar la lista.";
@@ -69,13 +71,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 		else
 		{
-			$UFLController->followList($_SESSION['userData']['id_user'], $_POST['id_list']);
-			echo "<script> window.onload = function() { recargaLista(); } </script>";
+			$UFLController->followList($_SESSION['userData']['id_user'], $id_list);
+			header("Location: list?id=$id_list");
 		}
 	}
 	else if (isset($_POST['unfollow_list'])) {
-		$UFLController->unfollowList($_SESSION['userData']['id_user'], $_POST['id_list']);
-		echo "<script> window.onload = function() { recargaLista(); } </script>";
+		$UFLController->unfollowList($_SESSION['userData']['id_user'], $id_list);
+		header("Location: list?id=$id_list");
 	}
 }
 
@@ -124,7 +126,7 @@ else { ?>
 										<p class="text-sm text-gray-600"><?= implode($bookController->getBookGenre($book['isbn'])) ?></p>
 										<?php if ($listOS): ?>
 											<form action="list" method="POST">
-												<input type="hidden" name="id_list" value="<?= $_POST['id_list'] ?>">
+												<input type="hidden" name="id_list" value="<?= $id_list ?>">
 												<input type="hidden" name="isbn" value="<?= $book['isbn'] ?>">
 												<button type="submit" onclick="return confirm('¿Seguro que quieres eliminar este libro?');" name="delete_book" class="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Eliminar libro</button>
 											</form>
@@ -146,17 +148,5 @@ else { ?>
 	function reset() {
 		const element = document.getElementById('book' + isbn);
 		element.parentNode.removeChild(element);
-	}
-	function recargaLista() {
-		var form = document.createElement("form");
-		form.method = "POST";
-		form.action = "";
-		var input = document.createElement("input");
-		input.type = "hidden";
-		input.name = "id_list";
-		input.value = "<?php echo $IDforJS; ?>";
-		form.appendChild(input);
-		document.body.appendChild(form);
-		form.submit();
 	}
 </script>

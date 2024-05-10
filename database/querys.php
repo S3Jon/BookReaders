@@ -18,14 +18,21 @@ $database->createReviewsTable();
 
 $database->createListsTable();
 
-$database->insertDummyLists();
-
 $database->createBooksInListsTable();
 
 $database->createUserFollowListsTable();
 
 // Create default admin user
 $database->createDefaultAdminUser();
+
+// Default lists
+$database->insertDummyLists();
+
+// Extra users
+$database->createExtraUsers();
+
+// Extra follows
+$database->createDefaultListFollows();
 
 $database->closeConnection();
 
