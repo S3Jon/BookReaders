@@ -330,6 +330,87 @@ class Database{
 				echo "Error al crear las listas de usuario seguidas por defecto: " . $e->getMessage();
 		}
 	}
+
+	public function createExtraBooks(){
+		try {
+			$stmt = $this->conn->prepare("SELECT * FROM books");
+			$stmt->execute();
+			$existingBooks = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			if (count($existingBooks) < 10) {
+				$books = [
+					['isbn' => '9788423342430', 'title' => 'El nombre del viento', 'author' => 'Patrick Rothfuss', 'genre' => 'Fantasía', 'editorial' => 'Destino', 'image' => 'img/el_nombre_del_viento.jpg'],
+					['isbn' => '9788401334107', 'title' => 'El temor de un hombre sabio', 'author' => 'Patrick Rothfuss', 'genre' => 'Fantasía', 'editorial' => 'Destino', 'image' => 'img/el_temor_de_un_hombre_sabio.jpg'],
+					['isbn' => '9788498382549', 'title' => 'La música del silencio', 'author' => 'Patrick Rothfuss', 'genre' => 'Fantasía', 'editorial' => 'Plaza & Janés', 'image' => 'img/la_musica_del_silencio.jpg'],
+					['isbn' => '9788497935194', 'title' => 'Harry Potter y la piedra filosofal', 'author' => 'J.K. Rowling', 'genre' => 'Fantasía', 'editorial' => 'Salamandra', 'image' => 'img/harry_potter_y_la_piedra_filosofal.jpg'],
+					['isbn' => '9780345803481', 'title' => '1984', 'author' => 'George Orwell', 'genre' => 'Ciencia ficción', 'editorial' => 'Penguin Books', 'image' => 'img/1984.jpg'],
+					['isbn' => '9780307476463', 'title' => 'Juego de tronos', 'author' => 'George R.R. Martin', 'genre' => 'Fantasía épica', 'editorial' => 'Bantam Books', 'image' => 'img/juego_de_tronos.jpg'],
+					['isbn' => '9780060558122', 'title' => 'El código Da Vinci', 'author' => 'Dan Brown', 'genre' => 'Misterio', 'editorial' => 'Doubleday', 'image' => 'img/el_codigo_da_vinci.jpg'],
+					['isbn' => '9780140280197', 'title' => 'El gran Gatsby', 'author' => 'F. Scott Fitzgerald', 'genre' => 'Ficción', 'editorial' => 'Charles Scribner\'s Sons', 'image' => 'img/el_gran_gatsby.jpg'],
+					['isbn' => '9780671027346', 'title' => 'Orgullo y prejuicio', 'author' => 'Jane Austen', 'genre' => 'Romance', 'editorial' => 'Thomas Egerton', 'image' => 'img/orgullo_y_prejuicio.jpg'],
+					['isbn' => '9780316769532', 'title' => 'Matar a un ruiseñor', 'author' => 'Harper Lee', 'genre' => 'Novela', 'editorial' => 'J.B. Lippincott & Co.', 'image' => 'img/matar_a_un_ruisenor.jpg']
+				];
+				$stmt = $this->conn->prepare("INSERT INTO books (isbn, title, author, genre, editorial, image) VALUES (:isbn, :title, :author, :genre, :editorial, :image)");
+				foreach($books as $book){
+					$stmt->bindParam(':isbn', $book['isbn']);
+					$stmt->bindParam(':title', $book['title']);
+					$stmt->bindParam(':author', $book['author']);
+					$stmt->bindParam(':genre', $book['genre']);
+					$stmt->bindParam(':editorial', $book['editorial']);
+					$stmt->bindParam(':image', $book['image']);
+					$stmt->execute();
+				}
+			} else {
+				// echo "Ya existen libros extra en la base de datos.";
+			}				
+		} catch(PDOException $e) {
+			echo "Error al crear los libros extra: " . $e->getMessage();
+		}
+	}
+
+	public function createBooksInLists(){
+		try{
+			$stmt = $this->conn->prepare("SELECT * FROM books_in_lists");
+			$stmt->execute();
+			$existingBooksInLists = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			if (count($existingBooksInLists) < 10) {
+				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE list_name = 'Lista 1 (publica)'");
+				$stmt->execute();
+				$lista_1 = $stmt->fetch(PDO::FETCH_ASSOC);
+				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE list_name = 'Lista 3 (Si no hay lista 2 va bien)'");
+				$stmt->execute();
+				$lista_3 = $stmt->fetch(PDO::FETCH_ASSOC);
+				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE list_name = 'Lista 4'");
+				$stmt->execute();
+				$lista_4 = $stmt->fetch(PDO::FETCH_ASSOC);
+				$stmt = $this->conn->prepare("SELECT isbn FROM books");
+				$stmt->execute();
+				$books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+				$stmt = $this->conn->prepare("INSERT INTO books_in_lists (id_list, isbn) VALUES (:id_list, :isbn)");
+				for ($i = 0; $i < count($books); $i++) {
+					$stmt->bindParam(':id_list', $lista_1['id_list']);
+					$stmt->bindParam(':isbn', $books[$i]['isbn']);
+					$stmt->execute();
+				}
+				for ($i = 0; $i < count($books); $i++) {
+					$stmt->bindParam(':id_list', $lista_4['id_list']);
+					$stmt->bindParam(':isbn', $books[$i]['isbn']);
+					$stmt->execute();
+				}
+				for ($i = 0; $i < count($books); $i++) {
+					$stmt->bindParam(':id_list', $lista_3['id_list']);
+					$stmt->bindParam(':isbn', $books[$i]['isbn']);
+					$stmt->execute();
+				}
+		} else {
+			// echo "Ya existen libros en listas en la base de datos.";
+		}
+		} catch(PDOException $e) {
+			echo "Error al crear los libros en listas: " . $e->getMessage();
+		}
+	}
 }
 
 ?>

@@ -34,6 +34,12 @@ $database->createExtraUsers();
 // Extra follows
 $database->createDefaultListFollows();
 
+// Extra books
+$database->createExtraBooks();
+
+// Books in lists
+$database->createBooksInLists();
+
 $database->closeConnection();
 
 ?>

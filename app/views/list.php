@@ -118,11 +118,8 @@ else { ?>
 							<div class="container w-40">
 								<div class="bg-white shadow-md rounded-lg max-w-sm w-full">
 									<div class="p-4">
-										<form action="book" method="POST">
-											<input type="hidden" name="id_book" value="<?= $book['isbn'] ?>">
-											<button type="submit" class="underline text-lg font-semibold text-gray-900" name="submit_button"><?= implode($bookController->getBookTitle($book['isbn'])) ?></button>
-										</form>
-										<p class="text-sm text-gray-600"><?= implode($bookController->getBookAuthor($book['isbn'])) ?></p>
+										<a href="book?isbn=<?= $book['isbn'] ?>" class="text-lg font-extrabold text-gray-900"><?= implode($bookController->getBookTitle($book['isbn'])) ?></a>
+										<p class="text-sm text-gray-600"><?= implode($bookController->getBookAuthor($book['isbn'])) ?></p> <!-- TODO: Cambiar para abrir explorar con el autor como parametro -->
 										<p class="text-sm text-gray-600"><?= implode($bookController->getBookGenre($book['isbn'])) ?></p>
 										<?php if ($listOS): ?>
 											<form action="list" method="POST">
