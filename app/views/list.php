@@ -120,7 +120,7 @@ else { ?>
 									<div class="p-4">
 										<a href="book?isbn=<?= $book['isbn'] ?>" class="text-lg font-extrabold text-gray-900"><?= implode($bookController->getBookTitle($book['isbn'])) ?></a>
 										<p class="text-sm text-gray-600"><?= implode($bookController->getBookAuthor($book['isbn'])) ?></p> <!-- TODO: Cambiar para abrir explorar con el autor como parametro -->
-										<p class="text-sm text-gray-600"><?= implode($bookController->getBookGenre($book['isbn'])) ?></p>
+										<p class="text-sm text-gray-600"><?= $bookController->getBookGenre($book['isbn']) ?></p>
 										<?php if ($listOS): ?>
 											<form action="list" method="POST">
 												<input type="hidden" name="id_list" value="<?= $id_list ?>">

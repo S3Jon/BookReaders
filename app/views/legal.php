@@ -45,7 +45,8 @@
                     4. <b>Compartir Información:</b> No compartimos información personal de nuestros usuarios con terceros sin su consentimiento, excepto cuando sea necesario para cumplir con obligaciones legales o para proteger nuestros intereses legítimos. 
                     <br><br>
                     5. <b>Derechos de los Usuarios:</b> Los usuarios tienen derecho a acceder, rectificar, cancelar u oponerse al tratamiento de sus datos personales. Para ejercer estos derechos, pueden ponerse en contacto con nosotros a través de los medios proporcionados en nuestro sitio web. 
-                </p>
+					<br><br>
+				</p>
             </div>
             <div id="politica-cookies-section" class="cookies hidden">
                 <p class="text-base">
@@ -63,6 +64,7 @@
                     <br><br>
                 </p>
             </div>
+			<br><br><br>
         </div>
     </div>
 </body>

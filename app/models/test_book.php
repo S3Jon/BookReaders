@@ -71,7 +71,8 @@ class Booktest
 		$stmt->bindParam(':isbn', $isbn);
 		$stmt->execute();
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
-		return $row;
+		$genre = implode($row);
+		return $genre;
 	}
 }
 ?>
