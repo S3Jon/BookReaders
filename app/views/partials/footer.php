@@ -11,24 +11,27 @@
                     </div>
                     <ul class="text-gray-400 font-medium">
                         <li class="mb-4">
-                            <a href="#" class="hover:underline">Sobre nosotros</a>
+                            <a href="sobre_nosotros" class="hover:underline">Sobre nosotros</a>
                         </li>
                         <li class="mb-4">
-                            <a href="#" class="hover:underline">Términos y condiciones</a>
+                            <a href="contacto" class="hover:underline">Contacto</a>
                         </li>
                         <li class="mb-4">
-                            <a href="#" class="hover:underline">Política de privacidad</a>
+                            <a href="faq" class="hover:underline">FAQ</a>
                         </li>
                     </ul>
                 </div>
                 <div class="mt-6">
-                    <h2 class="mb-9 text-sm font-semibold uppercase text-white">Información</h2>
+                    <h2 class="mb-9 text-sm font-semibold uppercase text-white">Información legal</h2>
                     <ul class="text-gray-400 font-medium">
                         <li class="mb-4">
-                            <a href="#" class="hover:underline">Contacto</a>
+                            <a href="legal.php?section=legal" class="hover:underline">Aviso Legal</a>
                         </li>
                         <li class="mb-4">
-                            <a href="#" class="hover:underline">FAQ</a>
+                            <a href="legal.php?section=privacy" class="hover:underline">Política de Privacidad</a>
+                        </li>
+                        <li class="mb-4">
+                            <a href="legal.php?section=cookies" class="hover:underline">Política de Cookies</a>
                         </li>
                     </ul>
                 </div>

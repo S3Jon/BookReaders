@@ -28,6 +28,7 @@ class ListModel //List está reservado por PHP
 		$this->conn = $db->getConnection();
 	}
 
+	//Actualmente en desuso; mirar cómo reciclar o si borrar
 	public function getPublicLists()
 	{
 		try {
@@ -38,7 +39,7 @@ class ListModel //List está reservado por PHP
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
-			echo $e->getMessage();
+			echo "Error al cargar listas publicas: " . $e->getMessage();
 		}
 	}
 
@@ -51,7 +52,7 @@ class ListModel //List está reservado por PHP
 			$stmt->execute();
 			return true;
 		} catch (PDOException $e) {
-			echo "Error al borrar la lista"; $e->getMessage();
+			echo "Error al borrar la lista: " . $e->getMessage();
 		}
 	}
 
@@ -66,7 +67,7 @@ class ListModel //List está reservado por PHP
 			$stmt->execute();
 			return true;
 		} catch (PDOException $e) {
-			echo "Error al crear la lista"; $e->getMessage();
+			echo "Error al crear la lista: " . $e->getMessage();
 		}
 	}
 
@@ -93,7 +94,7 @@ class ListModel //List está reservado por PHP
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
-			echo "Error al recuperar las listas básicas del usuario"; $e->getMessage();
+			echo "Error al recuperar las listas básicas del usuario: " . $e->getMessage();
 		}
 	}
 
@@ -107,7 +108,7 @@ class ListModel //List está reservado por PHP
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
-			echo "Error al recuperar las listas del usuario"; $e->getMessage();
+			echo "Error al recuperar las listas del usuario: " . $e->getMessage();
 		}
 	}
 
@@ -128,7 +129,7 @@ class ListModel //List está reservado por PHP
 			}
 			return true;
 		} catch (PDOException $e) {
-			echo "Error al crear las listas básicas"; $e->getMessage();
+			echo "Error al crear las listas básicas: " . $e->getMessage();
 		}
 	}
 
@@ -141,7 +142,7 @@ class ListModel //List está reservado por PHP
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
-			echo "Error al recuperar el nombre de la lista"; $e->getMessage();
+			echo "Error al recuperar el nombre de la lista: " . $e->getMessage();
 		}
 	}
 
@@ -154,7 +155,7 @@ class ListModel //List está reservado por PHP
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
-			echo "Error al recuperar el propietario de la lista"; $e->getMessage();
+			echo "Error al recuperar el propietario de la lista: " . $e->getMessage();
 		}
 	}
 

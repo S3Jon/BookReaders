@@ -4,7 +4,7 @@
 		<button type="submit" class="underline text-sm text-gray-600"><?= $propietarioLista ?></button>
 	</form>
 	<p class="text-sm text-gray-600">Visibilidad: <?= $visibilidadLista ?></p>
-	<p class="text-sm text-gray-600">Seguidores: <?= $UFLController->getFollowers($id_list) ?></p>
+	<p class="text-sm text-gray-600">Seguidores: <?= $UFLController->getFollowersNumber($id_list) ?></p>
 	<?php if ($listOS): ?>
 		<form action="edit_list" method="POST">
 			<input type="hidden" name="id_list" value="<?= $id_list ?>">

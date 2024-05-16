@@ -26,42 +26,62 @@ class BILModel
     }
 
 	public function getlistbooks($id_list){
-		$query = "SELECT * FROM " . $this->table_name . " WHERE id_list = :id_list";
-		$stmt = $this->conn->prepare($query);
-		$stmt->bindParam(':id_list', $id_list);
-		$stmt->execute();
-		$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		return $row;
+		try{
+			$query = "SELECT * FROM " . $this->table_name . " WHERE id_list = :id_list";
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_list', $id_list);
+			$stmt->execute();
+			$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+			return $row;
+		} catch (PDOException $e){
+			echo "Error al cargar libros de la lista: " . $e->getMessage();
+			die();
+		}
 	}
 
 	public function getBILCount($id_list){
-		$query = "SELECT COUNT(*) FROM " . $this->table_name . " WHERE id_list = :id_list";
-		$stmt = $this->conn->prepare($query);
-		$stmt->bindParam(':id_list', $id_list);
-		$stmt->execute();
-		$row = $stmt->fetch(PDO::FETCH_ASSOC);
-		return $row;
+		try{
+			$query = "SELECT COUNT(*) FROM " . $this->table_name . " WHERE id_list = :id_list";
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_list', $id_list);
+			$stmt->execute();
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			return $row;
+		} catch (PDOException $e){
+			echo "Error al cargar # de libros en la lista: " . $e->getMessage();
+			die();
+		}
 	}
 
 	//Llamarla desde la pagina de los libros; a menos que queramos añadir libros desde la lista con un buscador o algo?
 	public function addBook($id_list, $isbn){
-		$query = "INSERT INTO " . $this->table_name . " (id_list, isbn) VALUES (:id_list, :isbn)";
-		$stmt = $this->conn->prepare($query);
-		$stmt->bindParam(':id_list', $id_list);
-		$stmt->bindParam(':isbn', $isbn);
-		$stmt->execute();
+		try {
+			$query = "INSERT INTO " . $this->table_name . " (id_list, isbn) VALUES (:id_list, :isbn)";
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_list', $id_list);
+			$stmt->bindParam(':isbn', $isbn);
+			$stmt->execute();
+		} catch (PDOException $e){
+			echo "Error al añadir libro a la lista: " . $e->getMessage();
+			die();
+		}
 	}
 
+	//Igual renombrar a removeBookFromList o algo asi
 	public function removeBook($id_list, $isbn){
-		$query = "DELETE FROM " . $this->table_name . " WHERE id_list = :id_list AND isbn = :isbn";
-		$stmt = $this->conn->prepare($query);
-		$stmt->bindParam(':id_list', $id_list);
-		$stmt->bindParam(':isbn', $isbn);
-		$stmt->execute();
-		if ($stmt->rowCount() > 0){
+		try {
+			$query = "DELETE FROM " . $this->table_name . " WHERE id_list = :id_list AND isbn = :isbn";
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_list', $id_list);
+			$stmt->bindParam(':isbn', $isbn);
+			$stmt->execute();
+
 			return true;
-		} else {
-			return false;
+		} catch (PDOException $e){
+			echo "Error al eliminar libro de la lista: " . $e->getMessage();
+			die();
 		}
 	}
 

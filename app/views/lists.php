@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 function formatFollowers($id_list, $UFLController)
 {
-	$num_seguidores = $UFLController->getFollowers($id_list);
+	$num_seguidores = $UFLController->getFollowersNumber($id_list);
 	if ($num_seguidores == 1)
 	{
 		return $num_seguidores . " Seguidor";
@@ -88,9 +88,9 @@ function formatFollowers($id_list, $UFLController)
 									<img src="img/bookStack.svg" alt="bils" class="w-4 h-4">
 									<p class="text-sm text-black font-semibold"><?= implode($BILController->getBILCount($list['id_list'])) ?></p>
 								</div> 
-								<!-- implementar descirpción de listas -->
+								<!-- implementar descirpción de listas; igual droppear porque implementarlo + actualizar serái aburrido -->
 								<div class="w-[400px] max-w-[400px]">
-									<p class="text-sm text-black break-words">wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</p> <!--si la descripción cambia de tamaño literalmente explota-->
+									<p class="text-sm text-black break-words"></p> <!--si la descripción cambia de tamaño literalmente explota-->
 								</div>
 							</div>
 						</div>
