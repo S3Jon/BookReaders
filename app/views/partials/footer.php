@@ -39,7 +39,7 @@
                     <h2 class="mb-9 text-sm font-semibold uppercase text-white">Redes Sociales</h2>
                     <ul class="text-gray-400 font-medium">
                         <li class="mb-4">
-                            <a href="#" class="flex items-center gap-3 hover:underline">
+                            <a href="https://www.instagram.com/bookreadersweb/" target="_blank" class="flex items-center gap-3 hover:underline">
                                 <svg class="fill-gray-400" width="20" height="20" viewBox="0 0 93 93" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -53,7 +53,7 @@
                             </a>
                         </li>
                         <li class="mb-4">
-                            <a href="#" class="flex items-center gap-3 hover:underline">
+                            <a href="https://www.tiktok.com/@bookreadersweb" target="_blank" class="flex items-center gap-3 hover:underline">
                                 <svg class="fill-gray-400" width="20" height="20" viewBox="0 0 81 93" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
@@ -63,7 +63,7 @@
                             </a>
                         </li>
                         <li class="mb-4">
-                            <a href="#" class="flex items-center gap-3 hover:underline">
+                            <a href="https://x.com/BookReadersWeb" target="_blank" class="flex items-center gap-3 hover:underline">
                                 <svg class="fill-gray-400" width="20" height="20" viewBox="0 0 103 93" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path
