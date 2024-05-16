@@ -6,10 +6,10 @@ require_once '../app/controllers/BookController.php';
 require_once '../app/models/Book.php';
 
 session_start();
-if (!isset($_SESSION['userData'])) {
+/* if (!isset($_SESSION['userData'])) {
     header('Location: home');
     exit;
-}
+} */
 
 $bookController = new controllers\BookController(new models\Book());
 
