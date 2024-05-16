@@ -71,7 +71,7 @@ class Booktest
 		$stmt->bindParam(':isbn', $isbn);
 		$stmt->execute();
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
-		$genre = implode($row);
+		$genre = $genre = preg_replace('/[^a-zA-Z0-9, ]/', '', $row['genre']); //LOLOLOLOLOLOLOL
 		return $genre;
 	}
 }
