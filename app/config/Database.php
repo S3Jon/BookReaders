@@ -177,10 +177,24 @@ class Database{
         }
     }
 
-    // create reviews table
+	// create genres table
+	public function createGenresTable(){
+        try {
+            $sql = "CREATE TABLE IF NOT EXISTS book_genres (
+                id_genre INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) UNIQUE NOT NULL
+            )";
+            $this->conn->exec($sql);
+            // echo "Tabla de géneros creada exitosamente.";
+        } catch(PDOException $e) {
+            echo "Error al crear la tabla de géneros: " . $e->getMessage();
+        }
+    }
+
+	// create reviews table
     public function createReviewsTable(){
         try {
-            $sql = "CREATE TABLE IF NOT EXISTS reviews (
+            $sql = "CREATE TABLE IF NOT EXISTS book_reviews (
                 id_review INT AUTO_INCREMENT PRIMARY KEY,
                 id_user INT NOT NULL,
                 isbn VARCHAR(255) NOT NULL,
@@ -189,8 +203,8 @@ class Database{
                 visibility ENUM('public','private') DEFAULT 'private',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
-                FOREIGN KEY (isbn) REFERENCES books(isbn) ON DELETE CASCADE
+                FOREIGN KEY (id_user) REFERENCES users(id_user),
+                FOREIGN KEY (isbn) REFERENCES books(isbn)
             )";
             $this->conn->exec($sql);
             // echo "Tabla de reseñas creada exitosamente.";
@@ -330,6 +344,7 @@ class Database{
 				echo "Error al crear las listas de usuario seguidas por defecto: " . $e->getMessage();
 		}
 	}
+	
 
 	public function createExtraBooks(){
 		try {
@@ -339,16 +354,26 @@ class Database{
 
 			if (count($existingBooks) < 10) {
 				$books = [
-					['isbn' => '9788423342430', 'title' => 'El nombre del viento', 'author' => 'Patrick Rothfuss', 'genre' => 'Fantasía', 'editorial' => 'Destino', 'image' => 'img/el_nombre_del_viento.jpg'],
-					['isbn' => '9788401334107', 'title' => 'El temor de un hombre sabio', 'author' => 'Patrick Rothfuss', 'genre' => 'Fantasía', 'editorial' => 'Destino', 'image' => 'img/el_temor_de_un_hombre_sabio.jpg'],
-					['isbn' => '9788498382549', 'title' => 'La música del silencio', 'author' => 'Patrick Rothfuss', 'genre' => 'Fantasía', 'editorial' => 'Plaza & Janés', 'image' => 'img/la_musica_del_silencio.jpg'],
-					['isbn' => '9788497935194', 'title' => 'Harry Potter y la piedra filosofal', 'author' => 'J.K. Rowling', 'genre' => 'Fantasía', 'editorial' => 'Salamandra', 'image' => 'img/harry_potter_y_la_piedra_filosofal.jpg'],
-					['isbn' => '9780345803481', 'title' => '1984', 'author' => 'George Orwell', 'genre' => 'Ciencia ficción', 'editorial' => 'Penguin Books', 'image' => 'img/1984.jpg'],
-					['isbn' => '9780307476463', 'title' => 'Juego de tronos', 'author' => 'George R.R. Martin', 'genre' => 'Fantasía épica', 'editorial' => 'Bantam Books', 'image' => 'img/juego_de_tronos.jpg'],
-					['isbn' => '9780060558122', 'title' => 'El código Da Vinci', 'author' => 'Dan Brown', 'genre' => 'Misterio', 'editorial' => 'Doubleday', 'image' => 'img/el_codigo_da_vinci.jpg'],
-					['isbn' => '9780140280197', 'title' => 'El gran Gatsby', 'author' => 'F. Scott Fitzgerald', 'genre' => 'Ficción', 'editorial' => 'Charles Scribner\'s Sons', 'image' => 'img/el_gran_gatsby.jpg'],
-					['isbn' => '9780671027346', 'title' => 'Orgullo y prejuicio', 'author' => 'Jane Austen', 'genre' => 'Romance', 'editorial' => 'Thomas Egerton', 'image' => 'img/orgullo_y_prejuicio.jpg'],
-					['isbn' => '9780316769532', 'title' => 'Matar a un ruiseñor', 'author' => 'Harper Lee', 'genre' => 'Novela', 'editorial' => 'J.B. Lippincott & Co.', 'image' => 'img/matar_a_un_ruisenor.jpg']
+					['isbn' => '9788423342430', 'title' => 'El nombre del viento', 'author' => 'Patrick Rothfuss', 'genre' => '[\"Fantasy\"]', 'editorial' => 'Destino', 'image' => 'uploads/el_nombre_del_viento.jpg'],
+					['isbn' => '9788401334107', 'title' => 'El temor de un hombre sabio', 'author' => 'Patrick Rothfuss', 'genre' => '[\"Fantasy\"]', 'editorial' => 'Destino', 'image' => 'uploads/el_temor_de_un_hombre_sabio.jpg'],
+					['isbn' => '9788498382549', 'title' => 'La música del silencio', 'author' => 'Patrick Rothfuss', 'genre' => '[\"Fantasy\"]', 'editorial' => 'Plaza & Janés', 'image' => 'uploads/la_musica_del_silencio.jpg'],
+					['isbn' => '9788497935194', 'title' => 'Harry Potter y la piedra filosofal', 'author' => 'J.K. Rowling', 'genre' => '[\"Fantasy\"]', 'editorial' => 'Salamandra', 'image' => 'uploads/harry_potter_y_la_piedra_filosofal.jpg'],
+					['isbn' => '9780345803481', 'title' => '1984', 'author' => 'George Orwell', 'genre' => '[\"Science Fiction\"]', 'editorial' => 'Penguin Books', 'image' => 'uploads/1984.jpg'],
+					['isbn' => '9780307476463', 'title' => 'Juego de tronos', 'author' => 'George R.R. Martin', 'genre' => '[\"Fantasy\"]', 'editorial' => 'Bantam Books', 'image' => 'uploads/juego_de_tronos.jpg'],
+					['isbn' => '9780060558122', 'title' => 'El código Da Vinci', 'author' => 'Dan Brown', 'genre' => '[\"Mystery\"]', 'editorial' => 'Doubleday', 'image' => 'uploads/el_codigo_da_vinci.jpg'],
+					['isbn' => '9780140280197', 'title' => 'El gran Gatsby', 'author' => 'F. Scott Fitzgerald', 'genre' => '[\"Fiction\"]', 'editorial' => 'Charles Scribner\'s Sons', 'image' => 'uploads/el_gran_gatsby.jpg'],
+					['isbn' => '9780671027346', 'title' => 'Orgullo y prejuicio', 'author' => 'Jane Austen', 'genre' => '[\"Romance\"]', 'editorial' => 'Thomas Egerton', 'image' => 'uploads/orgullo_y_prejuicio.jpg'],
+					['isbn' => '9780316769532', 'title' => 'Matar a un ruiseñor', 'author' => 'Harper Lee', 'genre' => '[\"Novel\"]', 'editorial' => 'J.B. Lippincott & Co.', 'image' => 'uploads/matar_a_un_ruisenor.jpg'],
+					['isbn' => 'BRS123456789', 'title' => 'The Girl He Never Noticed', 'author' => 'Neilani Alejandrino', 'editorial' => 'Wattpadd', 'image' => 'uploads/The_Girl_He_Never_Noticed.jpg', 'genre' => '[\"Romance\"]'],
+					['isbn' => 'BRS234567890', 'title' => 'A different virus: Heartfire', 'author' => 'Crystal Scherer', 'editorial' => 'Wattpadd', 'image' => 'uploads/A_Different_Virus.jpg', 'genre' => '[\"Science Fiction\"]'],
+					['isbn' => 'BRS345678901', 'title' => 'Rapture', 'author' => 'Athena', 'editorial' => 'Wattpadd', 'image' => 'uploads/Rapture.jpg', 'genre' => '[\"Fantasy\"]'],
+					['isbn' => 'BRS456789012', 'title' => 'Night Shift', 'author' => 'Annie Crown', 'editorial' => 'Wattpadd', 'image' => 'uploads/Night_Shift.jpg', 'genre' => '[\"Thriller\"]'],
+					['isbn' => 'BRS567890123', 'title' => 'The mistery fighter', 'author' => 'Aleksandra Elin', 'editorial' => 'Wattpadd', 'image' => 'uploads/The_Mistery_Fighter.jpg', 'genre' => '[\"Mystery\"]'],
+					['isbn' => 'BRS678901234', 'title' => 'Plunder', 'author' => 'R. S. Kovach', 'editorial' => 'Wattpadd', 'image' => 'uploads/Plunder.jpg', 'genre' => '[\"Adventure\"]'],
+					['isbn' => 'BRS789012345', 'title' => 'Of Rust and Gold', 'author' => 'Aliston J. Drake', 'editorial' => 'Wattpadd', 'image' => 'uploads/Of_Rust_And_gold.jpg', 'genre' => '[\"Historical Fiction\"]'],
+					['isbn' => 'BRS890123456', 'title' => 'The long way back', 'author' => 'Winifred Bates', 'editorial' => 'Wattpadd', 'image' => 'uploads/The_Long_Way_Back.jpg', 'genre' => '[\"Drama\"]'],
+					['isbn' => 'BRS901234567', 'title' => 'Orc wars: Uprising', 'author' => 'Ghost Lord', 'editorial' => 'Wattpadd', 'image' => 'uploads/Orc_Wars_Uprising.jpg', 'genre' => '[\"Fantasy\"]'],
+					['isbn' => 'BRS012345678', 'title' => 'Four walls', 'author' => 'M. C. Roman', 'editorial' => 'Wattpadd', 'image' => 'uploads/Four_Walls.jpg', 'genre' => '[\"Romance\"]']
 				];
 				$stmt = $this->conn->prepare("INSERT INTO books (isbn, title, author, genre, editorial, image) VALUES (:isbn, :title, :author, :genre, :editorial, :image)");
 				foreach($books as $book){
@@ -411,6 +436,60 @@ class Database{
 			echo "Error al crear los libros en listas: " . $e->getMessage();
 		}
 	}
+
+	    // insert default genres
+		public function insertDefaultGenres(){
+			try {
+				$sql_queries = [
+					"INSERT INTO book_genres (name) VALUES ('Romance') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Science Fiction') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Fantasy') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Thriller') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Mystery') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Adventure') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Historical Fiction') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Drama') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Horror') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Biography') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Science') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Self-Help') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Cooking') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Travel') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('History') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Children') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Religion') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Aliens') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Vampires') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Werewolves') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Zombies') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Post-Apocalyptic') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Dystopian') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Time Travel') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Superheroes') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Magic') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Dragons') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Witches') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Fairies') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Angels') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Demons') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Adventures') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Academic') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Adolescence') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Adult') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Adult-fiction') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Anime') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+					"INSERT INTO book_genres (name) VALUES ('Art') ON DUPLICATE KEY UPDATE id_genre = id_genre",
+				];
+		
+				// Ejecutar las consultas SQL
+				foreach ($sql_queries as $query) {
+					$this->conn->exec($query);
+				}
+			} catch(PDOException $e) {
+				echo "Error al añadir los géneros por defecto: " . $e->getMessage();
+			}
+		}
+	
 }
 
 ?>
