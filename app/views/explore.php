@@ -66,7 +66,7 @@ $books = $bookController->readAllBooks();
                                             <p class="text-xs">Sin reseñas!</p>
                                         <?php endif; ?>
                                     </div>
-                                    <button type="submit" class="bg-primary/40 text-white px-5 py-2 rounded-full">Ver más</button>
+                                    <a href="book?isbn=<?= $book['isbn'] ?>" class="bg-primary/40 text-white px-5 py-2 rounded-full">Ver más</a>
                                 </div>
                             </div>
                         </div>
