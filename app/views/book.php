@@ -21,6 +21,9 @@ $description = isset($book['description']) ? $book['description'] : 'Descripció
 $rating = isset($book['rating']) ? $book['rating'] : '0';
 $image = isset($book['image']) ? $book['image'] : 'uploads/book_placeholder.jpg';
 $genres = json_decode(isset($book['genre'])) ? json_decode($book['genre']) : [];
+if (!is_array($genres)) {
+    $genres = [];
+}
 $reviews = isset($book['reviews']) ? $book['reviews'] : [];
 
 ?>
