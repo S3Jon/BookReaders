@@ -62,13 +62,14 @@ $books = $bookController->getTop50Books();
                                     <p class="font-serif font-light text-sm"><?= $book['editorial']?></p>
                                     <div class="flex items center gap-1">
                                         <?php if ($book['rating'] > 0) : ?>
-                                            <?php for ($i = 0; $i < $book['rating']; $i++) : ?>
+                                            <p class = "text-xs"><?= number_format($book['rating'], 1)?></p>
                                             <img class="w-3 h-3" src="img/star.svg" alt="star">
-                                            <?php endfor; ?>
-											<p class="text-xs"> (<?= $book['review_count'] ?>)</p>
                                         <?php else : ?>
                                             <p class="text-xs">Sin reseñas!</p>
                                         <?php endif; ?>
+										<?php if ($book['review_count'] > 0) : ?>
+											<p class="text-xs"> (<?= $book['review_count'] ?>)</p>
+										<?php endif; ?>
                                     </div>
                                     <a href="book?isbn=<?= $book['isbn'] ?>" class="bg-primary/40 text-white px-5 py-2 rounded-full">Ver más</a>
                                 </div>
