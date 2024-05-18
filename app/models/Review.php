@@ -8,7 +8,7 @@ require_once "../app/config/Database.php";
 use config\Database;
 use PDOException;
 
-class User
+class Review
 {  
     private $conn;
     private $table_name = "book_reviews";
@@ -54,6 +54,42 @@ class User
             die();
         }
     }
+
+	public function getReviewsByISBN($isbn)
+	{
+		try {
+			$query = "SELECT * FROM $this->table_name WHERE isbn = :isbn";
+			$stmt = $this->conn->prepare($query);
+
+			$this->isbn = htmlspecialchars(strip_tags($isbn));
+			$stmt->bindParam(':isbn', $this->isbn);
+
+			$stmt->execute();
+
+			return $stmt;
+		} catch (PDOException $e) {
+			echo "Error al obtener reseñas: " . $e->getMessage();
+			die();
+		}
+	}
+
+	public function getReviewsByUser($id_user)
+	{
+		try {
+			$query = "SELECT * FROM $this->table_name WHERE id_user = :id_user";
+			$stmt = $this->conn->prepare($query);
+
+			$this->id_user = htmlspecialchars(strip_tags($id_user));
+			$stmt->bindParam(':id_user', $this->id_user);
+
+			$stmt->execute();
+
+			return $stmt;
+		} catch (PDOException $e) {
+			echo "Error al obtener reseñas: " . $e->getMessage();
+			die();
+		}
+	}
 
 }
 

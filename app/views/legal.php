@@ -1,4 +1,4 @@
-<?php include_once 'partials/header.php'; ?>
+<?php include_once 'partials/header_nopage.php'; ?>
 
 <body class="bg-background">
     <div class="max-w-screen-xl mx-auto px-5">

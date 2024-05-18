@@ -14,6 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errorMessage = "Usuario o contraseña incorrectos";
     }
 }
+session_start();
+
+if (isset($_SESSION['userData'])) {
+	header('Location: home');
+}
 
 ?>
 

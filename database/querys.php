@@ -24,6 +24,8 @@ $database->createBooksInListsTable();
 
 $database->createUserFollowListsTable();
 
+$database->createUserFollowUsersTable();
+
 // Create default admin user
 $database->createDefaultAdminUser();
 
@@ -44,6 +46,8 @@ $database->createExtraBooks(); //merge with createExtraBooks
 
 // Books in lists
 $database->createBooksInLists();
+
+$database->createUserFollows();
 
 $database->closeConnection();
 

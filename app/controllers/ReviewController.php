@@ -1,15 +1,15 @@
 <?php
 
 namespace controllers;
-use models\User;
+use models\Review;
 
 class ReviewController
 {
     private $reviewModel;
 
-    public function __construct(User $user)
+    public function __construct(Review $review)
     {
-        $this->reviewModel = new $user;
+        $this->reviewModel = new $review;
     }
 
     

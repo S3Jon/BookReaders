@@ -1,3 +1,9 @@
+
+<?php
+	$id = isset($_SESSION['userData']['id_user']) ? $_SESSION['userData']['id_user'] : null;
+	$href = isset($_SESSION['userData']) ? "profile?id=$id" : "login";
+?>
+
 <header>
     <nav class="bg-primary p-8">
         <div class="flex items-center justify-between mx-4">
@@ -35,7 +41,7 @@
                     </svg>
                     Listas
                 </a>
-                <a href=<?php echo isset($_SESSION['userData']) ? "profile" : "login"; ?>
+                <a href=<?php echo $href; ?>
                     class="flex items-center gap-2 text-xl font-semibold text-slate-200 fill-slate-200 hover:text-blue-400 hover:fill-blue-400">
                     <svg width="16" height="16" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
                         <path

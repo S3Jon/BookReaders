@@ -300,6 +300,27 @@ class Database{
         }
     }
 
+	// create userfollowuser table
+
+	public function createUserFollowUsersTable(){
+		try {
+			$sql = "CREATE TABLE IF NOT EXISTS user_follow_users (
+				id_follow INT AUTO_INCREMENT PRIMARY KEY,
+				id_user INT NOT NULL,
+				id_followed INT NOT NULL,
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				FOREIGN KEY (id_user) REFERENCES users(id_user) ON DELETE CASCADE,
+				FOREIGN KEY (id_followed) REFERENCES users(id_user) ON DELETE CASCADE,
+				UNIQUE (id_user, id_followed)
+			)";
+			$this->conn->exec($sql);
+			// echo "Tabla de usuarios seguidos creada exitosamente.";
+		} catch(PDOException $e) {
+			echo "Error al crear la tabla de usuarios seguidos: " . $e->getMessage();
+		}
+	}
+
 	public function createDefaultListFollows(){
 		try {
 			$stmt = $this->conn->prepare("SELECT * FROM user_follow_lists");
@@ -487,6 +508,35 @@ class Database{
 				}
 			} catch(PDOException $e) {
 				echo "Error al añadir los géneros por defecto: " . $e->getMessage();
+			}
+		}
+
+		public function createUserFollows(){
+			try {
+				$stmt = $this->conn->prepare("SELECT * FROM user_follow_users");
+				$stmt->execute();
+				$UFUexists = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				if (!count($UFUexists) < 10)
+				{
+					$stmt = $this->conn->prepare("SELECT id_user FROM users");
+					$stmt->execute();
+					$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					$stmt = $this->conn->prepare("INSERT INTO user_follow_users (id_user, id_followed) VALUES (:id_user, :id_followed)");
+					foreach ($users as $user) {
+						foreach ($users as $followed) {
+							if ($user['id_user'] != $followed['id_user']) {
+								$stmt->bindParam(':id_user', $user['id_user']);
+								$stmt->bindParam(':id_followed', $followed['id_user']);
+								$stmt->execute();
+							}
+						}
+					}
+				} else {
+					// echo "Ya existen usuarios seguidos en la base de datos.";
+				}
+
+			}catch(PDOException $e){
+				echo "Error al crear los usuarios seguidos: " . $e->getMessage();
 			}
 		}
 	

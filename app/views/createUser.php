@@ -11,8 +11,9 @@ session_start();
 unset($_SESSION['success']);
 unset($_SESSION['alert']);
 
-if (isset($_SESSION['userData'])) {
-	header('Location: home');
+if (!isset($_SESSION['userData']) || $_SESSION['userData']['role'] !== 'admin') {
+    header('Location: home');
+    exit;
 }
 
 if (!empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['repeatPassword'])){
@@ -67,6 +68,12 @@ if (!empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['pass
                     <div class="mb-4">
                         <input placeholder="Correo electrónico" type="email" class="p-3 rounded w-full bg-background" id="email" name="email" required>
                     </div>
+					<div class="mb-4">
+						<select class="p-3 rounded w-full bg-background" id="role" name="role">
+							<option value="user">Usuario</option>
+							<option value="admin">Administrador</option>
+						</select>
+					</div>
                     <div class="mb-4">
                         <input placeholder="Contraseña" type="password" class="p-3 rounded w-full bg-background" id="password" name="password" required>
                     </div>
