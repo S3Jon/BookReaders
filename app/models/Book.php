@@ -152,6 +152,90 @@ class Book
         }
     }
 
+	//TODO- A futuro solo sacar los que tengan mas de X reviews para evitar 1 rating 5 star que sean el top
+	public function getTop50Books()
+	{
+        try {
+            $query = "
+            SELECT 
+                b.*, 
+                COALESCE(AVG(r.rating), 0) AS rating,
+                COUNT(r.rating) AS review_count
+            FROM 
+                " . $this->table_name . " b
+            LEFT JOIN 
+                book_reviews r ON b.isbn = r.isbn
+            GROUP BY 
+                b.id_book
+            ORDER BY 
+                rating DESC
+            LIMIT 50";
+            
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error al obtener los 50 libros más populares: " . $e->getMessage();
+            die();
+        }
+	}
+
+	// Método para obtener los libros más populares
+	public function getTopBooks()
+	{
+		try {
+			$query = "SELECT b.*, AVG(r.rating) AS rating
+					FROM " . $this->table_name . " b
+					LEFT JOIN book_reviews r ON b.isbn = r.isbn
+					GROUP BY b.id_book
+					ORDER BY rating DESC";
+			
+			$stmt = $this->conn->prepare($query);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al obtener los libros más populares: " . $e->getMessage();
+			die();
+		}
+	}
+
+	// Método para obtener los libros más populares por género
+	public function getTopBooksByGenre($genre)
+	{
+		try {
+			$query = "SELECT b.*, AVG(r.rating) AS rating
+					FROM " . $this->table_name . " b
+					LEFT JOIN book_reviews r ON b.isbn = r.isbn
+					WHERE b.genre = :genre
+					GROUP BY b.id_book
+					ORDER BY rating DESC";
+			
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':genre', $genre);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al obtener los libros más populares por género: " . $e->getMessage();
+			die();
+		}
+	}
+
+	// Método para obtener los libros más populares por autor
+	public function getTopBooksByAuthor($author)
+	{
+		try {
+			$query = "SELECT b.*, AVG(r.rating) AS rating
+					FROM " . $this->table_name . " b
+					LEFT JOIN book_reviews r ON b.isbn = r.isbn
+					WHERE b.author = :author
+					GROUP BY b.id_book
+					ORDER BY rating DESC";
+		} catch (PDOException $e) {
+			echo "Error al obtener los libros más populares por autor: " . $e->getMessage();
+			die();
+		}
+	}
+
     // Método para buscar libros por su título
     public function searchBooksByTitle($title)
     {

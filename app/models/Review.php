@@ -55,24 +55,6 @@ class Review
         }
     }
 
-	public function getReviewsByISBN($isbn)
-	{
-		try {
-			$query = "SELECT * FROM $this->table_name WHERE isbn = :isbn";
-			$stmt = $this->conn->prepare($query);
-
-			$this->isbn = htmlspecialchars(strip_tags($isbn));
-			$stmt->bindParam(':isbn', $this->isbn);
-
-			$stmt->execute();
-
-			return $stmt;
-		} catch (PDOException $e) {
-			echo "Error al obtener reseñas: " . $e->getMessage();
-			die();
-		}
-	}
-
 	public function getReviewsByUser($id_user)
 	{
 		try {
@@ -90,6 +72,62 @@ class Review
 			die();
 		}
 	}
+
+	public function getBookAverageRating($isbn)
+	{
+		try {
+			$query = "SELECT AVG(rating) as average_rating FROM $this->table_name WHERE isbn = :isbn";
+			$stmt = $this->conn->prepare($query);
+
+			$this->isbn = htmlspecialchars(strip_tags($isbn));
+			$stmt->bindParam(':isbn', $this->isbn);
+
+			$stmt->execute();
+
+			return $stmt;
+		} catch (PDOException $e) {
+			echo "Error al obtener reseñas: " . $e->getMessage();
+			die();
+		}
+	}
+
+	public function getReview($id_review)
+	{
+		try {
+			$query = "SELECT * FROM $this->table_name WHERE id_review = :id_review";
+			$stmt = $this->conn->prepare($query);
+
+			$this->id_review = htmlspecialchars(strip_tags($id_review));
+			$stmt->bindParam(':id_review', $this->id_review);
+
+			$stmt->execute();
+
+			return $stmt;
+		} catch (PDOException $e) {
+			echo "Error al obtener reseña: " . $e->getMessage();
+			die();
+		}
+	}
+
+	public function getReviewsByBook($isbn)
+	{
+		try {
+			$query = "SELECT * FROM $this->table_name WHERE isbn = :isbn";
+			$stmt = $this->conn->prepare($query);
+
+			$this->isbn = htmlspecialchars(strip_tags($isbn));
+			$stmt->bindParam(':isbn', $this->isbn);
+
+			$stmt->execute();
+
+			return $stmt;
+		} catch (PDOException $e) {
+			echo "Error al obtener reseñas: " . $e->getMessage();
+			die();
+		}
+	}
+
+
 
 }
 

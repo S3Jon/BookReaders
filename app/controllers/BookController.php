@@ -73,4 +73,9 @@ class BookController {
         }
     }
 
+	public function getTop50Books()
+	{
+		return $this->bookModel->getTop50Books();
+	}
+
 }

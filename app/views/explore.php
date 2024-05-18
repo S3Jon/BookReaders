@@ -4,11 +4,14 @@ require_once '../app/controllers/UserController.php';
 require_once '../app/models/User.php';
 require_once '../app/controllers/BookController.php';
 require_once '../app/models/Book.php';
+require_once '../app/controllers/ReviewController.php';
+require_once '../app/models/Review.php';
 
 session_start();
 
 $bookController = new controllers\BookController(new models\Book());
-$books = $bookController->readAllBooks();
+$reviewController = new controllers\ReviewController(new models\Review());
+$books = $bookController->getTop50Books();
 
 ?>
 
@@ -62,6 +65,7 @@ $books = $bookController->readAllBooks();
                                             <?php for ($i = 0; $i < $book['rating']; $i++) : ?>
                                             <img class="w-3 h-3" src="img/star.svg" alt="star">
                                             <?php endfor; ?>
+											<p class="text-xs"> (<?= $book['review_count'] ?>)</p>
                                         <?php else : ?>
                                             <p class="text-xs">Sin reseñas!</p>
                                         <?php endif; ?>
