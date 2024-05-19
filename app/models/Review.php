@@ -73,6 +73,24 @@ class Review
 		}
 	}
 
+	public function getPublicReviewsByUser($id_user)
+	{
+		try {
+			$query = "SELECT * FROM $this->table_name WHERE id_user = :id_user AND visibility = 'public'";
+			$stmt = $this->conn->prepare($query);
+
+			$this->id_user = htmlspecialchars(strip_tags($id_user));
+			$stmt->bindParam(':id_user', $this->id_user);
+
+			$stmt->execute();
+
+			return $stmt;
+		} catch (PDOException $e) {
+			echo "Error al obtener reseñas: " . $e->getMessage();
+			die();
+		}
+	}
+
 	public function getBookAverageRating($isbn)
 	{
 		try {

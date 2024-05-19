@@ -112,6 +112,19 @@ class ListModel //List está reservado por PHP
 		}
 	}
 
+	public function getUserPublicLists($id_user)
+	{
+		try {
+			$query = 'SELECT * FROM ' . $this->table . ' WHERE id_user = :id_user AND visibility = "public" AND type IS NULL';
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_user', $id_user);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al recuperar las listas públicas del usuario: " . $e->getMessage();
+		}
+	}
+
 	public function createBasicLists($id_user)
 	{
 		$visDB = 'public';

@@ -54,7 +54,12 @@ class UFLModel
 	public function getFollowedLists($id_user)
 	{
 		try {
-			$query = "SELECT id_list FROM " . $this->table_name . " WHERE id_user = :id_user";
+			$query = "
+				SELECT l.* 
+				FROM user_follow_lists ufl
+				JOIN lists l ON ufl.id_list = l.id_list
+				WHERE ufl.id_user = :id_user
+			";
 			$stmt = $this->conn->prepare($query);
 			$stmt->bindParam(':id_user', $id_user);
 			$stmt->execute();
@@ -64,7 +69,7 @@ class UFLModel
 			echo "Error al obtener listas seguidas: " . $e->getMessage();
 			die();
 		}
-	}
+	}	
 
 	public function isFollowing($id_user, $id_list)
 	{
