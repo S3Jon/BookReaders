@@ -9,6 +9,8 @@ require_once "../app/models/UserFollowLists.php";
 require_once "../app/models/BookInList.php";
 require_once "../app/models/test_book.php";
 
+
+if 
 $user = new models\User();
 $book = new models\Book();
 $bookController = new controllers\BookController($book);

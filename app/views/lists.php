@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <a href="list?id=<?= $list['id_list'] ?>" class="text-lg font-extrabold text-gray-900"><?= $list['list_name'] ?></a>
 								<div class="flex items-center gap-2 my-2 ml-1">
 									<img src="img/users.svg" alt="user" class="w-4 h-4">
-									<a href="profile_list.php?id=<?= $list['id_user'] ?>" class="text-sm text-black font-semibold"><?= $list['ownerName'] ?></a>
+									<a href="profile?id=<?= $list['id_user'] ?>" class="text-sm text-black font-semibold"><?= $list['ownerName'] ?></a>
 								</div>
 								<div class="flex items-center gap-2 my-2 ml-1">
 									<img src="img/followers.svg" alt="followers" class="w-4 h-4">
