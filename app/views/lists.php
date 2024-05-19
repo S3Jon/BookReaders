@@ -16,10 +16,24 @@ $UFLController = new models\UFLModel();
 //TODO- Actualizar fuente de BooksInList
 $BILController = new models\BILModel();
 
-$listasp;
-$top50 = $UFLController->getMostFollowed();
-foreach ($top50 as $key => $list) {
-	$listasp[$key] = $listController->getListById($list['id_list']);
+//TODO- Hacer llamada al top50 desde ListController
+function formatFollowers($followersNum)
+{
+	if ($followersNum == 1)
+	{
+		return $followersNum . " Seguidor";
+	}
+	else
+	{
+		return $followersNum . " Seguidores";
+	}
+}
+
+$listasp = $listController->getMostFollowed();
+foreach ($listasp as $key => $list) {
+	$listasp[$key]['ownerName'] = $userController->getUsernameById($list['id_user']);
+	$listasp[$key]['followersNum'] = formatFollowers($list['followersNum']);
+	$listasp[$key]['BILCount'] = implode($BILController->getBILCount($list['id_list']));
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -29,19 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['create'])) {
         $listController->createList($_SESSION['user_id'], $_POST['list_name'], $_POST['visibility']);
     }
-}
-
-function formatFollowers($id_list, $UFLController)
-{
-	$num_seguidores = $UFLController->getFollowersNumber($id_list);
-	if ($num_seguidores == 1)
-	{
-		return $num_seguidores . " Seguidor";
-	}
-	else
-	{
-		return $num_seguidores . " Seguidores";
-	}
 }
 
 ?>
@@ -78,15 +79,15 @@ function formatFollowers($id_list, $UFLController)
                                 <a href="list?id=<?= $list['id_list'] ?>" class="text-lg font-extrabold text-gray-900"><?= $list['list_name'] ?></a>
 								<div class="flex items-center gap-2 my-2 ml-1">
 									<img src="img/users.svg" alt="user" class="w-4 h-4">
-									<a href="profile_list.php?id=<?= $list['id_user'] ?>" class="text-sm text-black font-semibold"><?= $userController->getUsernameById($list['id_user']) ?></a>
+									<a href="profile_list.php?id=<?= $list['id_user'] ?>" class="text-sm text-black font-semibold"><?= $list['ownerName'] ?></a>
 								</div>
 								<div class="flex items-center gap-2 my-2 ml-1">
 									<img src="img/followers.svg" alt="followers" class="w-4 h-4">
-									<p class="text-sm text-black font-semibold"><?= formatFollowers($list['id_list'], $UFLController)?></p> <!-- Mover el seguidor/seguidores a una funcion perhaps -->	
+									<p class="text-sm text-black font-semibold"><?= $list['followersNum']?></p> <!-- Mover el seguidor/seguidores a una funcion perhaps -->	
 								</div>
 								<div class="flex items-center gap-2 my-2 ml-1">
 									<img src="img/bookStack.svg" alt="bils" class="w-4 h-4">
-									<p class="text-sm text-black font-semibold"><?= implode($BILController->getBILCount($list['id_list'])) ?></p>
+									<p class="text-sm text-black font-semibold"><?= $list['BILCount'] ?></p>
 								</div> 
 								<!-- implementar descirpción de listas; igual droppear porque implementarlo + actualizar serái aburrido -->
 								<div class="w-[400px] max-w-[400px]">

@@ -159,6 +159,28 @@ class ListModel //List está reservado por PHP
 		}
 	}
 
+	public function getMostFollowed()
+	{
+		try {
+			$query = "SELECT lists.*, COUNT(user_follow_lists.id_list) AS followersNum
+					  FROM lists 
+					  LEFT JOIN user_follow_lists ON lists.id_list = user_follow_lists.id_list 
+					  WHERE lists.visibility = 'public' 
+					  AND lists.type IS NULL
+					  GROUP BY lists.id_list 
+					  ORDER BY COUNT(user_follow_lists.id_list) DESC 
+					  LIMIT 50";
+			$stmt = $this->conn->prepare($query);
+			$stmt->execute();
+			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			return $rows;
+		} catch (PDOException $e) {
+			echo "Error al obtener listas más seguidas: " . $e->getMessage();
+			die();
+		}
+	}
+	
+
 	//Para un futuro
 	/* 
 	public function getListByUID($id_user)

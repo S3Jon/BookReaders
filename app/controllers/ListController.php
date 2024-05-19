@@ -85,4 +85,9 @@ class ListController
 	{
 		return $this->listModel->getListOwnerID($id_list);
 	}
+
+	public function getMostFollowed()
+	{
+		return $this->listModel->getMostFollowed();
+	}
 }
