@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once "../app/models/User.php";
 require_once "../app/controllers/UserController.php";
 require_once "../app/models/Book.php";
@@ -25,64 +26,90 @@ $UFUController = new models\UFUmodel();
 $review = new models\Review();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-	if (isset($_GET['id'])) {
-		$user_ID = $_GET['id'];
-		
-		$userInfo = $userController->readByUserId($user_ID);
-		$pLists = $listController->getUserBasicLists($user_ID);
-		$createdLists = $listController->getUserLists($user_ID);
-		$followedLists = $UFLController->getFollowedLists($user_ID);
-		$followedUsers = $UFUController->getFollowedUsers($user_ID);
-		$followers = $UFUController->getFollowers($user_ID);
-		$reviews = $review->getPublicReviewsByUser($user_ID); //A futuro si los usuarios son mutuals igual poner getReviewsByUser ya que devuelve todas
-	}
-	else {
-		header('Location: lists');
-		exit;
-	}
+    if (isset($_GET['id'])) {
+        $user_ID = $_GET['id'];
+        
+        $userInfo = $userController->readByUserId($user_ID);
+        $pLists = $listController->getUserBasicLists($user_ID);
+        $createdLists = $listController->getUserLists($user_ID);
+        $followedLists = $UFLController->getFollowedLists($user_ID);
+        $followedUsers = $UFUController->getFollowedUsers($user_ID);
+        $followers = $UFUController->getFollowers($user_ID);
+        $reviews = $review->getPublicReviewsByUser($user_ID); //A futuro si los usuarios son mutuals igual poner getReviewsByUser ya que devuelve todas
+    } else {
+        header('Location: lists');
+        exit();
+    }
 }
 
-session_start();
-
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	// por si los loles
+	if (!isset($_SESSION['userData'])) {
+		echo "Error: no user session found.";
+		exit();
+	}
+    if (isset($_POST['follow_user'])) {
+        $id_user = $_POST['id_user'];
+        $UFUController->followUser($_SESSION['userData']['id_user'], $id_user);
+        header("Location: profile?id=$id_user");
+        exit();
+    }
+    if (isset($_POST['unfollow_user'])) {
+        $id_user = $_POST['id_user'];
+        $UFUController->unfollowUser($_SESSION['userData']['id_user'], $id_user);
+        header("Location: profile?id=$id_user");
+        exit();
+    }
+}
 ?>
 
 <?php include 'partials/header.php'; ?>
 
 <div class="my-14 container mx-auto min-h-screen">
-	<div class="w-3/4 mx-auto">
-		<div class="flex justify-between">
-			<div>
-				<p class="text-2xl font-semibold text-gray-900"><?= $userInfo['username'] ?></p>
-				<p class="text-lg text-gray-600"><?= $userInfo['email'] ?></p>
-			</div>
-			<div>
-				<?php if (isset($_SESSION['user']) && $_SESSION['user']['id_user'] != $user_ID): ?>
-					<form action="" method="POST">
-						<input type="hidden" name="id_user" value="<?= $user_ID ?>">
-						<?php if ($UFUController->isFollowing($user_ID, $_SESSION['user']['id_user'])): ?>
-							<button type="submit" name="unfollow" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Dejar de seguir</button>
-						<?php else: ?>
-							<button type="submit" name="follow" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Seguir</button>
-						<?php endif; ?>
-					</form>
-				<?php endif; ?>
-			</div>
-		</div>
-		<div class="mt-10">
-			<p class="text-2xl font-semibold text-gray-900">Listas Básicas</p>
-			<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-10 mt-10">
-				<?php foreach ($pLists as $key => $list): ?>
-					<div class="container">
-						<div class="bg-white shadow-md rounded-lg max-w-sm w-full">
-							<div class="p-4">
-								<form action="list" method="POST">
-									<input type="hidden" name="id_list" value="<?= $list['id_list'] ?>">
-									<button type="submit" class="underline text-lg font-semibold text-gray-900" name="submit_button"><?= $list['list_name'] ?></button>
-								</form>
-								<p class="text-sm text-gray-600"><?= $list['visibility'] ?></p>
-								<p class="text-sm text-gray-600"><?= $list['created_at'] ?></p>
-								
-
+    <div class="md:mx-auto">
+        <div class="flex gap-12 justify-center">
+            <!-- User info and actions -->
+            <aside class="flex flex-col items-center gap-5 w-80">
+                <img src="<?= htmlspecialchars($userInfo['profile_image']) ?>" alt="<?= htmlspecialchars($userInfo['username']) ?>" class="w-56 h-80 object-image rounded-lg">
+                <p class="text-center text-3xl text-black font-bold"><?= htmlspecialchars($userInfo['username']) ?></p>
+                <?php if (isset($_SESSION['userData']) && $_SESSION['userData']['id_user'] == $user_ID): ?>
+                    <button class="w-4/5 p-2 bg-accent font-semibold rounded-md" onclick="window.location.href = 'edit_profile';">Editar perfil</button>
+                    <button class="w-4/5 p-2 bg-primary text-background font-semibold rounded-md" onclick="window.location.href = 'create_list';">Crear lista</button>
+                <?php elseif (!isset($_SESSION['userData'])): ?>
+                    <button class="w-full bg-green-500 font-semibold rounded-md" onclick="window.location.href = 'login';">Seguir</button>
+                <?php else: ?>
+                    <?php if ($UFUController->isFollowing($_SESSION['userData']['id_user'], $user_ID)): ?>
+                        <form action="profile" method="POST">
+                            <input type="hidden" name="id_user" value="<?= $user_ID ?>">
+                            <button type="submit" name="unfollow_user" class="p-2 bg-red-500 text-white font-semibold rounded-md">Dejar de seguir</button>
+                        </form>
+                    <?php else: ?>
+                        <form action="profile" method="POST">
+                            <input type="hidden" name="id_user" value="<?= $user_ID ?>">
+                            <button type="submit" name="follow_user" class="p-2 bg-green-500 text-white font-semibold rounded-md">Seguir</button>
+                        </form>
+                    <?php endif; ?>
+                <?php endif; ?>
+				<div class="container">
+					<div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full grid grid-cols-2">
+						<div class="p-4">
+							<div class="flex justify-center">
+								<p class="text-sm text-gray-700 font-semibold"><?= count($followedUsers) ?> seguidos</p>
+							</div>
+						</div>
+						<div class="p-4">
+							<div class="flex justify-center">
+								<p class="text-sm text-gray-700 font-semibold"><?= count($followers) ?> seguidores</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full">
+					<p class="text-center text-gray-900 font-light text-base"><?= htmlspecialchars($userInfo['bio']) ?></p>
+				</div>
+            </aside>
+        </div>
+    </div>
 </div>
 
 <?php include 'partials/footer.php'; ?>

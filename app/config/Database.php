@@ -61,6 +61,7 @@ class Database{
                 role ENUM('user','admin') DEFAULT 'user',
                 name VARCHAR(255),
                 profile_image VARCHAR(255),
+				bio VARCHAR(500),
                 metadata JSON,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -104,7 +105,7 @@ class Database{
 			$stmt = $this->conn->prepare("SELECT * FROM users");
 			$stmt->execute();
 			$existingUsers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+	
 			if (count($existingUsers) < 10) {
 				$extraUsers = [
 					['username' => 'user1', 'email' => 'user1@user1.user1', 'password' => password_hash('user1', PASSWORD_DEFAULT), 'role' => 'user'],
@@ -118,8 +119,10 @@ class Database{
 					['username' => 'juan', 'email' => 'juan@juan.juan', 'password' => password_hash('juan', PASSWORD_DEFAULT), 'role' => 'user'],
 					['username' => 'maria', 'email' => 'maria@maria.maria', 'password' => password_hash('maria', PASSWORD_DEFAULT), 'role' => 'user']
 				];
-				
-				$stmt = $this->conn->prepare("INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)");
+	
+				$stmt = $this->conn->prepare("INSERT INTO users (username, email, password, role, bio) VALUES (:username, :email, :password, :role, :bio)");
+				$bio = "Soy un usuario de prueba";
+				$stmt->bindParam(':bio', $bio);
 				foreach($extraUsers as $user){
 					$stmt->bindParam(':username', $user['username']);
 					$stmt->bindParam(':email', $user['email']);
@@ -127,14 +130,14 @@ class Database{
 					$stmt->bindParam(':role', $user['role']);
 					$stmt->execute();
 				}
-		} else {
-			// echo "Ya existen usuarios extra en la base de datos.";
-		}
+			} else {
+				// echo "Ya existen usuarios extra en la base de datos.";
+			}
 		} catch(PDOException $e) {
 			echo "Error al crear los usuarios extra: " . $e->getMessage();
-		
 		}
 	}
+	
 
     // create followers table
     public function createFollowersTable(){
@@ -511,22 +514,28 @@ class Database{
 			}
 		}
 
-		public function createUserFollows(){
+		//TODO- arreglar lol
+		public function createUserFollows() {
 			try {
-				$stmt = $this->conn->prepare("SELECT * FROM user_follow_users");
+				$stmt = $this->conn->prepare("SELECT COUNT(*) as follow_count FROM user_follow_users");
 				$stmt->execute();
-				$UFUexists = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				if (!count($UFUexists) < 10)
-				{
-					$stmt = $this->conn->prepare("SELECT id_user FROM users");
+				$UFUexists = $stmt->fetch(PDO::FETCH_ASSOC);
+		
+				if ($UFUexists['follow_count'] < 10) {
+					$stmt = $this->conn->prepare("SELECT id_user FROM users WHERE role != 'admin'");
 					$stmt->execute();
 					$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		
 					$stmt = $this->conn->prepare("INSERT INTO user_follow_users (id_user, id_followed) VALUES (:id_user, :id_followed)");
+		
+					$stmt->bindParam(':id_user', $id_user);
+					$stmt->bindParam(':id_followed', $id_followed);
+		
 					foreach ($users as $user) {
 						foreach ($users as $followed) {
 							if ($user['id_user'] != $followed['id_user']) {
-								$stmt->bindParam(':id_user', $user['id_user']);
-								$stmt->bindParam(':id_followed', $followed['id_user']);
+								$id_user = $user['id_user'];
+								$id_followed = $followed['id_user'];
 								$stmt->execute();
 							}
 						}
@@ -534,11 +543,11 @@ class Database{
 				} else {
 					// echo "Ya existen usuarios seguidos en la base de datos.";
 				}
-
-			}catch(PDOException $e){
+			} catch (PDOException $e) {
 				echo "Error al crear los usuarios seguidos: " . $e->getMessage();
 			}
 		}
+		
 	
 }
 
