@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="md:mx-auto">
         <div class="flex gap-12 justify-center">
             <!-- User info and actions -->
-            <aside class="flex flex-col items-center gap-5 w-80">
+            <aside class="flex flex-col items-center gap-5 w-80 border border-borderGrey w-2/4 px-10 py-12">
                 <img src="<?= htmlspecialchars($userInfo['profile_image']) ?>" alt="<?= htmlspecialchars($userInfo['username']) ?>" class="w-56 h-80 object-image rounded-lg">
                 <p class="text-center text-3xl text-black font-bold"><?= htmlspecialchars($userInfo['username']) ?></p>
                 <?php if (isset($_SESSION['userData']) && $_SESSION['userData']['id_user'] == $user_ID): ?>
@@ -91,17 +91,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                 <?php endif; ?>
 				<div class="container">
-					<div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full grid grid-cols-2">
-						<div class="p-4">
-							<div class="flex justify-center">
-								<p class="text-sm text-gray-700 font-semibold"><?= count($followedUsers) ?> seguidos</p>
-							</div>
+					<div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full grid grid-cols-2 grid-rows-3">
+						<div class="p-4 flex flex-col items-center">
+							<p class="text-xl text-black-700 font-bold"><?= count($followedUsers) ?></p>
+							<p class="text-sm text-black-700 font-semibold">seguidos</p>
 						</div>
-						<div class="p-4">
-							<div class="flex justify-center">
-								<p class="text-sm text-gray-700 font-semibold"><?= count($followers) ?> seguidores</p>
-							</div>
-						</div>
+					<div class="p-4 flex flex-col items-center">
+							<p class="text-xl text-black-700 font-bold"><?= count($followers) ?></p>
+							<p class="text-sm text-black-700 font-semibold">seguidores</p>
+					</div>
+					<div class="p-4 flex flex-col items-center text-align">
+						<p class="text-xl text-black-700 font-bold"><?= count($pLists) ?></p>
+						<p class="text-sm text-black-700 font-semibold">listas</p>
 					</div>
 				</div>
 				<div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full">
