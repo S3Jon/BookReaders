@@ -223,6 +223,7 @@ class Database{
                 id_list INT AUTO_INCREMENT PRIMARY KEY,
                 id_user INT NOT NULL,
                 list_name VARCHAR(255) NOT NULL,
+				list_description VARCHAR(300),
                 type ENUM('favorite', 'read', 'want_to_read','reading','dropped') DEFAULT NULL,
                 visibility ENUM('public','private') DEFAULT 'private',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -245,12 +246,14 @@ class Database{
 			if (!$dummyListsExist) {
 				$adminID = 1;
 				$dummyListsNames = ['Lista 1 (publica)', 'Lista 2 (privada)', 'Lista 3 (Si no hay lista 2 va bien)', 'Lista 4', 'ADMIN_DUMMY_LIST'];
+				$dummyListsDescriptions = ['Lista pública de prueba', 'Lista privada de prueba', 'Lista pública de prueba', 'Lista privada de prueba', 'Lista de prueba del admin'];
 				$dummyListsVisibility = ['public', 'private', 'public', 'public', 'private'];
 
-				$stmt = $this->conn->prepare("INSERT INTO lists (id_user, list_name, visibility) VALUES (:id_user, :list_name, :visibility)");
+				$stmt = $this->conn->prepare("INSERT INTO lists (id_user, list_name, list_description, visibility) VALUES (:id_user, :list_name, :list_description, :visibility)");
 				$stmt->bindParam(':id_user', $adminID); //default 1, porque solo vamos a tener admin asegurado
 				for($i = 0; $i < count($dummyListsNames); $i++){
 					$stmt->bindParam(':list_name', $dummyListsNames[$i]);
+					$stmt->bindParam(':list_description', $dummyListsDescriptions[$i]);
 					$stmt->bindParam(':visibility', $dummyListsVisibility[$i]);
 					$stmt->execute();
 				}
@@ -545,6 +548,52 @@ class Database{
 				}
 			} catch (PDOException $e) {
 				echo "Error al crear los usuarios seguidos: " . $e->getMessage();
+			}
+		}
+
+		public function createReviews(){
+			try {
+				$stmt = $this->conn->prepare("SELECT * FROM book_reviews");
+				$stmt->execute();
+				$existingReviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				if (count($existingReviews) < 10) {
+					$stmt = $this->conn->prepare("SELECT id_user FROM users WHERE role = 'user'");
+					$stmt->execute();
+					$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					$stmt = $this->conn->prepare("SELECT isbn FROM books");
+					$stmt->execute();
+					$books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		
+					$stmt = $this->conn->prepare("INSERT INTO book_reviews (id_user, isbn, rating, comment, visibility) VALUES (:id_user, :isbn, :rating, :comment, :visibility)");
+					$comments = [
+						"Me ha encantado este libro, lo recomiendo a todo el mundo.",
+						"Un libro muy interesante, aunque el final me ha dejado un poco frío.",
+						"Un libro que no me ha gustado nada, no lo recomendaría.",
+						"Un libro que me ha sorprendido gratamente, lo recomendaría a todo el mundo.",
+						"Un libro que me ha dejado indiferente, ni fu ni fa.",
+						"Un libro que me ha parecido muy aburrido, no lo recomendaría.",
+						"Un libro que me ha parecido muy interesante, lo recomendaría a todo el mundo.",
+						"Un libro que me ha parecido muy malo, no lo recomendaría.",
+						"Un libro que me ha parecido muy bueno, lo recomendaría a todo el mundo.",
+						"Un libro que me ha parecido muy regular, no lo recomendaría."
+					];
+					$review_visibility = 'public';
+					$review_sc = [1, 2, 3, 4, 5];
+					foreach ($users as $user) {
+						foreach ($books as $book) {
+							$stmt->bindParam(':id_user', $user['id_user']);
+							$stmt->bindParam(':isbn', $book['isbn']);
+							$stmt->bindParam(':rating', $review_sc[rand(0, 4)]);
+							$stmt->bindParam(':comment', $comments[rand(0, 9)]);
+							$stmt->bindParam(':visibility', $review_visibility);
+							$stmt->execute();
+						}
+					}
+				} else {
+					// echo "Ya existen reseñas en la base de datos.";
+				}
+			}catch(PDOException $e) {
+				echo "Error al crear las reseñas: " . $e->getMessage();
 			}
 		}
 		

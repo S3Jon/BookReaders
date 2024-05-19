@@ -30,12 +30,14 @@ function formatFollowers($followersNum)
 }
 
 $listasp = $listController->getMostFollowed();
+//Igual hay alguna forma mejor de hacer esto, pero funciona y chilling
 foreach ($listasp as $key => $list) {
 	$listasp[$key]['ownerName'] = $userController->getUsernameById($list['id_user']);
 	$listasp[$key]['followersNum'] = formatFollowers($list['followersNum']);
 	$listasp[$key]['BILCount'] = implode($BILController->getBILCount($list['id_list']));
 }
 
+//TODO- Quitarlas, las listas se borrarán desde dentro de la lista y se crearán desde el perfil
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['delete'])) {
         $listController->deleteList($_POST['id_list']);

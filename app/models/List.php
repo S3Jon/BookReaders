@@ -192,6 +192,21 @@ class ListModel //List está reservado por PHP
 			die();
 		}
 	}
+
+	public function updateList($id_list, $list_name, $visibility)
+	{
+		try {
+			$query = 'UPDATE ' . $this->table . ' SET list_name = COALESCE(:list_name, list_name), visibility = COALESCE(:visibility, visibility) WHERE id_list = :id_list';
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':list_name', $list_name);
+			$stmt->bindParam(':visibility', $visibility);
+			$stmt->bindParam(':id_list', $id_list);
+			$stmt->execute();
+			return true;
+		} catch (PDOException $e) {
+			echo "Error al actualizar la lista: " . $e->getMessage();
+		}
+	}
 	
 
 	//Para un futuro

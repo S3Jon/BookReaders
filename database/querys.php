@@ -47,6 +47,8 @@ $database->createExtraBooks(); //merge with createExtraBooks
 // Books in lists
 $database->createBooksInLists();
 
+$database->createReviews();
+
 $database->createUserFollows();
 
 $database->closeConnection();
