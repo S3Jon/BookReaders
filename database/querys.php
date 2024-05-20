@@ -14,7 +14,7 @@ $database->createFollowersTable();
 
 $database->createBooksTable();
 
-$database->createGenresTable();
+$database->createDefaultBooks();
 
 $database->createReviewsTable();
 
@@ -26,14 +26,17 @@ $database->createUserFollowListsTable();
 
 $database->createUserFollowUsersTable();
 
+$database->createUserBooksTable();
+ 
+$database->createGenresTable();
+ 
+$database->insertDefaultGenres();
+
 // Create default admin user
 $database->createDefaultAdminUser();
 
 // Default lists
-$database->insertDummyLists();
-
-// Default genres
-$database->insertDefaultGenres();
+$database->insertDefaultLists();
 
 // Extra users
 $database->createExtraUsers();
@@ -41,13 +44,8 @@ $database->createExtraUsers();
 // Extra follows
 $database->createDefaultListFollows();
 
-// Extra books
-$database->createExtraBooks(); //merge with createExtraBooks
-
 // Books in lists
 $database->createBooksInLists();
-
-$database->createReviews();
 
 $database->createUserFollows();
 

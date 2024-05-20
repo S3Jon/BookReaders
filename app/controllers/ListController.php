@@ -35,13 +35,13 @@ class ListController
 		return $this->listModel->deleteList($id_list);
 	}
 
-	public function createList($id_user, $list_name, $visibility)
+	public function createList($id_user, $list_name, $list_description, $visibility)
 	{
-		if ($id_user == null || $list_name == null || $visibility == null) {
+		if ($id_user == null || $list_name == null || $visibility == null) { //list_description puede ser null
 			echo "Los campos no pueden estar vacíos";
 			return false;
 		}
-		return $this->listModel->createList($id_user, $list_name, $visibility);
+		return $this->listModel->createList($id_user, $list_name, $list_description, $visibility);
 	}
 
 	public function getUserBasicLists($id_user)

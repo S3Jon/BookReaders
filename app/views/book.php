@@ -6,14 +6,14 @@ require_once '../app/controllers/BookController.php';
 require_once '../app/models/Book.php';
 
 session_start();
-/* if (!isset($_SESSION['userData'])) {
+if (!isset($_SESSION['userData'])) {
     header('Location: home');
     exit;
-} */
+}
 
 $bookController = new controllers\BookController(new models\Book());
 
-$book = $bookController->readBook($_GET['isbn']);
+$book = $bookController->readBook($_POST['isbn']);
 
 $title = isset($book['title']) ? $book['title'] : 'Título no disponible';
 $author = isset($book['author']) ? $book['author'] : 'Autor no disponible';
@@ -21,9 +21,6 @@ $description = isset($book['description']) ? $book['description'] : 'Descripció
 $rating = isset($book['rating']) ? $book['rating'] : '0';
 $image = isset($book['image']) ? $book['image'] : 'uploads/book_placeholder.jpg';
 $genres = json_decode(isset($book['genre'])) ? json_decode($book['genre']) : [];
-if (!is_array($genres)) {
-    $genres = [];
-}
 $reviews = isset($book['reviews']) ? $book['reviews'] : [];
 
 ?>

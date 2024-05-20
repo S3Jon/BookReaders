@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $followedLists = $UFLController->getFollowedLists($user_ID);
         $followedUsers = $UFUController->getFollowedUsers($user_ID);
         $followers = $UFUController->getFollowers($user_ID);
-        $reviews = $review->getPublicReviewsByUser($user_ID); //A futuro si los usuarios son mutuals igual poner getReviewsByUser ya que devuelve todas
+        $reviews = $review->getPublicReviewsByUser($user_ID); //A futuro si los usuarios son mutuals igual poner getReviewsByUser ya que devuelve todas (no solo public)
     } else {
         header('Location: lists');
         exit();
@@ -69,12 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="md:mx-auto">
         <div class="flex gap-12 justify-center">
             <!-- User info and actions -->
-            <aside class="flex flex-col items-center gap-5 w-80 border border-borderGrey w-2/4 px-10 py-12">
+            <aside class="flex flex-col items-center gap-5 w-80 border border-borderGrey px-10 py-12">
                 <img src="<?= htmlspecialchars($userInfo['profile_image']) ?>" alt="<?= htmlspecialchars($userInfo['username']) ?>" class="w-56 h-80 object-image rounded-lg">
                 <p class="text-center text-3xl text-black font-bold"><?= htmlspecialchars($userInfo['username']) ?></p>
                 <?php if (isset($_SESSION['userData']) && $_SESSION['userData']['id_user'] == $user_ID): ?>
                     <button class="w-4/5 p-2 bg-accent font-semibold rounded-md" onclick="window.location.href = 'edit_profile';">Editar perfil</button>
-                    <button class="w-4/5 p-2 bg-primary text-background font-semibold rounded-md" onclick="window.location.href = 'create_list';">Crear lista</button>
+                    <button class="w-4/5 p-2 bg-primary text-background font-semibold rounded-md" onclick="window.location.href = 'create_list';">Crear lista</button> <!-- TODO- Mover a listas de usuario -->
                 <?php elseif (!isset($_SESSION['userData'])): ?>
                     <button class="w-full bg-green-500 font-semibold rounded-md" onclick="window.location.href = 'login';">Seguir</button>
                 <?php else: ?>
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                 <?php endif; ?>
 				<div class="container">
-					<div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full grid grid-cols-2 grid-rows-3">
+					<div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full grid grid-cols-2 auto-rows-auto"> <!-- Cuantos items queremos? idk -->
 						<div class="p-4 flex flex-col items-center">
 							<p class="text-xl text-black-700 font-bold"><?= count($followedUsers) ?></p>
 							<p class="text-sm text-black-700 font-semibold">seguidos</p>
@@ -103,6 +103,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					<div class="p-4 flex flex-col items-center text-align">
 						<p class="text-xl text-black-700 font-bold"><?= count($pLists) ?></p>
 						<p class="text-sm text-black-700 font-semibold">listas</p>
+					</div>
+					<div class="p-4 flex flex-col items-center text-align">
+						<p class="text-xl text-black-700 font-bold"><?= count($reviews) ?></p>
+						<p class="text-sm text-black-700 font-semibold">reseñas</p>
 					</div>
 				</div>
 				<div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full">

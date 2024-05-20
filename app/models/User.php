@@ -206,7 +206,6 @@ class User
         return $stmt->rowCount() > 0;
     }
 
-	//Esto puede ser un terrible agujero de seguridad, repasar
 	public function getUserNameById($user_id)
 	{
 		try {

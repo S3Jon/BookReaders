@@ -4,13 +4,10 @@ require_once '../app/controllers/UserController.php';
 require_once '../app/models/User.php';
 require_once '../app/controllers/BookController.php';
 require_once '../app/models/Book.php';
-require_once '../app/controllers/ReviewController.php';
-require_once '../app/models/Review.php';
 
 session_start();
 
 $bookController = new controllers\BookController(new models\Book());
-$reviewController = new controllers\ReviewController(new models\Review());
 $books = $bookController->getTop50Books();
 
 ?>
