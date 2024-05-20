@@ -24,8 +24,6 @@ $database->createBooksInListsTable();
 
 $database->createUserFollowListsTable();
 
-$database->createUserFollowUsersTable();
-
 $database->createUserBooksTable();
  
 $database->createGenresTable();

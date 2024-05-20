@@ -6,12 +6,10 @@ require_once "../app/models/Book.php";
 require_once "../app/models/List.php";
 require_once "../app/controllers/ListController.php";
 require_once "../app/controllers/BookController.php";
-require_once "../app/models/Review.php";
-require_once "../app/controllers/ReviewController.php";
 require_once "../app/models/UserFollowLists.php";
 require_once "../app/models/BookInList.php";
 require_once "../app/models/test_book.php";
-require_once "../app/models/UserFollowUsers.php";
+require_once "../app/models/Followers.php";
 
 $user = new models\User();
 $book = new models\Book();
@@ -22,8 +20,7 @@ $listController = new controllers\ListController($list);
 $UFLController = new models\UFLModel();
 $BILController = new models\BILModel();
 $testbookCon = new models\Booktest();
-$UFUController = new models\UFUmodel();
-$review = new models\Review();
+$UFUController = new models\Followersmodel(); //cambia M
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (isset($_GET['id'])) {
@@ -35,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $followedLists = $UFLController->getFollowedLists($user_ID);
         $followedUsers = $UFUController->getFollowedUsers($user_ID);
         $followers = $UFUController->getFollowers($user_ID);
-        $reviews = $review->getPublicReviewsByUser($user_ID); //A futuro si los usuarios son mutuals igual poner getReviewsByUser ya que devuelve todas (no solo public)
+        //$reviews = $review->getPublicReviewsByUser($user_ID); //A futuro si los usuarios son mutuals igual poner getReviewsByUser ya que devuelve todas (no solo public)
     } else {
         header('Location: lists');
         exit();
@@ -104,13 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						<p class="text-xl text-black-700 font-bold"><?= count($pLists) ?></p>
 						<p class="text-sm text-black-700 font-semibold">listas</p>
 					</div>
-					<div class="p-4 flex flex-col items-center text-align">
-						<p class="text-xl text-black-700 font-bold"><?= count($reviews) ?></p>
-						<p class="text-sm text-black-700 font-semibold">reseñas</p>
-					</div>
-				</div>
-				<div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full">
-					<p class="text-center text-gray-900 font-light text-base"><?= htmlspecialchars($userInfo['bio']) ?></p>
 				</div>
             </aside>
         </div>

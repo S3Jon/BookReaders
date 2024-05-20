@@ -8,10 +8,10 @@ require_once "../app/config/Database.php";
 use config\Database;
 use PDOException;
 
-class UFUmodel
+class Followersmodel
 {
 	private $conn;
-	private $table_name = "user_follow_users";
+	private $table_name = "followers";
 
 	public $id_followUser;
 	public $id_user;
@@ -79,7 +79,7 @@ class UFUmodel
 		try {
 			$query = "
 				SELECT u.* 
-				FROM user_follow_users ufu
+				FROM " . $this->table_name . " ufu
 				JOIN users u ON ufu.id_followed = u.id_user
 				WHERE ufu.id_user = :id_user
 			";
@@ -98,7 +98,7 @@ class UFUmodel
 		try {
 			$query = "
 				SELECT u.* 
-				FROM user_follow_users ufu
+				FROM " . $this->table_name . " ufu
 				JOIN users u ON ufu.id_user = u.id_user
 				WHERE ufu.id_followed = :id_user
 			";

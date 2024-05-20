@@ -13,7 +13,7 @@ if (!isset($_SESSION['userData'])) {
 
 $bookController = new controllers\BookController(new models\Book());
 
-$book = $bookController->readBook($_POST['isbn']);
+$book = $bookController->readBook($_GET['isbn']);
 
 $title = isset($book['title']) ? $book['title'] : 'Título no disponible';
 $author = isset($book['author']) ? $book['author'] : 'Autor no disponible';
