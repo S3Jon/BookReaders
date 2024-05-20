@@ -21,6 +21,7 @@ $UFLController = new models\UFLModel();
 
 
 //get
+$listOS = false;
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 	if (isset($_GET['id'])) {
 		$id_list = $_GET['id'];

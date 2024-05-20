@@ -13,6 +13,7 @@ switch ($path) {
         require '../app/views/landing.php';
         break;
     case '/BookReaders/list.php':
+	case '/BookReaders/list_edit.php':
         if (!empty($query_params)) {
             // Parseamos los parámetros de la query
             parse_str($query_params, $params);
@@ -29,30 +30,20 @@ switch ($path) {
         break;
 	case '/BookReaders/legal.php':
 		if (!empty($query_params)) {
-			// Parseamos los parámetros de la query
 			parse_str($query_params, $params);
-			// Verificamos si se proporcionó el parámetro 'id'
 			if(isset($params['section'])) {
-				// Accedemos al valor del parámetro 'id'
 				$section = $params['section'];
-				// Luego puedes hacer algo con el ID, como cargar la vista correspondiente o procesar la información
 				require '../app/views/legal.php';
-				// Importante: Finalizamos el switch para evitar que se ejecute el case default
 				exit();
 			}
 		}
 		break;
 	case '/BookReaders/book.php':
 		if (!empty($query_params)) {
-			// Parseamos los parámetros de la query
 			parse_str($query_params, $params);
-			// Verificamos si se proporcionó el parámetro 'id'
 			if(isset($params['isbn'])) {
-				// Accedemos al valor del parámetro 'id'
 				$isbn = $params['isbn'];
-				// Luego puedes hacer algo con el ID, como cargar la vista correspondiente o procesar la información
 				require '../app/views/book.php';
-				// Importante: Finalizamos el switch para evitar que se ejecute el case default
 				exit();
 			}
 		}
@@ -60,15 +51,10 @@ switch ($path) {
 
 	case 'Bookreaders/profile':
 		if (!empty($query_params)) {
-			// Parseamos los parámetros de la query
 			parse_str($query_params, $params);
-			// Verificamos si se proporcionó el parámetro 'id'
 			if(isset($params['id'])) {
-				// Accedemos al valor del parámetro 'id'
 				$id = $params['id'];
-				// Luego puedes hacer algo con el ID, como cargar la vista correspondiente o procesar la información
 				require '../app/views/profile.php';
-				// Importante: Finalizamos el switch para evitar que se ejecute el case default
 				exit();
 			}
 		}

@@ -91,8 +91,8 @@ class ListController
 		return $this->listModel->getMostFollowed();
 	}
 
-	public function updateList($id_list, $list_name, $visibility)
+	public function updateList($id_list, $list_name, $list_description, $visibility)
 	{
-		return $this->listModel->updateList($id_list, $list_name, $visibility);
+		return $this->listModel->updateList($id_list, $list_name, $list_description, $visibility);
 	}
 }
