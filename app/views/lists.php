@@ -29,7 +29,7 @@ function formatFollowers($followersNum)
 	}
 }
 
-if (isset($_GET['search'])) {
+if (isset($_GET['search']) && !empty($_GET['search'])) {
 	$listasp = $listController->searchListLike($_GET['search']);
 	$getmode = true;
 } else {
