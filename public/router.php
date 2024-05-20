@@ -59,6 +59,18 @@ switch ($path) {
 			}
 		}
 		break;
+	
+	case 'Bookreaders/lists':
+		if (!empty($query_params)) {
+			parse_str($query_params, $params);
+			if(isset($params['search'])) {
+				$search = $params['search'];
+				require '../app/views/lists.php';
+				exit();
+			}
+		}
+		break;
+	
     default:
         $request = str_replace('/BookReaders/', '', $path);
         $filename = '../app/views/' . $request . '.php';

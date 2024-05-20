@@ -29,11 +29,23 @@ function formatFollowers($followersNum)
 	}
 }
 
-$listasp = $listController->getMostFollowed();
+if (isset($_GET['search'])) {
+	$listasp = $listController->searchListLike($_GET['search']);
+	$getmode = true;
+} else {
+	//TODO- Cambiar a getMostFollowed(
+	$listasp = $listController->getMostFollowed();
+	$getmode = false;
+}
 //Igual hay alguna forma mejor de hacer esto, pero funciona y chilling
 foreach ($listasp as $key => $list) {
 	$listasp[$key]['ownerName'] = $userController->getUsernameById($list['id_user']);
+	if ($getmode) {
+		$fn = $UFLController->getFollowersNumber($list['id_list']);
+		$listasp[$key]['followersNum'] = formatFollowers($fn);
+	} else {
 	$listasp[$key]['followersNum'] = formatFollowers($list['followersNum']);
+	}
 	$listasp[$key]['BILCount'] = implode($BILController->getBILCount($list['id_list']));
 }
 
@@ -59,15 +71,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				<h1 class="text-3xl font-bold text-gray-900">Explorar listas creadas por la comunidad</h1>
 			</div>
 			<!-- absolutamente robado parte 365 -->
-			<div class="w-2/3 md:mx-auto">
-        		<div class="flex items-center w-full gap-20">
-					<form class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
-						<input type="text" class="w-full py-2 bg-transparent outline-none"
-						placeholder=" Busca lista por nombre o usuario"> <!--lol-->
-						<button type="submit"><img src="img/lupa.svg" alt=""></button>
-					</form>
-        		</div>
+		<div class="w-2/3 md:mx-auto">
+			<div class="flex items-center w-full gap-20">
+				<form action="lists" method="GET" class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
+					<input type="text" name="search" class="w-full py-2 bg-transparent outline-none" placeholder="Busca lista por nombre o usuario">
+					<button type="submit"><img src="img/lupa.svg" alt=""></button>
+				</form>
 			</div>
+		</div>
 		</div>
         <div class="grid grid-cols-2 justify-items-center gap-10 mt-10">
             <?php foreach ($listasp as $key => $list): ?>

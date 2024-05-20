@@ -215,6 +215,26 @@ class ListModel //List está reservado por PHP
 			return false;
 		}
 	}
+
+	public function searchListLike($search)
+	{
+		try {
+			$query = "SELECT lists.*, users.username 
+					  FROM lists 
+					  JOIN users ON lists.id_user = users.id_user 
+					  WHERE (lists.list_name LIKE :search OR users.username LIKE :search) 
+					  AND lists.visibility = 'public'";
+			$stmt = $this->conn->prepare($query);
+			$searchParam = "%" . $search . "%";
+			$stmt->bindValue(':search', $searchParam, PDO::PARAM_STR);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error: " . $e->getMessage();
+			return [];
+		}
+	}
+	
 	
 	
 

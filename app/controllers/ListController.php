@@ -95,4 +95,9 @@ class ListController
 	{
 		return $this->listModel->updateList($id_list, $list_name, $list_description, $visibility);
 	}
+
+	public function searchListLike($search)
+	{
+		return $this->listModel->searchListLike($search);
+	}
 }
