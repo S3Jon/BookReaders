@@ -7,6 +7,7 @@ require_once "../app/controllers/UserController.php";
 require_once "../app/models/UserFollowLists.php";
 //TODO- Actualizar fuente de BooksInList
 require_once "../app/models/BookInList.php";
+include_once "../app/helpers/format_followers.php";
 
 session_start();
 
@@ -17,17 +18,6 @@ $UFLController = new models\UFLModel();
 $BILController = new models\BILModel();
 
 //TODO- Hacer llamada al top50 desde ListController
-function formatFollowers($followersNum)
-{
-	if ($followersNum == 1)
-	{
-		return $followersNum . " Seguidor";
-	}
-	else
-	{
-		return $followersNum . " Seguidores";
-	}
-}
 
 if (isset($_GET['search']) && !empty($_GET['search'])) {
 	$listasp = $listController->searchListLike($_GET['search']);
@@ -40,23 +30,6 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
 //Igual hay alguna forma mejor de hacer esto, pero funciona y chilling
 foreach ($listasp as $key => $list) {
 	$listasp[$key]['ownerName'] = $userController->getUsernameById($list['id_user']);
-	if ($getmode) {
-		$fn = $UFLController->getFollowersNumber($list['id_list']);
-		$listasp[$key]['followersNum'] = formatFollowers($fn);
-	} else {
-	$listasp[$key]['followersNum'] = formatFollowers($list['followersNum']);
-	}
-	$listasp[$key]['BILCount'] = implode($BILController->getBILCount($list['id_list']));
-}
-
-//TODO- Quitarlas, las listas se borrarán desde dentro de la lista y se crearán desde el perfil
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['delete'])) {
-        $listController->deleteList($_POST['id_list']);
-    }
-    if (isset($_POST['create'])) {
-        $listController->createList($_SESSION['user_id'], $_POST['list_name'], $_POST['visibility']);
-    }
 }
 
 ?>
@@ -96,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 								</div>
 								<div class="flex items-center gap-2 my-2 ml-1">
 									<img src="img/followers.svg" alt="followers" class="w-4 h-4">
-									<p class="text-sm text-black font-semibold"><?= $list['followersNum']?></p> <!-- Mover el seguidor/seguidores a una funcion perhaps -->	
+									<p class="text-sm text-black font-semibold"><?= formatFollowers($list['followersNum'])?></p> <!-- Mover el seguidor/seguidores a una funcion perhaps -->	
 								</div>
 								<div class="flex items-center gap-2 my-2 ml-1">
 									<img src="img/bookStack.svg" alt="bils" class="w-4 h-4">
