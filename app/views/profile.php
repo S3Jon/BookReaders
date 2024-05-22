@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 								<p class="text-sm text-black-700 font-semibold">seguidores</p>
 							</div>
 							<div class="p-4 flex flex-col items-center text-align">
-								<p class="text-xl text-black-700 font-bold"><?= count($pLists) ?></p>
+								<p class="text-xl text-black-700 font-bold"><?= count($createdLists) ?></p>
 								<p class="text-sm text-black-700 font-semibold">listas</p>
 							</div>
 							<div class="p-4 flex flex-col items-center">
@@ -156,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 						<p class="text-lg text-gray-900">Colección privada.</p>
 					<?php endif; ?>
 					<div class="grid grid-cols-3 mt-6">
-						<h1 class="text-3xl font-bold text-gray-900 w-full col-span-2 underline">Listas creadas por <?= $userInfo['username'] ?></h1>
+						<h1 class="text-3xl font-bold text-gray-900 w-full col-span-2 underline">Listas de <?= $userInfo['username'] ?></h1>
 						<?php if (isset($_SESSION['userData']) && $_SESSION['userData']['id_user'] == $user_ID): ?>
 							<button class="w-fit h-max-2 p-4 bg-primary text-background font-semibold rounded-md justify-end" onclick="window.location.href = 'create_list';">Crear lista</button>
 						<?php endif; ?>
@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					<?php else : ?>
 						<p class="text-lg text-gray-900">Este usuario no tiene listas públicas.</p>
 					<?php endif; ?>
-					<h1 class="text-3xl font-bold text-gray-900 mt-6 underline">Listas seguidas por <?= $userInfo['username'] ?></h1>
+					<h1 class="text-3xl font-bold text-gray-900 mt-6 underline">Listas seguidas de <?= $userInfo['username'] ?></h1>
 					<?php if (count($followedLists) > 0) : ?>
 						<div class="flex gap-4 mt-6 pl-2">
 							<?php foreach ($followedLists as $list) : ?>
