@@ -26,10 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (isset($_GET['id'])) {
         $user_ID = $_GET['id'];
         
+		$FLInfo = [];
         $userInfo = $userController->readByUserId($user_ID);
         $pLists = $listController->getUserBasicLists($user_ID);
         $createdLists = $listController->getUserTopLists($user_ID);
         $followedLists = $UFLController->getFollowedLists($user_ID);
+		foreach ($followedLists as $key => $list) {
+			$FLInfo[$key] = $listController->exploreLists($list['id_list']);
+		}
         $followedUsers = $UFUController->getFollowedUsers($user_ID);
         $followers = $UFUController->getFollowers($user_ID);
         //$reviews = $review->getPublicReviewsByUser($user_ID); //A futuro si los usuarios son mutuals igual poner getReviewsByUser ya que devuelve todas (no solo public)

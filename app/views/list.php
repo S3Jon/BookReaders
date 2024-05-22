@@ -105,14 +105,14 @@ else { ?>
 					</div>
 				</div>
 			</div>
-			<div class="grid grid-cols-2 gap-10 mt-10">
-				<div>
+			<div class="gap-10 mt-10">
+				<aside>
 					<div class="bg-white shadow-md rounded-lg max-w-sm w-full">
 						<div class="p-4">
 							<?php include 'list_derivadas/list_info.php'; ?>
 						</div>
 					</div>
-				</div>
+				</aside>
 				<div>
 					<div class ="grid grid-cols-4 justify-items-start gap-4">
 						<?php foreach ($BILInfo as $key => $book): ?>

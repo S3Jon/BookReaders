@@ -203,7 +203,7 @@ class ListModel //List está reservado por PHP
 						FROM books_in_lists
 						JOIN books ON books_in_lists.isbn = books.isbn
 						WHERE books_in_lists.id_list = lists.id_list
-						ORDER BY books_in_lists.id_list ASC
+						ORDER BY books_in_lists.isbn ASC
 						LIMIT 1) AS list_pic
 				FROM lists
 				LEFT JOIN user_follow_lists ON lists.id_list = user_follow_lists.id_list
@@ -278,11 +278,33 @@ class ListModel //List está reservado por PHP
 	public function searchListLike($search)
 	{
 		try {
-			$query = "SELECT lists.*, users.username 
-					  FROM lists 
-					  JOIN users ON lists.id_user = users.id_user 
-					  WHERE (lists.list_name LIKE :search OR users.username LIKE :search) 
-					  AND lists.visibility = 'public'";
+			$query = "
+				SELECT lists.*, users.username,
+					   COALESCE(BILCount.book_count, 0) AS BILCount,
+					   COALESCE(followersCount.followersNum, 0) AS followersNum,
+					   (SELECT books.image
+						FROM books_in_lists
+						JOIN books ON books_in_lists.isbn = books.isbn
+						WHERE books_in_lists.id_list = lists.id_list
+						ORDER BY books_in_lists.isbn ASC
+						LIMIT 1) AS list_pic
+				FROM lists
+				JOIN users ON lists.id_user = users.id_user
+				LEFT JOIN (
+					SELECT id_list, COUNT(DISTINCT isbn) AS book_count
+					FROM books_in_lists
+					GROUP BY id_list
+				) AS BILCount ON lists.id_list = BILCount.id_list
+				LEFT JOIN (
+					SELECT id_list, COUNT(id_list) AS followersNum
+					FROM user_follow_lists
+					GROUP BY id_list
+				) AS followersCount ON lists.id_list = followersCount.id_list
+				WHERE (lists.list_name LIKE :search OR users.username LIKE :search)
+				  AND lists.visibility = 'public'
+				  AND lists.type IS NULL
+				GROUP BY lists.id_list, users.username";
+	
 			$stmt = $this->conn->prepare($query);
 			$searchParam = "%" . $search . "%";
 			$stmt->bindValue(':search', $searchParam, PDO::PARAM_STR);
