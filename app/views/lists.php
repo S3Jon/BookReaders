@@ -59,7 +59,7 @@ foreach ($listasp as $key => $list) {
                     <div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full">
 						<div class="flex fex-row gap-1">
 							<div class="justify-self-center my-4 ml-4 w-[105px]">
-								<img src="img/fk_placeholder.png" alt="book" class="object-cover w-40">
+								<img src="<?= $list_pic = !empty($list['list_pic']) ? $list['list_pic'] : 'img/fk_placeholder.png';?>" alt="book" class="object-cover w-40">
 							</div>
 							<div class="p-4 flex flex-col">
                                 <a href="list?id=<?= $list['id_list'] ?>" class="text-lg font-extrabold text-gray-900"><?= $list['list_name'] ?></a>
@@ -77,7 +77,7 @@ foreach ($listasp as $key => $list) {
 								</div> 
 								<!-- implementar descirpción de listas; igual droppear porque implementarlo + actualizar serái aburrido -->
 								<div class="w-[400px] max-w-[400px]">
-									<p class="text-sm text-black break-words"></p> <!--si la descripción cambia de tamaño literalmente explota-->
+									<p class="text-sm text-black break-words"> <?= $list['list_description'] ?></p> <!--si la descripción cambia de tamaño literalmente explota-->
 								</div>
 							</div>
 						</div>

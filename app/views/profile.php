@@ -105,8 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </aside>
 			<section class="border border-borderGrey w-2/4 px-10 py-12">
 				<h1 class="text-3xl font-bold text-gray-900">Colección de <?= $userInfo['username'] ?></h1>
-				<div class="gap-4 mt-6 grid grid-cols-4">
-					<?php if (count($pLists) > 0) : ?>
+				<?php if (count($pLists) > 0) : ?>
+					<div class="gap-4 mt-6 grid grid-cols-4 pl-2">
 						<?php foreach ($pLists as $list) : ?>
 							<div class="flex flex-col gap-1 bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-32">
 								<a href="list?id=<?= $list['id_list'] ?>" class="text-lg font-extrabold text-gray-900"><?= $list['list_name'] ?></a>
@@ -116,13 +116,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 								</div> 
 							</div>
 						<?php endforeach; ?>
-					<?php else : ?>
-						<p class="text-lg text-gray-900">Este usuario no ha puesto pública su colección.</p>
-					<?php endif; ?>
-				</div>
+					</div>
+				<?php else : ?>
+					<p class="text-lg text-gray-900">Este usuario no ha puesto pública su colección.</p>
+				<?php endif; ?>
 				<h1 class="text-3xl font-bold text-gray-900 mt-6">Listas creadas por <?= $userInfo['username'] ?></h1>
-				<div class="flex gap-4 mt-6">
-					<?php if (count($createdLists) > 0) : ?>
+				<?php if (count($createdLists) > 0) : ?>
+					<div class="flex gap-4 mt-6 pl-2">
+					
 						<?php foreach ($createdLists as $list) : ?>
 							<div class="flex flex-col gap-1">
 								<a href="list?id=<?= $list['id_list'] ?>" class="text-lg font-extrabold text-gray-900"><?= $list['list_name'] ?></a>
@@ -132,10 +133,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 								</div>
 							</div>
 						<?php endforeach; ?>
-					<?php else : ?>
-						<p class="text-lg text-gray-900">Este usuario no ha creado ninguna lista.</p>
-					<?php endif; ?>
-				</div>
+					</div>
+				<?php else : ?>
+					<p class="text-lg text-gray-900">Este usuario no ha creado ninguna lista.</p>
+				<?php endif; ?>
+				<h1 class="text-3xl font-bold text-gray-900 mt-6">Listas seguidas por <?= $userInfo['username'] ?></h1>
+				<?php if (count($followedLists) > 0) : ?>
+					<div class="flex gap-4 mt-6 pl-2">
+						<?php foreach ($followedLists as $list) : ?>
+							<div class="flex flex-col gap-1">
+								<a href="list?id=<?= $list['id_list'] ?>" class="text-lg font-extrabold text-gray-900"><?= $list['list_name'] ?></a>
+								<div class="flex items-center gap-2 my-2 ml-1">
+									<img src="img/bookStack.svg" alt="bils" class="w-4 h-4">
+									<p class="text-sm text-black font-semibold"><?= $list['BILCount'] ?></p>
+								</div>
+							</div>
+						<?php endforeach; ?>
+					</div>
+				<?php else : ?>
+					<p class="text-lg text-gray-900">Este usuario no sigue ninguna lista.</p>
+				<?php endif; ?>	
 			</section>
         </div>
     </div>

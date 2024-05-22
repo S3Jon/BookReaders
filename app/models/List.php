@@ -198,7 +198,13 @@ class ListModel //List está reservado por PHP
 			$query = "
 				SELECT lists.*, 
 					   COUNT(user_follow_lists.id_list) AS followersNum,
-					   COALESCE(BILCount.BILCount, 0) AS BILCount
+					   COALESCE(BILCount.BILCount, 0) AS BILCount,
+					   (SELECT books.image
+						FROM books_in_lists
+						JOIN books ON books_in_lists.isbn = books.isbn
+						WHERE books_in_lists.id_list = lists.id_list
+						ORDER BY books_in_lists.id_list ASC
+						LIMIT 1) AS list_pic
 				FROM lists
 				LEFT JOIN user_follow_lists ON lists.id_list = user_follow_lists.id_list
 				LEFT JOIN (
@@ -211,7 +217,7 @@ class ListModel //List está reservado por PHP
 				GROUP BY lists.id_list
 				ORDER BY followersNum DESC
 				LIMIT 50";
-	
+			
 			$stmt = $this->conn->prepare($query);
 			$stmt->execute();
 			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -221,6 +227,7 @@ class ListModel //List está reservado por PHP
 			die();
 		}
 	}
+	
 	
 
 	public function getUserMostFollowed($id_user) //Para profile
