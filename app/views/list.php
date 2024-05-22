@@ -58,7 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 	if (isset($_POST['delete_list'])) {
 		if ($listController->deleteList($id_list)) {
-			header("Location: list?id=$id_list");
+			$upl = $_SESSION['userData']['id_user'];
+			header("Location: profile?id=$upl");
 			exit;
 		} else {
 			echo "Error al eliminar la lista.";
