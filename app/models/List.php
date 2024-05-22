@@ -56,12 +56,12 @@ class ListModel //List está reservado por PHP
 		}
 	}
 
-	public function createList($id_user, $list_name, $list_description, $visibility) //createList($id_user, $list_name, $visibility)
+	public function createList($id_user, $list_name, $list_description, $visibility)
 	{
 		try {
-			$query = 'INSERT INTO ' . $this->table . ' (id_user, list_name, list_description, visibility) VALUES (:id_user, :list_name, :list_description :visibility)';
+			$query = 'INSERT INTO ' . $this->table . ' (id_user, list_name, list_description, visibility) VALUES (:id_user, :list_name, :list_description, :visibility)';
 			$stmt = $this->conn->prepare($query);
-			$stmt->bindParam(':id_user', $id_user); //default 1, cambiar a futuro
+			$stmt->bindParam(':id_user', $id_user);
 			$stmt->bindParam(':list_name', $list_name);
 			$stmt->bindParam(':list_description', $list_description);
 			$stmt->bindParam(':visibility', $visibility);
@@ -70,7 +70,7 @@ class ListModel //List está reservado por PHP
 		} catch (PDOException $e) {
 			echo "Error al crear la lista: " . $e->getMessage();
 		}
-	}
+	}	
 
 	public function getListById($id_list)
 	{
