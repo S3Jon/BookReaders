@@ -75,16 +75,40 @@ class ListModel //List está reservado por PHP
 	public function getListById($id_list)
 	{
 		try {
-			$query = 'SELECT * FROM ' . $this->table . ' WHERE id_list = :id_list';
+			$query = "
+				SELECT lists.*, 
+					   COALESCE(BILCount.book_count, 0) AS BILCount,
+					   COALESCE(followersCount.followersNum, 0) AS followersNum,
+					   (SELECT books.image
+						FROM books_in_lists
+						JOIN books ON books_in_lists.isbn = books.isbn
+						WHERE books_in_lists.id_list = lists.id_list
+						ORDER BY books_in_lists.isbn ASC
+						LIMIT 1) AS list_pic
+				FROM lists
+				LEFT JOIN (
+					SELECT id_list, COUNT(DISTINCT isbn) AS book_count
+					FROM books_in_lists
+					GROUP BY id_list
+				) AS BILCount ON lists.id_list = BILCount.id_list
+				LEFT JOIN (
+					SELECT id_list, COUNT(id_list) AS followersNum
+					FROM user_follow_lists
+					GROUP BY id_list
+				) AS followersCount ON lists.id_list = followersCount.id_list
+				WHERE lists.id_list = :id_list
+				GROUP BY lists.id_list";
+	
 			$stmt = $this->conn->prepare($query);
-			$stmt->bindParam(':id_list', $id_list);
+			$stmt->bindParam(':id_list', $id_list, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
 			echo "Error al recuperar los datos de la lista: " . $e->getMessage();
+			return [];
 		}
-
 	}
+	
 
 	public function getUserBasicLists($id_user)
 	{

@@ -70,6 +70,17 @@ switch ($path) {
 			}
 		}
 		break;
+
+	case 'Bookreaders/profile_search':
+		if (!empty($query_params)) {
+			parse_str($query_params, $params);
+			if(isset($params['id'])) {
+				$id = $params['id'];
+				require '../app/views/profile_search.php';
+				exit();
+			}
+		}
+		break;
 	
     default:
         $request = str_replace('/BookReaders/', '', $path);

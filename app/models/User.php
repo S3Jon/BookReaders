@@ -218,5 +218,31 @@ class User
 			die();
 		}
 	}
+
+	public function userExists($user_id)
+	{
+		try {
+			$stmt = $this->conn->prepare("SELECT * FROM users WHERE id_user = :user_id");
+			$stmt->bindParam(':user_id', $user_id);
+			$stmt->execute();
+			return $stmt->rowCount() > 0;
+		} catch (PDOException $e) {
+			echo "Error al comprobar si el usuario existe: " . $e->getMessage();
+			die();
+		}
+	}
+
+	public function searchUserByName($username)
+	{
+		try {
+			$stmt = $this->conn->prepare("SELECT * FROM users WHERE username LIKE :username");
+			$stmt->bindParam(':username', $username);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al buscar usuario por nombre: " . $e->getMessage();
+			die();
+		}
+	}
 }
 ?>
