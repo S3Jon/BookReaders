@@ -98,5 +98,50 @@ class Review
         }
     }
 
+    // Update a review
+    public function update()
+    {
+        $query = "UPDATE " . $this->table_name . " SET rating=:rating, comment=:comment, visibility=:visibility WHERE id_review=:id_review";
+        $stmt = $this->conn->prepare($query);
+
+        // Sanitize the data
+        $this->rating = htmlspecialchars(strip_tags($this->rating));
+        $this->comment = htmlspecialchars(strip_tags($this->comment));
+        $this->visibility = htmlspecialchars(strip_tags($this->visibility));
+        $this->id_review = htmlspecialchars(strip_tags($this->id_review));
+
+        // Bind the data
+        $stmt->bindParam(':rating', $this->rating);
+        $stmt->bindParam(':comment', $this->comment);
+        $stmt->bindParam(':visibility', $this->visibility);
+        $stmt->bindParam(':id_review', $this->id_review);
+
+        // Execute the query
+        if($stmt->execute()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Delete a review
+    public function delete()
+    {
+        $query = "DELETE FROM " . $this->table_name . " WHERE id_review=:id_review";
+        $stmt = $this->conn->prepare($query);
+
+        // Sanitize the data
+        $this->id_review = htmlspecialchars(strip_tags($this->id_review));
+
+        // Bind the data
+        $stmt->bindParam(':id_review', $this->id_review);
+
+        // Execute the query
+        if($stmt->execute()){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 ?>

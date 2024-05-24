@@ -48,6 +48,32 @@ if (count($reviews) > 0) {
     $rating = number_format($totalRating / count($reviews), 2);
 }
 
+// Ordenar reviws por fecha 
+$currentUserReview = null;
+$otherReviews = [];
+
+// Separar la reseña del usuario actual del resto
+foreach ($reviews as $key => $review) {
+    if ($review['id_user'] === $currentUserId) {
+        $currentUserReview = $review;
+    } else {
+        $otherReviews[] = $review;
+    }
+}
+
+// Ordenar las demás reseñas por fecha
+usort($otherReviews, function ($a, $b) {
+    return strtotime($b['created_at']) - strtotime($a['created_at']);
+});
+
+// Colocar la reseña del usuario actual al inicio, si existe
+if ($currentUserReview) {
+    array_unshift($otherReviews, $currentUserReview);
+}
+
+// Actualizar la variable $reviews con el nuevo orden
+$reviews = $otherReviews;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     $data = [
         'id_user' => $_SESSION['userData']['id_user'],
@@ -62,6 +88,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         exit;
     } else {
         // echo 'Error al publicar la reseña';
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_review'])) {
+    $data = [
+        'id_review' => $_POST['id_review'],
+        'comment' => $_POST['comment'],
+        'rating' => $_POST['rate'],
+        'visibility' => 'public'
+    ];
+
+    if ($reviewController->updateReview($data)) {
+        header('Location: book?isbn=' . $_GET['isbn']);
+        exit;
+    } else {
+        // echo 'Error al actualizar la reseña';
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_review'])) {
+    echo 'delete';
+    $data = [
+        'id_review' => $_POST['id_review']
+    ];
+
+    if ($reviewController->deleteReview($data)) {
+        header('Location: book?isbn=' . $_GET['isbn']);
+        exit;
+    } else {
+        // echo 'Error al eliminar la reseña';
     }
 }
 
@@ -105,7 +161,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                 <p class="mt-8"><?= $description ?></p>
 
                 <!-- Add Review -->
-                <?php if(!$canReview) : ?>
+                <!-- <?php var_dump($canReview); ?> -->
+                <?php if($canReview) : ?>
                     <section class="mt-10 bg-[rgba(36,38,51,0.15)] px-10 py-7 rounded-lg">
                         <form action="" class="flex flex-col gap-7" method="POST">
                             <div class="flex items-center gap-3">
@@ -179,7 +236,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                                         <span class="font-bold pt-1"><?= isset($review['rating']) && $review['rating'] !== null ? $review['rating'] . '/5' : '1/5' ?></span>
                                     </div>
                                 </div>
-                                <p class="mt-4"><?= $review['comment'] ?></p>
+                                <?php if ($review['id_user'] === $currentUserId): ?>
+                                    <form action="" method="POST" class="mt-4">
+                                        <input type="hidden" name="id_review" value="<?= $review['id_review'] ?>">
+                                        <div class="flex items-center gap-3 mb-5">
+                                            <p class="mt-1">Tu voto:</p>
+                                            <div class="flex flex-row-reverse gap-3 rating-container">
+                                                <input type="radio" id="star5" name="rate" value="5" hidden />
+                                                <label for="star5" title="5 star"><img class="cursor-pointer" src="img/star2.svg" alt="5 star"></label>
+                                                <input type="radio" id="star4" name="rate" value="4" hidden/>
+                                                <label for="star4" title="4 stars"><img class="cursor-pointer" src="img/star2.svg" alt="3 stars"></label>
+                                                <input type="radio" id="star3" name="rate" value="3" hidden/>
+                                                <label for="star3" title="3 stars"><img class="cursor-pointer" src="img/star2.svg" alt="3 stars"></label>
+                                                <input type="radio" id="star2" name="rate" value="2" hidden/>
+                                                <label for="star2" title="2 stars"><img class="cursor-pointer" src="img/star2.svg" alt="2 stars"></label>
+                                                <input type="radio" id="star1" name="rate" value="1" hidden/>
+                                                <label for="star1" title="1 stars"><img class="cursor-pointer" src="img/star2.svg" alt="1 stars"></label>
+                                            </div>
+                                        </div>
+                                        <textarea name="comment" class="w-full border border-gray-300 p-2"><?= $review['comment'] ?></textarea>
+                                        <div class="flex justify-between">
+                                            <div class="flex items-center gap-2">
+                                                <label for="private" class="cursor-pointer">Reseña privada</label>
+                                                <input type="radio" id="private" name="review" value="private" class="cursor-pointer mr-10 mt-[2px] w-5 h-5" checked />
+                                                <label for="public" class="cursor-pointer">Reseña pública</label>
+                                                <input type="radio" id="public" name="review" value="public" class="cursor-pointer mt-[2px] w-5 h-5" />
+                                            </div>
+                                            <div class="">
+                                                <button type="submit" name="update_review" class="mt-2 px-4 py-2 bg-blue-400 text-white rounded">Editar</button>
+                                                <button type="submit" name="delete_review" class="mt-2 px-4 py-2 bg-red-400 text-white rounded">Eliminar</button>
+                                            </div>
+                                        </div>                                     
+                                    </form>
+                                <?php else: ?>
+                                    <p class="mt-4"><?= htmlspecialchars($review['comment']) ?></p>
+                                <?php endif; ?>
                             </div>                        
                         <?php endforeach; ?>
                     <?php else : ?>
