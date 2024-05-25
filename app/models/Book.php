@@ -270,7 +270,13 @@ class Book
     public function searchBooksByGenre($genre)
     {
         try {
-            $query = "SELECT * FROM " . $this->table_name . " WHERE genre LIKE :genre";
+            $query = "
+                SELECT b.*, AVG(r.rating) as rating, COUNT(r.rating) as review_count
+                FROM " . $this->table_name . " b
+                LEFT JOIN book_reviews r ON b.isbn = r.isbn
+                WHERE b.genre LIKE :genre
+                GROUP BY b.isbn
+            ";
             $stmt = $this->conn->prepare($query);
             $stmt->bindValue(':genre', '%' . $genre . '%');
             $stmt->execute();
@@ -323,6 +329,28 @@ class Book
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo "Error al buscar libros por su título y autor: " . $e->getMessage();
+            die();
+        }
+    }
+
+    //search by title, genre,author,editorial
+    public function searchBooks($search)
+    {
+        try {
+            $query = "SELECT b.* , AVG(r.rating) as rating, COUNT(r.rating) as review_count
+                    FROM " . $this->table_name . " b
+                    LEFT JOIN book_reviews r ON b.isbn = r.isbn
+                    WHERE b.title LIKE :search
+                    OR b.genre LIKE :search
+                    OR b.author LIKE :search
+                    OR b.editorial LIKE :search
+                    GROUP BY b.isbn";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindValue(':search', '%' . $search . '%');
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error al buscar libros por su título, género, autor o editorial: " . $e->getMessage();
             die();
         }
     }

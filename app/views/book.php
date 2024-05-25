@@ -20,6 +20,14 @@ $userController = new controllers\UserController(new models\User());
 $book = $bookController->readBook($_GET['isbn']);
 $reviews = $reviewController->getReviews($_GET['isbn']);
 
+//reviws visibility control 
+$reviews = array_filter($reviews, function ($review) {
+    if ($review['visibility'] === 'private' && $review['id_user'] === $_SESSION['userData']['id_user']) {
+        return true;
+    }
+    return $review['visibility'] === 'public';
+});
+
 $canReview = true;
 $currentUserId = $_SESSION['userData']['id_user'];
 
@@ -96,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_review'])) {
         'id_review' => $_POST['id_review'],
         'comment' => $_POST['comment'],
         'rating' => $_POST['rate'],
-        'visibility' => 'public'
+        'visibility' => $_POST['review']
     ];
 
     if ($reviewController->updateReview($data)) {
@@ -152,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_review'])) {
                 <div class="flex gap-4 mt-6">
                     <?php if (count($genres) > 0) : ?>
                         <?php foreach ($genres as $genre) : ?>
-                            <span class="px-[12px] py-[7px] border-2 font-semibold text-[12px] border-primary rounded-[25px] cursor-pointer"><?= $genre ?></span>
+                            <a href="explore?genre=<?= $genre ?>" class="px-[12px] py-[7px] border-2 font-semibold text-[12px] border-primary rounded-[25px] cursor-pointer"><?= $genre ?></a>
                         <?php endforeach; ?>
                     <?php else : ?>
                         <span class="text-black rounded-lg">Sin género</span>
@@ -161,7 +169,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_review'])) {
                 <p class="mt-8"><?= $description ?></p>
 
                 <!-- Add Review -->
-                <!-- <?php var_dump($canReview); ?> -->
                 <?php if($canReview) : ?>
                     <section class="mt-10 bg-[rgba(36,38,51,0.15)] px-10 py-7 rounded-lg">
                         <form action="" class="flex flex-col gap-7" method="POST">
@@ -195,27 +202,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_review'])) {
                 <?php endif; ?>
 
                 <!-- Reviews -->
-                <!-- <section class="mt-10">
-                    <h2 class=""><?= $totalReviews ?> reseñas de usuarios</h2>
-                    <?php foreach ($book['reviews'] as $review) : ?>
-                        <div class="mt-6 border border-borderGrey p-6 rounded-lg">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <img src="img/maestro.svg" alt="user" class="w-10">
-                                    <div class="flex flex-col">
-                                        <p class="font-bold"><?= $review['user'] ?></p>
-                                        <p class="text-sm"><?= $review['date'] ?></p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <img src="img/star.svg" alt="rating" class="w-5">
-                                    <span class="font-bold pt-1 "><?= $review['rating'] ?>/5</span>
-                                </div>
-                            </div>
-                            <p class="mt-4"><?= $review['comment'] ?></p>
-                        </div>                        
-                    <?php endforeach; ?>
-                </section> -->
                 <section class="mt-10">
                     <h2><?= count($reviews) > 1 ? count($reviews) . ' reseñas de usuarios' : count($reviews) . ' reseña de usuario' ?></h2>
                     <?php if (count($reviews) > 0) : ?>
@@ -242,31 +228,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_review'])) {
                                         <div class="flex items-center gap-3 mb-5">
                                             <p class="mt-1">Tu voto:</p>
                                             <div class="flex flex-row-reverse gap-3 rating-container">
-                                                <input type="radio" id="star5" name="rate" value="5" hidden />
+                                                <input type="radio" id="star5" name="rate" value="5" hidden <?= $review['rating'] == 5 ? 'checked' : '' ?> />
                                                 <label for="star5" title="5 star"><img class="cursor-pointer" src="img/star2.svg" alt="5 star"></label>
-                                                <input type="radio" id="star4" name="rate" value="4" hidden/>
-                                                <label for="star4" title="4 stars"><img class="cursor-pointer" src="img/star2.svg" alt="3 stars"></label>
-                                                <input type="radio" id="star3" name="rate" value="3" hidden/>
+                                                <input type="radio" id="star4" name="rate" value="4" hidden <?= $review['rating'] == 4 ? 'checked' : '' ?> />
+                                                <label for="star4" title="4 stars"><img class="cursor-pointer" src="img/star2.svg" alt="4 stars"></label>
+                                                <input type="radio" id="star3" name="rate" value="3" hidden <?= $review['rating'] == 3 ? 'checked' : '' ?> />
                                                 <label for="star3" title="3 stars"><img class="cursor-pointer" src="img/star2.svg" alt="3 stars"></label>
-                                                <input type="radio" id="star2" name="rate" value="2" hidden/>
+                                                <input type="radio" id="star2" name="rate" value="2" hidden <?= $review['rating'] == 2 ? 'checked' : '' ?> />
                                                 <label for="star2" title="2 stars"><img class="cursor-pointer" src="img/star2.svg" alt="2 stars"></label>
-                                                <input type="radio" id="star1" name="rate" value="1" hidden/>
-                                                <label for="star1" title="1 stars"><img class="cursor-pointer" src="img/star2.svg" alt="1 stars"></label>
+                                                <input type="radio" id="star1" name="rate" value="1" hidden <?= $review['rating'] == 1 ? 'checked' : '' ?> />
+                                                <label for="star1" title="1 star"><img class="cursor-pointer" src="img/star2.svg" alt="1 star"></label>
                                             </div>
                                         </div>
                                         <textarea name="comment" class="w-full border border-gray-300 p-2"><?= $review['comment'] ?></textarea>
                                         <div class="flex justify-between">
                                             <div class="flex items-center gap-2">
                                                 <label for="private" class="cursor-pointer">Reseña privada</label>
-                                                <input type="radio" id="private" name="review" value="private" class="cursor-pointer mr-10 mt-[2px] w-5 h-5" checked />
+                                                <input type="radio" id="private" name="review" value="private" class="cursor-pointer mr-10 mt-[2px] w-5 h-5" <?= $review['visibility'] == 'private' ? 'checked' : '' ?> />
                                                 <label for="public" class="cursor-pointer">Reseña pública</label>
-                                                <input type="radio" id="public" name="review" value="public" class="cursor-pointer mt-[2px] w-5 h-5" />
+                                                <input type="radio" id="public" name="review" value="public" class="cursor-pointer mt-[2px] w-5 h-5" <?= $review['visibility'] == 'public' ? 'checked' : '' ?> />
                                             </div>
-                                            <div class="">
+                                            <div class="flex gap-4">
                                                 <button type="submit" name="update_review" class="mt-2 px-4 py-2 bg-blue-400 text-white rounded">Editar</button>
                                                 <button type="submit" name="delete_review" class="mt-2 px-4 py-2 bg-red-400 text-white rounded">Eliminar</button>
                                             </div>
-                                        </div>                                     
+                                        </div>
                                     </form>
                                 <?php else: ?>
                                     <p class="mt-4"><?= htmlspecialchars($review['comment']) ?></p>

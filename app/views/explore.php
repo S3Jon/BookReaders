@@ -10,6 +10,16 @@ session_start();
 $bookController = new controllers\BookController(new models\Book());
 $books = $bookController->getTop50Books();
 
+$genre = $_GET['genre'] ?? null;
+if ($genre) {
+    $books = $bookController->getBooksByGenre($genre);
+}
+
+$search = $_GET['search'] ?? null;
+if ($search) {
+    $books = $bookController->searchBooks($search);
+}
+
 ?>
 
 <?php require_once 'partials/header.php'; ?>
@@ -19,31 +29,14 @@ $books = $bookController->getTop50Books();
         <!-- Header buscador de libros -->
         <div class="flex flex-col md:flex-row md:items-center w-full gap-5 md:gap-20">
             <h1 class="font-serif4 font-bold text-3xl min-w-fit">Explorar libros</h1>
-            <form class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
-                <input type="text" class="w-full py-2 bg-transparent outline-none"
-                    placeholder="Busca un libro, autor/a o editorial">
-                <div class="relative inline-block">
-                    <button type="button" onclick="toggleDropdown()"
-                        class="flex items-center gap-3 w-32 text-black p-3 text-sm border-none cursor-pointer">
-                        <img class="w-5 h-5" src="img/arrow_down.svg" alt="">
-                        <p class="text-base" id="selectedOption">Título</p>
-                    </button>
-                    <div id="myDropdown" class="hidden absolute bg-white min-w-[160px] shadow z-10">
-                        <a class="text-black px-2 py-3 block no-underline cursor-pointer border"
-                            onclick="selectOption('Título')">Título</a>
-                        <a class="text-black px-2 py-3 block no-underline cursor-pointer border"
-                            onclick="selectOption('Autor')">Autor</a>
-                        <a class="text-black px-2 py-3 block no-underline cursor-pointer border"
-                            onclick="selectOption('Editorial')">Editorial</a>
-                    </div>
-                </div>
-
-                <button class="min-w-4 min-h-4" type="submit"><img class="min-w-4 min-h-4" src="img/lupa.svg" alt="lupa.svg"></button>
+            <form id="searchForm" action="" method="GET" class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
+                <input type="text" id="searchInput" autocomplete="off" name="search" class="w-full py-2 bg-transparent outline-none" placeholder="Busca un libro, autor/a o editorial">
+                <button type="submit" class="min-w-4 min-h-4"><img class="min-w-4 min-h-4" src="img/lupa.svg" alt="lupa.svg"></button>
             </form>
         </div>
 
         <!-- Lista de libros -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-10 mt-10">
+        <div id="bookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-10 mt-10">
             <?php foreach ($books as $book) : ?>
                 <form action="book" method="POST" class="cursor-pointer">
                     <input type="hidden" name="isbn" value="<?= $book['isbn']?>">
@@ -64,9 +57,9 @@ $books = $bookController->getTop50Books();
                                         <?php else : ?>
                                             <p class="text-xs">Sin reseñas!</p>
                                         <?php endif; ?>
-										<?php if ($book['review_count'] > 0) : ?>
-											<p class="text-xs"> (<?= $book['review_count'] ?>)</p>
-										<?php endif; ?>
+                                        <?php if ($book['review_count'] > 0) : ?>
+                                            <p class="text-xs"> (<?= $book['review_count'] ?>)</p>
+                                        <?php endif; ?>
                                     </div>
                                     <a href="book?isbn=<?= $book['isbn'] ?>" class="bg-primary/40 text-white px-5 py-2 rounded-full">Ver más</a>
                                 </div>
@@ -80,30 +73,22 @@ $books = $bookController->getTop50Books();
     </div>
 </div>
 
-<script>
-    function toggleDropdown() {
-        var dropdown = document.getElementById("myDropdown");
-        dropdown.classList.toggle("show");
-    }
-
-    function selectOption(option) {
-        document.getElementById("selectedOption").innerText = option;
-        toggleDropdown();
-    }
-
-    // Cerrar el dropdown si se hace clic fuera de él
-    window.onclick = function (event) {
-        if (!event.target.matches('.dropbtn')) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
-            }
-        }
-    }
-</script>
-
 <?php require_once 'partials/footer.php'; ?>
+
+<script>
+document.getElementById('searchInput').addEventListener('input', function() {
+    let searchValue = this.value;
+
+    // Crear una solicitud AJAX para buscar libros
+    fetch(`?search=${searchValue}`)
+        .then(response => response.text())
+        .then(data => {
+            let parser = new DOMParser();
+            let doc = parser.parseFromString(data, 'text/html');
+
+            let newBookList = doc.getElementById('bookList').innerHTML;
+
+            document.getElementById('bookList').innerHTML = newBookList;
+        });
+});
+</script>

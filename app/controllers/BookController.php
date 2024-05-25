@@ -78,4 +78,14 @@ class BookController {
 		return $this->bookModel->getTop50Books();
 	}
 
+    public function getBooksByGenre($genre)
+    {
+        return $this->bookModel->searchBooksByGenre($genre);
+    }
+
+    public function searchBooks($search)
+    {
+        return $this->bookModel->searchBooks($search);
+    }
+
 }
