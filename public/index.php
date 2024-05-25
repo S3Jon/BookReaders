@@ -32,10 +32,13 @@ require_once "../database/querys.php";
             }
         );
         $('#books_wrapper').addClass('w-full overflow-auto');
-        new MultiSelectTag('genre', {
-            placeholder: 'Selecciona uno o varios géneros',
-            shadow: true,
-        }); 
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.querySelector('#genre'))
+            new MultiSelectTag('genre', {
+                placeholder: 'Selecciona uno o varios géneros',
+                shadow: true,
+            });
+        });
     </script>
 </body>
 </html>

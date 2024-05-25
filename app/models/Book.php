@@ -354,4 +354,18 @@ class Book
             die();
         }
     }
+
+    // Método para obtener la actividad de los libros
+    public function getActivity()
+    {
+        // try {
+            
+        //     $stmt = $this->conn->prepare($query);
+        //     $stmt->execute();
+        //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // } catch (PDOException $e) {
+        //     echo "Error al obtener la actividad de los libros: " . $e->getMessage();
+        //     die();
+        // }
+    }
 }

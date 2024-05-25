@@ -88,4 +88,8 @@ class BookController {
         return $this->bookModel->searchBooks($search);
     }
 
+    public function getActivity(){
+        return $this->bookModel->getActivity();        
+    }
+
 }
