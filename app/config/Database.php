@@ -107,16 +107,16 @@ class Database{
 	
 			if (count($existingUsers) < 10) {
 				$extraUsers = [
-					['username' => 'user1', 'email' => 'user1@user1.user1', 'password' => password_hash('user1', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'user2', 'email' => 'user2@user2.user2', 'password' => password_hash('user2', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'user3', 'email' => 'user3@user3.user3', 'password' => password_hash('user3', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'user4', 'email' => 'user4@user4.user4', 'password' => password_hash('user4', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'user5', 'email' => 'user5@user5.user5', 'password' => password_hash('user5', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'user6', 'email' => 'user6@user6.user6', 'password' => password_hash('user6', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'user7', 'email' => 'user7@user7.user7', 'password' => password_hash('user7', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'pedro', 'email' => 'pedro@pedro.pedro', 'password' => password_hash('pedro', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'juan', 'email' => 'juan@juan.juan', 'password' => password_hash('juan', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'maria', 'email' => 'maria@maria.maria', 'password' => password_hash('maria', PASSWORD_DEFAULT), 'role' => 'user']
+					['username' => 'Ana', 'email' => 'ana@ana.ana', 'password' => password_hash('ana', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Luis', 'email' => 'luis@luis.luis', 'password' => password_hash('luis', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Carlos', 'email' => 'carlos@carlos.carlos', 'password' => password_hash('carlos', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Laura', 'email' => 'laura@laura.laura', 'password' => password_hash('laura', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Julia', 'email' => 'julia@julia.julia', 'password' => password_hash('julia', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Diego', 'email' => 'diego@diego.diego', 'password' => password_hash('diego', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Sofia', 'email' => 'sofia@sofia.sofia', 'password' => password_hash('sofia', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Pedro', 'email' => 'pedro@pedro.pedro', 'password' => password_hash('pedro', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Juan', 'email' => 'juan@juan.juan', 'password' => password_hash('juan', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Maria', 'email' => 'maria@maria.maria', 'password' => password_hash('maria', PASSWORD_DEFAULT), 'role' => 'user']
 				];
 	
 				$stmt = $this->conn->prepare("INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)");
@@ -237,30 +237,55 @@ class Database{
 		try {
 			$stmt = $this->conn->prepare("SELECT * FROM lists");
 			$stmt->execute();
-			$dummyListsExist = $stmt->fetch(PDO::FETCH_ASSOC);
-
-			if (!$dummyListsExist) {
-				$adminID = 1;
-				$dummyListsNames = ['Lista 1 (publica)', 'Lista 2 (privada)', 'Lista 3 (Si no hay lista 2 va bien)', 'Lista 4', 'ADMIN_DUMMY_LIST'];
-				$dummyListsDescriptions = ['Lista pública de prueba', 'Lista privada de prueba', 'Lista pública de prueba', 'Lista privada de prueba', 'Lista de prueba del admin'];
-				$dummyListsVisibility = ['public', 'private', 'public', 'public', 'private'];
-
-				$stmt = $this->conn->prepare("INSERT INTO lists (id_user, list_name, list_description, visibility) VALUES (:id_user, :list_name, :list_description, :visibility)");
-				$stmt->bindParam(':id_user', $adminID); //default 1, porque solo vamos a tener admin asegurado
-				for($i = 0; $i < count($dummyListsNames); $i++){
-					$stmt->bindParam(':list_name', $dummyListsNames[$i]);
-					$stmt->bindParam(':list_description', $dummyListsDescriptions[$i]);
-					$stmt->bindParam(':visibility', $dummyListsVisibility[$i]);
-					$stmt->execute();
+			$defaultListsExist = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+			if (!$defaultListsExist) {
+				// Obtener todos los usuarios con el rol de 'user'
+				$usersStmt = $this->conn->prepare("SELECT id_user, username FROM users WHERE role = 'user'");
+				$usersStmt->execute();
+				$users = $usersStmt->fetchAll(PDO::FETCH_ASSOC);
+	
+				$firstWords = ['Fiesta', 'Retiro', 'Visita', 'Aventura', 'Exploración', 'Viaje', 'Descubrimiento', 'Encuentro', 'Conferencia', 'Expedición', 'Excursión', 'Misión', 'Peregrinación', 'Ruta', 'Salida', 'Tour', 'Travesía', 'Trekking', 'Vuelta', 'Expedición'];
+				$connectors = ['en', 'sobre', 'hacia', 'por', 'con', 'a', 'de', 'hasta', 'durante', 'desde', 'bajo', 'contra', 'entre', 'para', 'sin'];
+				$lastWords = ['futuro', 'extranjero', 'más allá', 'paraíso', 'desconocido', 'aventura', 'destino', 'nuevo horizonte', 'próxima etapa', 'cielo', 'mar', 'montaña', 'desierto', 'bosque', 'ciudad', 'mundo', 'universo', 'naturaleza', 'planeta', 'continente'];
+				$descriptions = [
+					'Una experiencia inolvidable.',
+					'Perfecto para los aventureros.',
+					'Descubre nuevos horizontes.',
+					'Ideal para familias y amigos.',
+					'Explora lo desconocido.',
+					'Un viaje lleno de sorpresas.',
+					'Para los amantes de la naturaleza.',
+					'Una aventura que no te puedes perder.',
+					'Descubre lugares increíbles.',
+					'Un destino mágico te espera.'
+				];
+	
+				$insertStmt = $this->conn->prepare("INSERT INTO lists (id_user, list_name, list_description, visibility) VALUES (:id_user, :list_name, :list_description, :visibility)");
+	
+				foreach ($users as $user) {
+					$numLists = rand(5, 7); // Cada usuario tendrá entre 5 y 7 listas.
+					for ($i = 0; $i < $numLists; $i++) {
+						$listName = $firstWords[array_rand($firstWords)] . ' ' . $connectors[array_rand($connectors)] . ' ' . $lastWords[array_rand($lastWords)];
+						$description = $descriptions[array_rand($descriptions)];
+						$visibility = 'public';
+	
+						$insertStmt->bindParam(':id_user', $user['id_user']);
+						$insertStmt->bindParam(':list_name', $listName);
+						$insertStmt->bindParam(':list_description', $description);
+						$insertStmt->bindParam(':visibility', $visibility);
+						$insertStmt->execute();
+					}
 				}
-				// echo "Listas de usuario dummy creadas exitosamente.";
+	
+				// echo "Listas de usuario creadas exitosamente.";
 			} else {
-				// echo "Las listas de usuario dummy ya existen en la base de datos.";
+				// echo "Las listas de usuario ya existen en la base de datos.";
 			}
-			} catch(PDOException $e) {
-				echo "Error al crear las listas de usuario dummy: " . $e->getMessage();
+		} catch(PDOException $e) {
+			echo "Error al crear las listas de usuario: " . $e->getMessage();
 		}
-	}
+	}	
 
     // create booklists table
     public function createBooksInListsTable(){
@@ -307,45 +332,40 @@ class Database{
 			$stmt = $this->conn->prepare("SELECT * FROM user_follow_lists");
 			$stmt->execute();
 			$defaultListFollowsExist = $stmt->fetch(PDO::FETCH_ASSOC);
-
+	
 			if (!$defaultListFollowsExist) {
 				$stmt = $this->conn->prepare("SELECT id_user FROM users WHERE role = 'user'");
 				$stmt->execute();
 				$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE list_name = 'Lista 1 (publica)'");
+	
+				$stmt = $this->conn->prepare("SELECT id_list, id_user FROM lists");
 				$stmt->execute();
-				$lista_1 = $stmt->fetch(PDO::FETCH_ASSOC);
-				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE list_name = 'Lista 3 (Si no hay lista 2 va bien)'");
-				$stmt->execute();
-				$lista_3 = $stmt->fetch(PDO::FETCH_ASSOC);
-				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE list_name = 'Lista 4'");
-				$stmt->execute();
-				$lista_4 = $stmt->fetch(PDO::FETCH_ASSOC);
-
-				$stmt = $this->conn->prepare("INSERT INTO user_follow_lists (id_user, id_list) VALUES (:id_user, :id_list)");
-				for ($i = 0; $i < count($users); $i++) {
-					$stmt->bindParam(':id_user', $users[$i]['id_user']);
-					$stmt->bindParam(':id_list', $lista_1['id_list']);
-					$stmt->execute();
+				$lists = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	
+				$insertStmt = $this->conn->prepare("INSERT INTO user_follow_lists (id_user, id_list) VALUES (:id_user, :id_list)");
+	
+				foreach ($users as $user) {
+					foreach ($lists as $list) {
+						// Asegurarse de que el propietario de la lista no la siga
+						if ($user['id_user'] != $list['id_user']) {
+							// 50% de probabilidad de seguir la lista
+							if (rand(0, 1) == 1) {
+								$insertStmt->bindParam(':id_user', $user['id_user']);
+								$insertStmt->bindParam(':id_list', $list['id_list']);
+								$insertStmt->execute();
+							}
+						}
+					}
 				}
-				for ($i = 0; $i < (count($users) - 1); $i++) {
-					$stmt->bindParam(':id_user', $users[$i]['id_user']);
-					$stmt->bindParam(':id_list', $lista_4['id_list']);
-					$stmt->execute();
-				}
-				for ($i = 0; $i < (count($users) - 2); $i++) {
-					$stmt->bindParam(':id_user', $users[$i]['id_user']);
-					$stmt->bindParam(':id_list', $lista_3['id_list']);
-					$stmt->execute();
-				}
+	
 				// echo "Listas de usuario seguidas por defecto creadas exitosamente.";
 			} else {
 				// echo "Las listas de usuario seguidas por defecto ya existen en la base de datos.";
 			}
-			} catch(PDOException $e) {
-				echo "Error al crear las listas de usuario seguidas por defecto: " . $e->getMessage();
+		} catch(PDOException $e) {
+			echo "Error al crear las listas de usuario seguidas por defecto: " . $e->getMessage();
 		}
-	}
+	}	
 
 	// create default books
 	public function createDefaultBooks(){
@@ -384,48 +404,41 @@ class Database{
 	}
 
 	public function createBooksInLists(){
-		try{
+		try {
 			$stmt = $this->conn->prepare("SELECT * FROM books_in_lists");
 			$stmt->execute();
 			$existingBooksInLists = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+	
 			if (count($existingBooksInLists) < 10) {
-				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE list_name = 'Lista 1 (publica)'");
+				// Obtener todas las listas
+				$stmt = $this->conn->prepare("SELECT id_list FROM lists");
 				$stmt->execute();
-				$lista_1 = $stmt->fetch(PDO::FETCH_ASSOC);
-				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE list_name = 'Lista 3 (Si no hay lista 2 va bien)'");
-				$stmt->execute();
-				$lista_3 = $stmt->fetch(PDO::FETCH_ASSOC);
-				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE list_name = 'Lista 4'");
-				$stmt->execute();
-				$lista_4 = $stmt->fetch(PDO::FETCH_ASSOC);
+				$lists = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	
+				// Obtener todos los libros
 				$stmt = $this->conn->prepare("SELECT isbn FROM books");
 				$stmt->execute();
 				$books = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+	
 				$stmt = $this->conn->prepare("INSERT INTO books_in_lists (id_list, isbn) VALUES (:id_list, :isbn)");
-				for ($i = 0; $i < count($books); $i++) {
-					$stmt->bindParam(':id_list', $lista_1['id_list']);
-					$stmt->bindParam(':isbn', $books[$i]['isbn']);
-					$stmt->execute();
+	
+				foreach ($books as $book) {
+					foreach ($lists as $list) {
+						// 50% de probabilidad de que el libro esté en la lista
+						if (rand(0, 1) == 1) {
+							$stmt->bindParam(':id_list', $list['id_list']);
+							$stmt->bindParam(':isbn', $book['isbn']);
+							$stmt->execute();
+						}
+					}
 				}
-				for ($i = 0; $i < count($books); $i++) {
-					$stmt->bindParam(':id_list', $lista_4['id_list']);
-					$stmt->bindParam(':isbn', $books[$i]['isbn']);
-					$stmt->execute();
-				}
-				for ($i = 0; $i < count($books); $i++) {
-					$stmt->bindParam(':id_list', $lista_3['id_list']);
-					$stmt->bindParam(':isbn', $books[$i]['isbn']);
-					$stmt->execute();
-				}
-		} else {
-			// echo "Ya existen libros en listas en la base de datos.";
-		}
+			} else {
+				// echo "Ya existen libros en listas en la base de datos.";
+			}
 		} catch(PDOException $e) {
 			echo "Error al crear los libros en listas: " . $e->getMessage();
 		}
-	}
+	}	
 
 	// insert default genres
 	public function insertDefaultGenres(){
