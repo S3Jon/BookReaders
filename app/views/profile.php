@@ -104,13 +104,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="my-14 container mx-auto min-h-screen">
     <div class="md:mx-auto">
-		<div class="w-2/3 justify-center">
+		<div class="w-2/3 justify-center flex">
 			<div class="flex items-center w-40 gap-20">
 			<form action="profile" method="GET" class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
 				<input type="text" name="search" class="w-full py-2 bg-transparent outline-none" placeholder="Busca usuario">
 				<button type="submit"><img src="img/lupa.svg" alt=""></button>
 			</form>
 			</div>
+			<button class="w-40 p-2 bg-accent font-semibold rounded-md" onclick="window.location.href = 'logout';">Cerrar sesión</button>
 		</div>
 		<?php if ($profileMode): ?>
 			<?php if ($userController->readByUserID($user_ID) === false): ?>
