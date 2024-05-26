@@ -347,7 +347,7 @@ class ListModel //List está reservado por PHP
 				SELECT l.*, 
 					COUNT(bil.isbn) AS BILCount,
 					COALESCE(followersCount.followersNum, 0) AS followersNum,
-					b.image AS book_image
+					MAX(b.image) AS book_image
 				FROM ' . $this->table . ' l
 				LEFT JOIN books_in_lists bil ON l.id_list = bil.id_list
 				LEFT JOIN books b ON bil.isbn = b.isbn
@@ -359,7 +359,8 @@ class ListModel //List está reservado por PHP
 				WHERE l.id_user = :id_user AND l.visibility = "public" AND l.type IS NULL
 				GROUP BY l.id_list
 				ORDER BY followersNum DESC';
-	
+
+				
 			$stmt = $this->conn->prepare($query);
 			$stmt->bindParam(':id_user', $id_user);
 			$stmt->execute();
