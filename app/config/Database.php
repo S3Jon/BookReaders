@@ -411,7 +411,7 @@ class Database{
 	
 			if (count($existingBooksInLists) < 10) {
 				// Obtener todas las listas
-				$stmt = $this->conn->prepare("SELECT id_list FROM lists");
+				$stmt = $this->conn->prepare("SELECT id_list FROM lists WHERE visibility = 'public' AND type IS NULL");
 				$stmt->execute();
 				$lists = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	
