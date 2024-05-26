@@ -10,6 +10,8 @@ require_once "../app/models/UserFollowLists.php";
 require_once "../app/models/BookInList.php";
 require_once "../app/models/test_book.php";
 require_once "../app/models/Followers.php";
+require_once "../app/models/Review.php";
+require_once "../app/controllers/ReviewController.php";
 
 $user = new models\User();
 $book = new models\Book();
@@ -21,6 +23,7 @@ $UFLController = new models\UFLModel();
 $BILController = new models\BILModel();
 $testbookCon = new models\Booktest();
 $UFUController = new models\Followersmodel();
+$reviewsController = new models\Review();
 
 $profileMode = false;
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -36,30 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $followedLists = $UFLController->getFollowedLists($user_ID);
         $followedUsers = $UFUController->getFollowedUsers($user_ID);
         $followers = $UFUController->getFollowers($user_ID);
-        $reviews = array_slice([
-            [
-                'book_title' => 'The Girl He Never Noticed',
-                'id_review' => 1,
-                'id_user' => 123,
-                'isbn' => 'BRS123456789',
-                'rating' => 5,
-                'comment' => 'An amazing read! The characters were well developed and the plot was thrilling from start to finish.',
-                'visibility' => 'public',
-                'created_at' => '2024-05-20 10:00:00',
-                'updated_at' => '2024-05-20 10:00:00',
-            ],
-            [
-                'book_title' => 'A different virus: Heartfire',
-                'id_review' => 2,
-                'id_user' => 124,
-                'isbn' => 'BRS234567890',
-                'rating' => 4,
-                'comment' => 'Great book with a few minor flaws. Overall, a very enjoyable experience.',
-                'visibility' => 'public',
-                'created_at' => '2024-05-18 15:30:00',
-                'updated_at' => '2024-05-18 15:30:00',
-            ]
-        ], 0, 2);
+        $reviews = $reviewsController->getUserReviews($user_ID);
     }
 	else if (isset($_GET['search'])) {
 		$search = $_GET['search'];
@@ -198,13 +178,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 								<div class="flex items-center">
 									<a href="profile?id=<?= $user_ID ?>&section=listas" class="text-3xl font-bold text-gray-900 underline mr-2">Listas</a>
 									<span class="text-3xl font-bold text-gray-900">
-										(
 											<?php if ($createdLists): ?>
-												<?= count($createdLists) ?>
+												<?= "(" . count($createdLists) . ")"?>
 											<?php else: ?>
-												0
+												<?= "(0)" ?>
 											<?php endif; ?>
-										)
 									</span>
 								</div>
 								<?php if (isset($_SESSION['userData']) && $_SESSION['userData']['id_user'] == $user_ID): ?>
@@ -280,9 +258,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 							<?php endif; ?>
 							<div class="flex items-center mt-6">
 								<a href="profile?id=<?= $user_ID ?>&section=reviews" class="text-3xl font-bold text-gray-900 underline mr-2">Reseñas</a>
-								<span class="text-3xl font-bold text-gray-900">(<?= count($reviews) ?>)</span>
+								<span class="text-3xl font-bold text-gray-900">(<?= $reviews && count($reviews) > 0 ? count($reviews) : "0" ?>)</span>
 							</div>
-							<?php if (count($reviews) > 0) : ?>
+							<?php if ($reviews && count($reviews) > 0) : ?>
 								<div class="flex gap-4 mt-6 pl-2">
 									<?php foreach (array_slice($reviews, 0, 2) as $review) : ?>
 										<div class="flex flex-col gap-1 border border-borderGrey p-2">

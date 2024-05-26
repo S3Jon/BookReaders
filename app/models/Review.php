@@ -143,5 +143,22 @@ class Review
             return false;
         }
     }
+
+	// Get all reviews for a user
+	public function getUserReviews($id_user)
+	{
+		try {
+			// Prepare the query to get all reviews for a user
+			$stmt = $this->conn->prepare("SELECT br.*, b.title AS book_title FROM book_reviews br JOIN books b ON br.isbn = b.isbn WHERE id_user = :id_user");
+			$stmt->bindParam(':id_user', $id_user);
+			$stmt->execute();
+
+			// Get all rows of execution results as associative array
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al obtener reseñas por ID de usuario: " . $e->getMessage();
+			die();
+		}
+	}
 }
 ?>

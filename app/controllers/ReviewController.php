@@ -62,5 +62,10 @@ class ReviewController {
             return false;
         }
     }
+
+	public function getUserReviews($id_user)
+	{
+		return $this->reviewModel->getUserReviews($id_user);
+	}
     
 }
