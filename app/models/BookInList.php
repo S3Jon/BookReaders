@@ -91,5 +91,30 @@ class BILModel
 		}
 	}
 
+	public function searchBookInList($id_list, $search)
+	{
+		try {
+			$query = "
+				SELECT books.*, books_in_lists.id_list, COALESCE(AVG(book_reviews.rating), 0) AS average_rating
+				FROM books_in_lists
+				JOIN books ON books_in_lists.isbn = books.isbn
+				LEFT JOIN book_reviews ON books.isbn = book_reviews.isbn
+				WHERE books_in_lists.id_list = :id_list 
+				  AND (books.title LIKE :search OR books.author LIKE :search)
+				GROUP BY books.isbn, books_in_lists.id_list
+				ORDER BY books_in_lists.isbn ASC";
+	
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_list', $id_list, PDO::PARAM_INT);
+			$search = '%' . $search . '%';
+			$stmt->bindParam(':search', $search, PDO::PARAM_STR);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al buscar libros en la lista: " . $e->getMessage();
+			return [];
+		}
+	}
+
 }
 ?>

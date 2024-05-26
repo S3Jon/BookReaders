@@ -25,9 +25,14 @@ $listOS = false;
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 	if (isset($_GET['id'])) {
 		$id_list = $_GET['id'];
+		$searchQuery = $_GET['search'] ?? '';
 		
 		$listaInfo = $listController->getListById($id_list);
-		$BILInfo = $BILController->getListBooksInfo($id_list);
+		if ($searchQuery) {
+			$BILInfo = $BILController->searchBookInList($id_list, $searchQuery);
+		} else {
+			$BILInfo = $BILController->getListBooksInfo($id_list);
+		}
 		$nombreLista = isset($listaInfo['list_name']) ? $listaInfo['list_name'] : 'Error al cargar el titulo';
 		$propietarioLista = $userController->getUsernameById($listaInfo['id_user']);
 		$visibilidadLista = isset($listaInfo['visibility']) ? $listaInfo['visibility'] : 'Error al cargar la visibilidad';
@@ -40,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 		}
 	}
 	else {
-		header('Location: lists');
-		exit;
+		//header('Location: lists');
+		//exit;
 	}
 }
 
@@ -98,11 +103,11 @@ else { ?>
 				<!-- absolutamente robado parte 365 -->
 				<div class="w-2/3 md:mx-auto">
 					<div class="flex items-center w-full gap-20">
-						<form class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
-							<input type="text" class="w-full py-2 bg-transparent outline-none"
-							placeholder=" Busca libro"> <!--lol-->
-							<button type="submit"><img src="img/lupa.svg" alt=""></button>
-						</form>
+					<form action="list" method="GET" class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
+						<input type="hidden" name="id" value="<?= htmlspecialchars($id_list) ?>">
+						<input type="text" name="search" class="w-full py-2 bg-transparent outline-none" placeholder="Busca libro">
+						<button type="submit"><img src="img/lupa.svg" alt=""></button>
+					</form>
 					</div>
 				</div>
 			</div>
@@ -115,6 +120,13 @@ else { ?>
 					</div>
 				</aside>
 				<section class="pt-8 px-10 py-12 w-5/6">
+					<?php if ($searchQuery): ?>
+						<div>
+							<h2 class="text-lg font-semibold text-gray-900">Resultados de la búsqueda</h2>
+							<p class="text-sm text-gray-600">Resultados para: <?= htmlspecialchars($searchQuery) ?></p>
+							<button onclick="window.location.href = 'list?id=<?= $id_list ?>'" class="px-2 py-1 bg-primary text-white rounded-md hover:bg-primary-dark focus:outline-none focus:bg-primary-dark">Mostrar todos los libros</button>
+						</div>
+					<?php endif; ?>
 					<div class ="grid grid-cols-2 justify-items-start gap-4">
 					<?php foreach ($BILInfo as $key => $book): ?>
 						<div class="container">
