@@ -25,18 +25,24 @@ class BILModel
         $this->conn = $database->getConnection();
     }
 
-	public function getlistbooks($id_list){
-		try{
-			$query = "SELECT * FROM " . $this->table_name . " WHERE id_list = :id_list";
+	public function getListBooksInfo($id_list)
+	{
+		try {
+			$query = "
+				SELECT books.*, books_in_lists.id_list, COALESCE(AVG(book_reviews.rating), 0) AS average_rating
+				FROM " . $this->table_name ."
+				JOIN books ON books_in_lists.isbn = books.isbn
+				LEFT JOIN book_reviews ON books.isbn = book_reviews.isbn
+				WHERE books_in_lists.id_list = :id_list
+				GROUP BY books.isbn, books_in_lists.id_list
+				ORDER BY books_in_lists.isbn ASC";
+	
 			$stmt = $this->conn->prepare($query);
 			$stmt->bindParam(':id_list', $id_list);
 			$stmt->execute();
-			$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-			return $row;
-		} catch (PDOException $e){
-			echo "Error al cargar libros de la lista: " . $e->getMessage();
-			die();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al recuperar los libros de la lista: " . $e->getMessage();
 		}
 	}
 
