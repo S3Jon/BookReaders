@@ -114,8 +114,8 @@ else { ?>
 						</div>
 					</div>
 				</aside>
-				<section class="pt-8 px-10 py-12 w-3/4">
-					<div class ="grid grid-cols-3 justify-items-start gap-4">
+				<section class="pt-8 px-10 py-12 w-5/6">
+					<div class ="grid grid-cols-2 justify-items-start gap-4">
 					<?php foreach ($BILInfo as $key => $book): ?>
 						<div class="container">
 							<div class="flex border border-borderGrey rounded-lg p-2">
@@ -127,8 +127,23 @@ else { ?>
 								<div class="flex flex-col gap-1 p-2">
 									<a href="book?isbn=<?= $book['isbn'] ?>" class="text-lg font-extrabold text-gray-900"><?= htmlspecialchars($book['title']) ?></a>
 									<p class="text-sm text-gray-600"><?= htmlspecialchars($book['author']) ?></p>
-									<p class="text-sm text-gray-600"><?= htmlspecialchars($book['genre']) ?></p>
-									<p class="text-sm text-gray-600">Rating: <?= number_format($book['average_rating'], 1) ?>/5</p>
+									<p class="text-sm text-gray-600">
+										<?php
+										$genres = json_decode($book['genre'], true);
+										if (json_last_error() === JSON_ERROR_NONE) {
+											echo htmlspecialchars(implode(', ', $genres));
+										} else {
+											echo htmlspecialchars($book['genre']);
+										}
+										?>
+									</p>
+									<div>
+										<?php if ($book['average_rating'] > 0): ?>
+											<p class="text-sm text-gray-600">Rating: <?= number_format($book['average_rating'], 1) ?>/5</p>
+										<?php else: ?>
+											<p class="text-sm text-gray-600">Sin reseñas</p>
+										<?php endif; ?>
+									</div>
 									<?php if ($listOS): ?>
 										<form action="list" method="POST">
 											<input type="hidden" name="id_list" value="<?= $id_list ?>">

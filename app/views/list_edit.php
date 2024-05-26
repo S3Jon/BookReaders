@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </script>
 
 <div class="my-14 container mx-auto min-h-screen">
-    <div class="w-3/4 mx-auto">
+    <div class="w-3/4 mx-auto border border-borderGrey p-8">
         <div class="flex justify-between">
             <div class="w-2/6">
                 <h1 class="text-3xl font-bold text-gray-900">Editar lista</h1>
@@ -86,7 +86,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <option value="private" <?php echo $list['visibility'] === 'private' ? 'selected' : ''; ?>>Privada</option>
                 </select>
             </div>
-            <button type="submit" name="update_list" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Guardar cambios</button>
+			<div class="pt-8">
+            	<button type="submit" name="update_list" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Guardar cambios</button>
+			</div>
         </form>
     </div>
 </div>

@@ -2,7 +2,9 @@
 	<a href="profile?id=<?= $listaInfo['id_user'] ?>" class="underline text-sm text-gray-600">
 		<?= $propietarioLista ?>
 	</a>
-	<p class="text-sm text-gray-600">Visibilidad: <?= $visibilidadLista ?></p>
+	<? if ($listOS): ?>
+		<p class="text-sm text-gray-600">Visibilidad: <?= $visibilidadLista ?></p>
+	<? endif; ?>
 	<p class="text-sm text-gray-600">Seguidores: <?= $UFLController->getFollowersNumber($id_list) ?></p>
 	<p class="text-sm text-gray-600">Libros: <?= implode($BILController->getBILCount($id_list)) ?></p>
 	<p class="text-sm text-gray-600">Descripción: <?= $listaInfo['list_description'] ?></p>
