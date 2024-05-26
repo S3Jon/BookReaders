@@ -34,7 +34,23 @@ class ListModel //List está reservado por PHP
 		try {
 			//temporalmente ordernar por fecha de creacion, luego se ordenara por seguidores
 			//type IS NULL para que no muestre listas básicas, las creadas por usuarios tendrán type NULL
-			$query = 'SELECT b.*, i.image FROM ' . $this->table . ' AS bLEFT JOIN images AS i ON b.id = i.book_idWHERE b.visibility = "public" AND b.type IS NULL ORDER BY b.created_at DESC LIMIT 1';
+			$query = '
+			SELECT l.*, 
+				COUNT(bil.isbn) AS BILCount,
+				COALESCE(followersCount.followersNum, 0) AS followersNum,
+				MAX(b.image) AS book_image
+			FROM ' . $this->table . ' l
+			LEFT JOIN books_in_lists bil ON l.id_list = bil.id_list
+			LEFT JOIN books b ON bil.isbn = b.isbn
+			LEFT JOIN (
+				SELECT id_list, COUNT(id_list) AS followersNum
+				FROM user_follow_lists
+				GROUP BY id_list
+			) AS followersCount ON l.id_list = followersCount.id_list
+			WHERE l.id_user = :id_user AND l.visibility = "public" AND l.type IS NULL
+			GROUP BY l.id_list
+			ORDER BY l.created_at DESC, followersNum DESC';
+
 			$stmt = $this->conn->prepare($query);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_ASSOC);
