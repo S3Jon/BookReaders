@@ -7,6 +7,7 @@ require_once "../app/controllers/UserController.php";
 require_once "../app/models/UserFollowLists.php";
 //TODO- Actualizar fuente de BooksInList
 require_once "../app/models/BookInList.php";
+include_once "../app/helpers/format_followers.php";
 
 session_start();
 
@@ -17,19 +18,8 @@ $UFLController = new models\UFLModel();
 $BILController = new models\BILModel();
 
 //TODO- Hacer llamada al top50 desde ListController
-function formatFollowers($followersNum)
-{
-	if ($followersNum == 1)
-	{
-		return $followersNum . " Seguidor";
-	}
-	else
-	{
-		return $followersNum . " Seguidores";
-	}
-}
 
-if (isset($_GET['search'])) {
+if (isset($_GET['search']) && !empty($_GET['search'])) {
 	$listasp = $listController->searchListLike($_GET['search']);
 	$getmode = true;
 } else {
@@ -40,23 +30,6 @@ if (isset($_GET['search'])) {
 //Igual hay alguna forma mejor de hacer esto, pero funciona y chilling
 foreach ($listasp as $key => $list) {
 	$listasp[$key]['ownerName'] = $userController->getUsernameById($list['id_user']);
-	if ($getmode) {
-		$fn = $UFLController->getFollowersNumber($list['id_list']);
-		$listasp[$key]['followersNum'] = formatFollowers($fn);
-	} else {
-	$listasp[$key]['followersNum'] = formatFollowers($list['followersNum']);
-	}
-	$listasp[$key]['BILCount'] = implode($BILController->getBILCount($list['id_list']));
-}
-
-//TODO- Quitarlas, las listas se borrarán desde dentro de la lista y se crearán desde el perfil
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['delete'])) {
-        $listController->deleteList($_POST['id_list']);
-    }
-    if (isset($_POST['create'])) {
-        $listController->createList($_SESSION['user_id'], $_POST['list_name'], $_POST['visibility']);
-    }
 }
 
 ?>
@@ -71,14 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				<h1 class="text-3xl font-bold text-gray-900">Explorar listas creadas por la comunidad</h1>
 			</div>
 			<!-- absolutamente robado parte 365 -->
-		<div class="w-2/3 md:mx-auto">
-			<div class="flex items-center w-full gap-20">
-				<form action="lists" method="GET" class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
-					<input type="text" name="search" class="w-full py-2 bg-transparent outline-none" placeholder="Busca lista por nombre o usuario">
-					<button type="submit"><img src="img/lupa.svg" alt=""></button>
-				</form>
+			<div class="w-2/3 md:mx-auto">
+				<div class="flex items-center w-full gap-20">
+					<form action="lists" method="GET" class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
+						<input type="text" name="search" class="w-full py-2 bg-transparent outline-none" placeholder="Busca lista por nombre o usuario">
+						<button type="submit"><img src="img/lupa.svg" alt=""></button>
+					</form>
+				</div>
 			</div>
-		</div>
 		</div>
         <div class="grid grid-cols-2 justify-items-center gap-10 mt-10">
             <?php foreach ($listasp as $key => $list): ?>
@@ -86,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg w-full">
 						<div class="flex fex-row gap-1">
 							<div class="justify-self-center my-4 ml-4 w-[105px]">
-								<img src="img/fk_placeholder.png" alt="book" class="object-cover w-40">
+								<img src="<?= $list_pic = !empty($list['list_pic']) ? $list['list_pic'] : 'img/fk_placeholder.png';?>" alt="book" class="object-cover w-40">
 							</div>
 							<div class="p-4 flex flex-col">
                                 <a href="list?id=<?= $list['id_list'] ?>" class="text-lg font-extrabold text-gray-900"><?= $list['list_name'] ?></a>
@@ -96,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 								</div>
 								<div class="flex items-center gap-2 my-2 ml-1">
 									<img src="img/followers.svg" alt="followers" class="w-4 h-4">
-									<p class="text-sm text-black font-semibold"><?= $list['followersNum']?></p> <!-- Mover el seguidor/seguidores a una funcion perhaps -->	
+									<p class="text-sm text-black font-semibold"><?= formatFollowers($list['followersNum'])?></p> <!-- Mover el seguidor/seguidores a una funcion perhaps -->	
 								</div>
 								<div class="flex items-center gap-2 my-2 ml-1">
 									<img src="img/bookStack.svg" alt="bils" class="w-4 h-4">
@@ -104,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 								</div> 
 								<!-- implementar descirpción de listas; igual droppear porque implementarlo + actualizar serái aburrido -->
 								<div class="w-[400px] max-w-[400px]">
-									<p class="text-sm text-black break-words"></p> <!--si la descripción cambia de tamaño literalmente explota-->
+									<p class="text-sm text-black break-words"> <?= $list['list_description'] ?></p> <!--si la descripción cambia de tamaño literalmente explota-->
 								</div>
 							</div>
 						</div>

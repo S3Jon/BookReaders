@@ -33,11 +33,11 @@ $database->insertDefaultGenres();
 // Create default admin user
 $database->createDefaultAdminUser();
 
-// Default lists
-$database->insertDefaultLists();
-
 // Extra users
 $database->createExtraUsers();
+
+// Default lists
+$database->insertDefaultLists();
 
 // Extra follows
 $database->createDefaultListFollows();

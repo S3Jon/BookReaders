@@ -100,4 +100,9 @@ class ListController
 	{
 		return $this->listModel->searchListLike($search);
 	}
+
+	public function getUserTopLists($id_user)
+	{
+		return $this->listModel->getUserTopLists($id_user);
+	}
 }

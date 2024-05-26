@@ -1,13 +1,19 @@
 <h1 class="text-lg font-semibold text-gray-900"><?= $nombreLista ?></h1>
-	<form action="profile_list" method="POST">
-		<input type="hidden" name="id_user" value="<?= implode($listController->getListOwnerID($id_list)) ?>">
-		<button type="submit" class="underline text-sm text-gray-600"><?= $propietarioLista ?></button>
-	</form>
-	<p class="text-sm text-gray-600">Visibilidad: <?= $visibilidadLista ?></p>
-	<p class="text-sm text-gray-600">Seguidores: <?= $UFLController->getFollowersNumber($id_list) ?></p>
-	<p class="text-sm text-gray-600">Libros: <?= implode($BILController->getBILCount($id_list)) ?></p>
+	<div class="flex items-center gap-2 my-2 ml-1">
+		<img src="img/users.svg" alt="user" class="w-4 h-4">
+		<a href="profile?id=<?= $listaInfo['id_user'] ?>" class="text-sm text-black font-semibold"><?= $propietarioLista ?></a>
+	</div>
+	<div class="flex items-center gap-2 my-2 ml-1">
+		<img src="img/followers.svg" alt="followers" class="w-4 h-4">
+		<p class="text-sm text-black font-semibold"><?= $listaInfo['followersNum']?></p> <!-- Mover el seguidor/seguidores a una funcion perhaps -->	
+	</div>
+	<div class="flex items-center gap-2 my-2 ml-1">
+		<img src="img/bookStack.svg" alt="bils" class="w-4 h-4">
+		<p class="text-sm text-black font-semibold"><?= implode($BILController->getBILCount($id_list)) ?></p>
+	</div> 
 	<p class="text-sm text-gray-600">Descripción: <?= $listaInfo['list_description'] ?></p>
 	<?php if ($listOS): ?>
+		<p class="text-sm text-gray-600">Visibilidad: <?= $visibilidadLista ?></p>
 		<a href="list_edit?id=<?= $id_list ?>" class="px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-600">Editar lista</a>
 		<form action="list" method="POST">
 			<input type="hidden" name="id_list" value="<?= $id_list ?>">

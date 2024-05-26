@@ -56,12 +56,12 @@ class ListModel //List está reservado por PHP
 		}
 	}
 
-	public function createList($id_user, $list_name, $list_description, $visibility) //createList($id_user, $list_name, $visibility)
+	public function createList($id_user, $list_name, $list_description, $visibility)
 	{
 		try {
-			$query = 'INSERT INTO ' . $this->table . ' (id_user, list_name, list_description, visibility) VALUES (:id_user, :list_name, :list_description :visibility)';
+			$query = 'INSERT INTO ' . $this->table . ' (id_user, list_name, list_description, visibility) VALUES (:id_user, :list_name, :list_description, :visibility)';
 			$stmt = $this->conn->prepare($query);
-			$stmt->bindParam(':id_user', $id_user); //default 1, cambiar a futuro
+			$stmt->bindParam(':id_user', $id_user);
 			$stmt->bindParam(':list_name', $list_name);
 			$stmt->bindParam(':list_description', $list_description);
 			$stmt->bindParam(':visibility', $visibility);
@@ -70,26 +70,56 @@ class ListModel //List está reservado por PHP
 		} catch (PDOException $e) {
 			echo "Error al crear la lista: " . $e->getMessage();
 		}
-	}
+	}	
 
 	public function getListById($id_list)
 	{
 		try {
-			$query = 'SELECT * FROM ' . $this->table . ' WHERE id_list = :id_list';
+			$query = "
+				SELECT lists.*, 
+					   COALESCE(BILCount.book_count, 0) AS BILCount,
+					   COALESCE(followersCount.followersNum, 0) AS followersNum,
+					   (SELECT books.image
+						FROM books_in_lists
+						JOIN books ON books_in_lists.isbn = books.isbn
+						WHERE books_in_lists.id_list = lists.id_list
+						ORDER BY books_in_lists.isbn ASC
+						LIMIT 1) AS list_pic
+				FROM lists
+				LEFT JOIN (
+					SELECT id_list, COUNT(DISTINCT isbn) AS book_count
+					FROM books_in_lists
+					GROUP BY id_list
+				) AS BILCount ON lists.id_list = BILCount.id_list
+				LEFT JOIN (
+					SELECT id_list, COUNT(id_list) AS followersNum
+					FROM user_follow_lists
+					GROUP BY id_list
+				) AS followersCount ON lists.id_list = followersCount.id_list
+				WHERE lists.id_list = :id_list
+				GROUP BY lists.id_list";
+	
 			$stmt = $this->conn->prepare($query);
-			$stmt->bindParam(':id_list', $id_list);
+			$stmt->bindParam(':id_list', $id_list, PDO::PARAM_INT);
 			$stmt->execute();
 			return $stmt->fetch(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {
 			echo "Error al recuperar los datos de la lista: " . $e->getMessage();
+			return [];
 		}
-
 	}
+	
 
 	public function getUserBasicLists($id_user)
 	{
 		try {
-			$query = 'SELECT * FROM ' . $this->table . ' WHERE id_user = :id_user AND type IS NOT NULL';
+			$query = '
+				SELECT l.*, COUNT(bil.isbn) AS BILCount
+				FROM ' . $this->table . ' l
+				LEFT JOIN books_in_lists bil ON l.id_list = bil.id_list
+				WHERE l.id_user = :id_user AND l.type IS NOT NULL
+				GROUP BY l.id_list';
+	
 			$stmt = $this->conn->prepare($query);
 			$stmt->bindParam(':id_user', $id_user);
 			$stmt->execute();
@@ -116,7 +146,20 @@ class ListModel //List está reservado por PHP
 	public function getUserPublicLists($id_user)
 	{
 		try {
-			$query = 'SELECT * FROM ' . $this->table . ' WHERE id_user = :id_user AND visibility = "public" AND type IS NULL';
+			$query = '
+				SELECT l.*, 
+					   COUNT(bil.isbn) AS BILCount,
+					   COALESCE(followersCount.followersNum, 0) AS followersNum
+				FROM ' . $this->table . ' l
+				LEFT JOIN books_in_lists bil ON l.id_list = bil.id_list
+				LEFT JOIN (
+					SELECT id_list, COUNT(id_list) AS followersNum
+					FROM user_follow_lists
+					GROUP BY id_list
+				) AS followersCount ON l.id_list = followersCount.id_list
+				WHERE l.id_user = :id_user AND l.visibility = "public" AND l.type IS NULL
+				GROUP BY l.id_list';
+	
 			$stmt = $this->conn->prepare($query);
 			$stmt->bindParam(':id_user', $id_user);
 			$stmt->execute();
@@ -130,7 +173,7 @@ class ListModel //List está reservado por PHP
 	{
 		$visDB = 'public';
 		$typeDB = ['favorite', 'read', 'want_to_read', 'reading', 'dropped'];
-		$listNameDB = ['Libros favoritos', 'Leídos', 'Por Leer', 'Leyendo', 'Abandonados'];
+		$listNameDB = ['Favoritos', 'Leídos', 'Por Leer', 'Leyendo', 'Abandonados'];
 		try {
 			$query = 'INSERT INTO ' . $this->table . ' (id_user, list_name, type, visibility) VALUES (:id_user, :list_name, :type, :visibility)';
 			$stmt = $this->conn->prepare($query);
@@ -176,14 +219,29 @@ class ListModel //List está reservado por PHP
 	public function getMostFollowed()
 	{
 		try {
-			$query = "SELECT lists.*, COUNT(user_follow_lists.id_list) AS followersNum
-					  FROM lists 
-					  LEFT JOIN user_follow_lists ON lists.id_list = user_follow_lists.id_list 
-					  WHERE lists.visibility = 'public' 
-					  AND lists.type IS NULL
-					  GROUP BY lists.id_list 
-					  ORDER BY COUNT(user_follow_lists.id_list) DESC 
-					  LIMIT 50";
+			$query = "
+				SELECT lists.*, 
+					   COUNT(user_follow_lists.id_list) AS followersNum,
+					   COALESCE(BILCount.BILCount, 0) AS BILCount,
+					   (SELECT books.image
+						FROM books_in_lists
+						JOIN books ON books_in_lists.isbn = books.isbn
+						WHERE books_in_lists.id_list = lists.id_list
+						ORDER BY books_in_lists.isbn ASC
+						LIMIT 1) AS list_pic
+				FROM lists
+				LEFT JOIN user_follow_lists ON lists.id_list = user_follow_lists.id_list
+				LEFT JOIN (
+					SELECT id_list, COUNT(DISTINCT isbn) AS BILCount
+					FROM books_in_lists
+					GROUP BY id_list
+				) AS BILCount ON lists.id_list = BILCount.id_list
+				WHERE lists.visibility = 'public' 
+				  AND lists.type IS NULL
+				GROUP BY lists.id_list
+				ORDER BY followersNum DESC
+				LIMIT 50";
+			
 			$stmt = $this->conn->prepare($query);
 			$stmt->execute();
 			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -193,6 +251,8 @@ class ListModel //List está reservado por PHP
 			die();
 		}
 	}
+	
+	
 
 	public function getUserMostFollowed($id_user) //Para profile
 	{
@@ -242,11 +302,33 @@ class ListModel //List está reservado por PHP
 	public function searchListLike($search)
 	{
 		try {
-			$query = "SELECT lists.*, users.username 
-					  FROM lists 
-					  JOIN users ON lists.id_user = users.id_user 
-					  WHERE (lists.list_name LIKE :search OR users.username LIKE :search) 
-					  AND lists.visibility = 'public'";
+			$query = "
+				SELECT lists.*, users.username,
+					   COALESCE(BILCount.book_count, 0) AS BILCount,
+					   COALESCE(followersCount.followersNum, 0) AS followersNum,
+					   (SELECT books.image
+						FROM books_in_lists
+						JOIN books ON books_in_lists.isbn = books.isbn
+						WHERE books_in_lists.id_list = lists.id_list
+						ORDER BY books_in_lists.isbn ASC
+						LIMIT 1) AS list_pic
+				FROM lists
+				JOIN users ON lists.id_user = users.id_user
+				LEFT JOIN (
+					SELECT id_list, COUNT(DISTINCT isbn) AS book_count
+					FROM books_in_lists
+					GROUP BY id_list
+				) AS BILCount ON lists.id_list = BILCount.id_list
+				LEFT JOIN (
+					SELECT id_list, COUNT(id_list) AS followersNum
+					FROM user_follow_lists
+					GROUP BY id_list
+				) AS followersCount ON lists.id_list = followersCount.id_list
+				WHERE (lists.list_name LIKE :search OR users.username LIKE :search)
+				  AND lists.visibility = 'public'
+				  AND lists.type IS NULL
+				GROUP BY lists.id_list, users.username";
+	
 			$stmt = $this->conn->prepare($query);
 			$searchParam = "%" . $search . "%";
 			$stmt->bindValue(':search', $searchParam, PDO::PARAM_STR);
@@ -257,6 +339,36 @@ class ListModel //List está reservado por PHP
 			return [];
 		}
 	}
+
+	public function getUserTopLists($id_user)
+	{
+		try {
+			$query = '
+				SELECT l.*, 
+					COUNT(bil.isbn) AS BILCount,
+					COALESCE(followersCount.followersNum, 0) AS followersNum,
+					b.image AS book_image
+				FROM ' . $this->table . ' l
+				LEFT JOIN books_in_lists bil ON l.id_list = bil.id_list
+				LEFT JOIN books b ON bil.isbn = b.isbn
+				LEFT JOIN (
+					SELECT id_list, COUNT(id_list) AS followersNum
+					FROM user_follow_lists
+					GROUP BY id_list
+				) AS followersCount ON l.id_list = followersCount.id_list
+				WHERE l.id_user = :id_user AND l.visibility = "public" AND l.type IS NULL
+				GROUP BY l.id_list
+				ORDER BY followersNum DESC';
+	
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_user', $id_user);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo "Error al recuperar las listas principales del usuario: " . $e->getMessage();
+		}
+	}
+
 	
 	
 	

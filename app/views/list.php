@@ -25,9 +25,18 @@ $listOS = false;
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 	if (isset($_GET['id'])) {
 		$id_list = $_GET['id'];
+		$searchQuery = $_GET['search'] ?? '';
 		
-		$listaInfo = $listController->exploreLists($id_list);
-		$BILInfo = $BILController->getlistbooks($id_list);
+		$listaInfo = $listController->getListById($id_list);
+		if (!$listaInfo) {
+			header('Location: lists');
+			exit;
+		}
+		if ($searchQuery) {
+			$BILInfo = $BILController->searchBookInList($id_list, $searchQuery);
+		} else {
+			$BILInfo = $BILController->getListBooksInfo($id_list);
+		}
 		$nombreLista = isset($listaInfo['list_name']) ? $listaInfo['list_name'] : 'Error al cargar el titulo';
 		$propietarioLista = $userController->getUsernameById($listaInfo['id_user']);
 		$visibilidadLista = isset($listaInfo['visibility']) ? $listaInfo['visibility'] : 'Error al cargar la visibilidad';
@@ -40,8 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 		}
 	}
 	else {
-		header('Location: lists');
-		exit;
+		//header('Location: lists');
+		//exit;
 	}
 }
 
@@ -58,7 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	}
 	if (isset($_POST['delete_list'])) {
 		if ($listController->deleteList($id_list)) {
-			header("Location: list?id=$id_list");
+			$upl = $_SESSION['userData']['id_user'];
+			header("Location: profile?id=$upl");
 			exit;
 		} else {
 			echo "Error al eliminar la lista.";
@@ -97,44 +107,72 @@ else { ?>
 				<!-- absolutamente robado parte 365 -->
 				<div class="w-2/3 md:mx-auto">
 					<div class="flex items-center w-full gap-20">
-						<form class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
-							<input type="text" class="w-full py-2 bg-transparent outline-none"
-							placeholder=" Busca libro"> <!--lol-->
-							<button type="submit"><img src="img/lupa.svg" alt=""></button>
-						</form>
+					<form action="list" method="GET" class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
+						<input type="hidden" name="id" value="<?= htmlspecialchars($id_list) ?>">
+						<input type="text" name="search" class="w-full py-2 bg-transparent outline-none" placeholder="Busca libro">
+						<button type="submit"><img src="img/lupa.svg" alt=""></button>
+					</form>
 					</div>
 				</div>
 			</div>
-			<div class="grid grid-cols-2 gap-10 mt-10">
-				<div>
+			<div class="flex gap-12 justify-center pt-8">
+				<aside>
 					<div class="bg-white shadow-md rounded-lg max-w-sm w-full">
 						<div class="p-4">
 							<?php include 'list_derivadas/list_info.php'; ?>
 						</div>
 					</div>
-				</div>
-				<div>
-					<div class ="grid grid-cols-4 justify-items-start gap-4">
-						<?php foreach ($BILInfo as $key => $book): ?>
-							<div class="container w-40">
-								<div class="bg-white shadow-md rounded-lg max-w-sm w-full">
-									<div class="p-4">
-										<a href="book?isbn=<?= $book['isbn'] ?>" class="text-lg font-extrabold text-gray-900"><?= implode($bookController->getBookTitle($book['isbn'])) ?></a>
-										<p class="text-sm text-gray-600"><?= implode($bookController->getBookAuthor($book['isbn'])) ?></p> <!-- TODO: Cambiar para abrir explorar con el autor como parametro -->
-										<p class="text-sm text-gray-600"><?= $bookController->getBookGenre($book['isbn']) ?></p>
-										<?php if ($listOS): ?>
-											<form action="list" method="POST">
-												<input type="hidden" name="id_list" value="<?= $id_list ?>">
-												<input type="hidden" name="isbn" value="<?= $book['isbn'] ?>">
-												<button type="submit" onclick="return confirm('¿Seguro que quieres eliminar este libro?');" name="delete_book" class="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Eliminar libro</button>
-											</form>
+				</aside>
+				<section class="pt-8 px-10 py-12 w-5/6">
+					<?php if ($searchQuery): ?>
+						<div>
+							<h2 class="text-lg font-semibold text-gray-900">Resultados de la búsqueda</h2>
+							<p class="text-sm text-gray-600">Resultados para: <?= htmlspecialchars($searchQuery) ?></p>
+							<button onclick="window.location.href = 'list?id=<?= $id_list ?>'" class="px-2 py-1 bg-primary text-white rounded-md hover:bg-primary-dark focus:outline-none focus:bg-primary-dark">Mostrar todos los libros</button>
+						</div>
+					<?php endif; ?>
+					<div class ="grid grid-cols-2 justify-items-start gap-4">
+					<?php foreach ($BILInfo as $key => $book): ?>
+						<div class="container">
+							<div class="flex border border-borderGrey rounded-lg p-2">
+								<!-- Left column for the book cover -->
+								<div class="flex-shrink-0">
+									<img src="<?= htmlspecialchars($book['image'] ?? 'Public/image/default_cover.svg') ?>" alt="<?= htmlspecialchars($book['title']) ?>" class="w-20 h-auto rounded-lg">
+								</div>
+								<!-- Right column for the book details -->
+								<div class="flex flex-col gap-1 p-2">
+									<a href="book?isbn=<?= $book['isbn'] ?>" class="text-lg font-extrabold text-gray-900"><?= htmlspecialchars($book['title']) ?></a>
+									<p class="text-sm text-gray-600"><?= htmlspecialchars($book['author']) ?></p>
+									<p class="text-sm text-gray-600">
+										<?php
+										$genres = json_decode($book['genre'], true);
+										if (json_last_error() === JSON_ERROR_NONE) {
+											echo htmlspecialchars(implode(', ', $genres));
+										} else {
+											echo htmlspecialchars($book['genre']);
+										}
+										?>
+									</p>
+									<div>
+										<?php if ($book['average_rating'] > 0): ?>
+											<p class="text-sm text-gray-600">Rating: <?= number_format($book['average_rating'], 1) ?>/5</p>
+										<?php else: ?>
+											<p class="text-sm text-gray-600">Sin reseñas</p>
 										<?php endif; ?>
 									</div>
+									<?php if ($listOS): ?>
+										<form action="list" method="POST">
+											<input type="hidden" name="id_list" value="<?= $id_list ?>">
+											<input type="hidden" name="isbn" value="<?= $book['isbn'] ?>">
+											<button type="submit" onclick="return confirm('¿Seguro que quieres eliminar este libro?');" name="delete_book" class="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:bg-red-600">Eliminar libro</button>
+										</form>
+									<?php endif; ?>
 								</div>
 							</div>
-						<?php endforeach; ?>
+						</div>
+					<?php endforeach; ?>
 					</div>
-				</div>
+				</section>
 			</div>
 		</div>
 	</div>
