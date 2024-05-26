@@ -34,7 +34,7 @@ class ListModel //List está reservado por PHP
 		try {
 			//temporalmente ordernar por fecha de creacion, luego se ordenara por seguidores
 			//type IS NULL para que no muestre listas básicas, las creadas por usuarios tendrán type NULL
-			$query = 'SELECT * FROM ' . $this->table . ' WHERE visibility = "public" AND type IS NULL ORDER BY created_at DESC'; 
+			$query = 'SELECT b.*, i.image FROM ' . $this->table . ' AS bLEFT JOIN images AS i ON b.id = i.book_idWHERE b.visibility = "public" AND b.type IS NULL ORDER BY b.created_at DESC LIMIT 1';
 			$stmt = $this->conn->prepare($query);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_ASSOC);
