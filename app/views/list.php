@@ -153,9 +153,10 @@ else { ?>
 										}
 										?>
 									</p>
-									<div>
+									<div class="flex items-center gap-2 my-2 ml-1">
 										<?php if ($book['average_rating'] > 0): ?>
-											<p class="text-sm text-gray-600">Rating: <?= number_format($book['average_rating'], 1) ?>/5</p>
+											<p class="text-sm text-gray-600"><?= number_format($book['average_rating'], 1) ?></p>
+											<img src="img/star.svg" alt="star" class="w-4 h-4">
 										<?php else: ?>
 											<p class="text-sm text-gray-600">Sin reseñas</p>
 										<?php endif; ?>
