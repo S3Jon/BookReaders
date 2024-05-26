@@ -338,7 +338,7 @@ class Database{
 				$stmt->execute();
 				$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	
-				$stmt = $this->conn->prepare("SELECT id_list, id_user FROM lists");
+				$stmt = $this->conn->prepare("SELECT id_list, id_user FROM lists WHERE visibility = 'public' AND type IS NULL");
 				$stmt->execute();
 				$lists = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	
