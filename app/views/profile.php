@@ -149,11 +149,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 									<a href="profile?id=<?= $user_ID ?>&section=followers" class="text-sm text-black-700 font-semibold">seguidores</a>
 								</div>
 								<div class="p-4 flex flex-col items-center">
-									<a href="profile?id=<?= $user_ID ?>&section=lists" class="text-xl text-black-700 font-bold"><?= count($createdLists) ?></a>
+									<a href="profile?id=<?= $user_ID ?>&section=lists" class="text-xl text-black-700 font-bold">
+										<?php if ($createdLists): ?>
+											<?= count($createdLists) ?>
+										<?php else: ?>
+											0
+										<?php endif; ?>
+									</a>
 									<a href="profile?id=<?= $user_ID ?>&section=lists" class="text-sm text-black-700 font-semibold">listas</a>
 								</div>
 								<div class="p-4 flex flex-col items-center">
-									<a href="profile?id=<?= $user_ID ?>&section=reviews" class="text-xl text-black-700 font-bold"><?= count($reviews) ?></a>
+									<a href="profile?id=<?= $user_ID ?>&section=reviews" class="text-xl text-black-700 font-bold">
+										<?php if ($reviews): ?>
+											<?= count($reviews) ?>
+										<?php else: ?>
+											0
+										<?php endif; ?>
+									</a>
 									<a href="profile?id=<?= $user_ID ?>&section=reviews" class="text-sm text-black-700 font-semibold">reseñas</a>
 								</div>
 							</div>
@@ -184,13 +196,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 							<div class="grid grid-cols-3 mt-6">
 								<div class="flex items-center">
 									<a href="profile?id=<?= $user_ID ?>&section=listas" class="text-3xl font-bold text-gray-900 underline mr-2">Listas</a>
-									<span class="text-3xl font-bold text-gray-900">(<?= count($createdLists) ?>)</span>
+									<span class="text-3xl font-bold text-gray-900">
+										(
+											<?php if ($createdLists): ?>
+												<?= count($createdLists) ?>
+											<?php else: ?>
+												0
+											<?php endif; ?>
+										)
+									</span>
 								</div>
 								<?php if (isset($_SESSION['userData']) && $_SESSION['userData']['id_user'] == $user_ID): ?>
 									<button class="w-fit h-max-2 p-4 bg-primary text-background font-semibold rounded-md justify-end" onclick="window.location.href = 'create_list';">Crear lista</button>
 								<?php endif; ?>
 							</div>
-							<?php if (count($createdLists) > 0) : ?>
+							<?php if ($createdLists && count($createdLists) > 0) : ?>
 								<div class="flex gap-4 mt-4 pl-2">
 									<?php foreach (array_slice($createdLists, 0, 2) as $list) : ?>
 										<div class="flex gap-1 bg-[rgba(36,38,51,0.15)] shadow-md rounded-lg p-2">

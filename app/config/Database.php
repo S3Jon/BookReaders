@@ -107,16 +107,16 @@ class Database{
 	
 			if (count($existingUsers) < 10) {
 				$extraUsers = [
-					['username' => 'Ana', 'email' => 'ana@ana.ana', 'password' => password_hash('ana', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Luis', 'email' => 'luis@luis.luis', 'password' => password_hash('luis', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Carlos', 'email' => 'carlos@carlos.carlos', 'password' => password_hash('carlos', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Laura', 'email' => 'laura@laura.laura', 'password' => password_hash('laura', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Julia', 'email' => 'julia@julia.julia', 'password' => password_hash('julia', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Diego', 'email' => 'diego@diego.diego', 'password' => password_hash('diego', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Sofia', 'email' => 'sofia@sofia.sofia', 'password' => password_hash('sofia', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Pedro', 'email' => 'pedro@pedro.pedro', 'password' => password_hash('pedro', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Juan', 'email' => 'juan@juan.juan', 'password' => password_hash('juan', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Maria', 'email' => 'maria@maria.maria', 'password' => password_hash('maria', PASSWORD_DEFAULT), 'role' => 'user']
+					['username' => 'Ana', 'email' => 'ana@gmail.com', 'password' => password_hash('ana', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Luis', 'email' => 'luis@gmail.com', 'password' => password_hash('luis', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Carlos', 'email' => 'carlos@gmail.com', 'password' => password_hash('carlos', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Laura', 'email' => 'laura@gmail.com', 'password' => password_hash('laura', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Julia', 'email' => 'julia@gmail.com', 'password' => password_hash('julia', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Diego', 'email' => 'diego@gmail.com', 'password' => password_hash('diego', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Sofia', 'email' => 'sofia@gmail.com', 'password' => password_hash('sofia', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Pedro', 'email' => 'pedro@gmail.com', 'password' => password_hash('pedro', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Juan', 'email' => 'juan@gmail.com', 'password' => password_hash('juan', PASSWORD_DEFAULT), 'role' => 'user'],
+					['username' => 'Maria', 'email' => 'maria@gmail.com', 'password' => password_hash('maria', PASSWORD_DEFAULT), 'role' => 'user']
 				];
 	
 				$stmt = $this->conn->prepare("INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)");
