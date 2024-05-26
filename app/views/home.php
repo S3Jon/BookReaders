@@ -19,11 +19,15 @@ if ($sessiont < 3) {
 
 require_once '../app/controllers/BookController.php';
 require_once '../app/models/Book.php';
+require_once '../app/controllers/ListController.php';
+require_once '../app/models/List.php';
+
 
 $bookController = new controllers\BookController(new models\Book());
+$listController = new controllers\ListController(new models\ListModel());
 
-$activity = $bookController->getActivity();
-// var_dump($activity);
+$activity = $listController->getPublicLists();
+var_dump($activity);
 
 ?>
 
@@ -88,15 +92,9 @@ $activity = $bookController->getActivity();
                     </div>
                 </div>
                 <div class="flex">
-                    <!-- <?php foreach ($activity as $act) : ?>
-                        <?php if ($act['type'] == 'review') : ?>
-                            <p>El usuario <a href="profile?id=<?php echo $act['id_user'] ?>" class="text-primary"><?php echo $act['username'] ?></a> ha dejado una reseña en <a href="book?id=<?php echo $act['id_book'] ?>" class="text-primary"><?php echo $act['title'] ?></a></p>
-                        <?php elseif ($act['type'] == 'rating') : ?>
-                            <p>El usuario <a href="profile?id=<?php echo $act['id_user'] ?>" class="text-primary"><?php echo $act['username'] ?></a> ha valorado <a href="book?id=<?php echo $act['id_book'] ?>" class="text-primary"><?php echo $act['title'] ?></a></p>
-                        <?php elseif ($act['type'] == 'follow') : ?>
-                            <p>El usuario <a href="profile?id=<?php echo $act['id_user'] ?>" class="text-primary"><?php echo $act['username'] ?></a> ha seguido a <a href="profile?id=<?php echo $act['id_followed'] ?>" class="text-primary"><?php echo $act['followed'] ?></a></p>
-                        <?php endif; ?>
-                    <?php endforeach; ?> -->
+                    <?php foreach ($activity as $act) : ?>
+                        
+                    <?php endforeach; ?>
                 </div>
             </section>
         </div>
