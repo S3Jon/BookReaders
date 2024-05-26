@@ -30,6 +30,8 @@ $database->createGenresTable();
  
 $database->insertDefaultGenres();
 
+$database->createReviews();
+
 // Create default admin user
 $database->createDefaultAdminUser();
 
