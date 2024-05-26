@@ -44,14 +44,14 @@ foreach ($listasp as $key => $list) {
 				<h1 class="text-3xl font-bold text-gray-900">Explorar listas creadas por la comunidad</h1>
 			</div>
 			<!-- absolutamente robado parte 365 -->
-		<div class="w-2/3 md:mx-auto">
-			<div class="flex items-center w-full gap-20">
-				<form action="lists" method="GET" class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
-					<input type="text" name="search" class="w-full py-2 bg-transparent outline-none" placeholder="Busca lista por nombre o usuario">
-					<button type="submit"><img src="img/lupa.svg" alt=""></button>
-				</form>
+			<div class="w-2/3 md:mx-auto">
+				<div class="flex items-center w-full gap-20">
+					<form action="lists" method="GET" class="flex items-center gap-5 w-full pb-1 border-b-2 border-primary">
+						<input type="text" name="search" class="w-full py-2 bg-transparent outline-none" placeholder="Busca lista por nombre o usuario">
+						<button type="submit"><img src="img/lupa.svg" alt=""></button>
+					</form>
+				</div>
 			</div>
-		</div>
 		</div>
         <div class="grid grid-cols-2 justify-items-center gap-10 mt-10">
             <?php foreach ($listasp as $key => $list): ?>

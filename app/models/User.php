@@ -235,8 +235,28 @@ class User
 	public function searchUserByName($username)
 	{
 		try {
-			$stmt = $this->conn->prepare("SELECT * FROM users WHERE username LIKE :username");
-			$stmt->bindParam(':username', $username);
+			$query = "
+				SELECT u.id_user, u.username, u.profile_image, 
+					   COALESCE(f.followersNum, 0) AS followersNum,
+					   COALESCE(l.publicListsCount, 0) AS publicListsCount
+				FROM users u
+				LEFT JOIN (
+					SELECT id_followed, COUNT(*) AS followersNum
+					FROM followers
+					GROUP BY id_followed
+				) AS f ON u.id_user = f.id_followed
+				LEFT JOIN (
+					SELECT id_user, COUNT(*) AS publicListsCount
+					FROM lists
+					WHERE visibility = 'public' AND type IS NULL
+					GROUP BY id_user
+				) AS l ON u.id_user = l.id_user
+				WHERE u.username LIKE :search
+				ORDER BY followersNum DESC";
+			
+			$stmt = $this->conn->prepare($query);
+			$searchParam = "%" . $username . "%";
+			$stmt->bindValue(':search', $searchParam, PDO::PARAM_STR);
 			$stmt->execute();
 			return $stmt->fetchAll(PDO::FETCH_ASSOC);
 		} catch (PDOException $e) {

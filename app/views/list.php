@@ -28,6 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 		$searchQuery = $_GET['search'] ?? '';
 		
 		$listaInfo = $listController->getListById($id_list);
+		if (!$listaInfo) {
+			header('Location: lists');
+			exit;
+		}
 		if ($searchQuery) {
 			$BILInfo = $BILController->searchBookInList($id_list, $searchQuery);
 		} else {

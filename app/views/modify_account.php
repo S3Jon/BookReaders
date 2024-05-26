@@ -12,51 +12,52 @@ if (!isset($_SESSION['userData'])) {
 
 $userController = new controllers\UserController(new models\User());
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['edit_user'])) {
-        $id_user = $_POST['id_user'];
-		if ($_SESSION['userData']['id_user'] !== $id_user) {
-			header('Location: home');
-			exit;
-		}
+$userID = $_SESSION['userData']['id_user'];
+$user = $userController->readByUserID($userID);
 
-        $user = $userController->readByUserID($id_user);
+if (isset($_POST['modify_account'])) {
+	$username = $_POST['username'];
+	$email = $_POST['email'];
+	$password = $_POST['password'];
 
-    } else if (isset($_POST['update_user'])) {
-        $id_user = $_POST['id_user'];
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        //TODO - Si no hay password, no actualizarlo. Actualmente se carga la password si esta vacio.
-        $password = $_POST['new_password'];
-        $role = $_POST['role'];
-
-        if ($userController->updateUser($id_user, $username, $email, $password, $role)) {
-            echo "Usuario actualizado con éxito.";
-            header("Location: adminpanel");
-            exit;
-        } else {
-            echo "Error al actualizar el usuario.";
-        }
-
-    }
+	$userController->updateUser($user['id_user'], $username, $email, $password, $user['role']);
+	header('Location: profile');
+	exit;
 }
 
 ?>
 
-<div class="flex justify-center items-center h-screen">
-    <div class="bg-white p-8 rounded shadow-2xl w-1/3">
-        <h2 class="text-2xl font-bold mb-4">Editar Usuario</h2>
-        <form action="edit_user" method="post" class="mb-4">
-            <input type="hidden" name="id_user" value="<?php echo $user['id_user']; ?>" class="hidden">
-            <input type="text" name="username" value="<?php echo $user['username']; ?>" class="block mb-2 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-500" placeholder="Nombre de Usuario">
-            <input type="email" name="email" value="<?php echo $user['email']; ?>" class="block mb-2 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-500" placeholder="Correo Electrónico">
-            <input type="password" name="new_password" placeholder="Nueva Contraseña" class="block mb-2 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-500">
-            <select name="role" class="block mb-2 border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-blue-500">
-                <option value="user" <?php if ($user['role'] === 'user') echo 'selected'; ?>>Usuario</option>
-                <option value="admin" <?php if ($user['role'] === 'admin') echo 'selected'; ?>>Administrador</option>
-            </select>
-            <button type="submit" name="update_user" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Actualizar</button>
-        </form>
-        <a href="adminpanel" class="text-blue-500">Volver</a>
-    </div>
+<?php include 'partials/header.php'; ?>
+
+<div class="container mx-auto px-4 min-h-screen">
+	<div class="grid grid-cols-2 mt-6">
+		<div class="flex items-center">
+			<a class="text-3xl font-bold text-gray-900 underline mr-2">Modificar cuenta</a>
+		</div>
+		<div>
+			<button onclick="window.location.href='profile?id=<?= $userID ?>'" class="flex items-center justify-end gap-2 bg-red-500 text-white font-semibold px-4 py-2 rounded-md w-24">
+				<span>Cancelar</span>
+			</button>
+		</div>
+	</div>
+
+	<form action="modify_account" method="POST" enctype="multipart/form-data">
+		<div class="mt-4">
+			<label for="username" class="text-lg font-semibold text-gray-900">Nombre de usuario</label>
+			<input type="text" name="username" id="username" class="w-full p-2 border border-gray-300 rounded-md" value="<?= $user['username'] ?>" required>
+		</div>
+		<div class="mt-4">
+			<label for="email" class="text-lg font-semibold text-gray-900">Correo electrónico</label>
+			<input type="email" name="email" id="email" class="w-full p-2 border border-gray-300 rounded-md" value="<?= $user['email'] ?>">
+		</div>
+		<div class="mt-4">
+			<label for="password" class="text-lg font-semibold text-gray-900">Cambiar contraseña (dejar vacio para mantener la actual)</label>
+			<input type="password" name="password" id="password" class="w-full p-2 border border-gray-300 rounded-md">
+		</div>
+		<div class="mt-4">
+			<button type="submit" name="modify_account" class="px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-600">Modificar cuenta</button>
+		</div>
+	</form>
 </div>
+
+<?php include 'partials/footer.php'; ?>
