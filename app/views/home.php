@@ -27,7 +27,6 @@ $bookController = new controllers\BookController(new models\Book());
 $listController = new controllers\ListController(new models\ListModel());
 
 $activity = $listController->getPublicLists();
-var_dump($activity);
 
 ?>
 
