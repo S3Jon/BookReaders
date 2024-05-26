@@ -774,6 +774,10 @@ video {
   display: inline-block;
 }
 
+.inline {
+  display: inline;
+}
+
 .flex {
   display: flex;
 }
@@ -828,6 +832,10 @@ video {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-12 {
+  height: 3rem;
 }
 
 .min-h-16 {
@@ -937,6 +945,10 @@ video {
 
 .w-5\/6 {
   width: 83.333333%;
+}
+
+.w-12 {
+  width: 3rem;
 }
 
 .min-w-4 {
@@ -1416,6 +1428,10 @@ video {
 
 .pt-5 {
   padding-top: 1.25rem;
+}
+
+.pb-8 {
+  padding-bottom: 2rem;
 }
 
 .text-center {

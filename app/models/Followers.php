@@ -78,7 +78,7 @@ class Followersmodel
 	{
 		try {
 			$query = "
-				SELECT u.* 
+				SELECT u.id_user, u.username, u.profile_image
 				FROM " . $this->table_name . " ufu
 				JOIN users u ON ufu.id_followed = u.id_user
 				WHERE ufu.id_user = :id_user
@@ -92,12 +92,12 @@ class Followersmodel
 			die();
 		}
 	}
-
+	
 	public function getFollowers($id_user)
 	{
 		try {
 			$query = "
-				SELECT u.* 
+				SELECT u.id_user, u.username, u.profile_image
 				FROM " . $this->table_name . " ufu
 				JOIN users u ON ufu.id_user = u.id_user
 				WHERE ufu.id_followed = :id_user
@@ -111,6 +111,7 @@ class Followersmodel
 			die();
 		}
 	}
+	
 
 	public function isFollowing($id_user, $id_followed)
 	{
