@@ -264,5 +264,19 @@ class User
 			die();
 		}
 	}
+
+	public function updateUserProfileImage($user_id, $profile_image)
+	{
+		try {
+			$stmt = $this->conn->prepare("UPDATE users SET profile_image = :profile_image WHERE id_user = :user_id");
+			$stmt->bindParam(':profile_image', $profile_image);
+			$stmt->bindParam(':user_id', $user_id);
+			$stmt->execute();
+			return true;
+		} catch (PDOException $e) {
+			echo "Error al actualizar la imagen de perfil del usuario: " . $e->getMessage();
+			die();
+		}
+	}
 }
 ?>

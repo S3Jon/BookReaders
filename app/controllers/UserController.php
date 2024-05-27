@@ -165,4 +165,14 @@ class UserController
 		}
 		return $this->userModel->searchUserByName($username);
 	}
+
+	public function updateUserProfileImage($user_id, $profile_image)
+	{
+		if ($user_id == null) 
+		{
+			echo "El ID de usuario no puede estar vacío";
+			return false;
+		}
+		return $this->userModel->updateUserProfileImage($user_id, $profile_image);
+	}
 }
