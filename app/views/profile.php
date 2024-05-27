@@ -128,14 +128,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 									<a href="profile?id=<?= $user_ID ?>&section=followers" class="text-sm text-black-700 font-semibold">seguidores</a>
 								</div>
 								<div class="p-4 flex flex-col items-center">
-									<a href="profile?id=<?= $user_ID ?>&section=lists" class="text-xl text-black-700 font-bold">
+									<a href="profile?id=<?= $user_ID ?>&section=listas" class="text-xl text-black-700 font-bold">
 										<?php if ($createdLists): ?>
 											<?= count($createdLists) ?>
 										<?php else: ?>
 											0
 										<?php endif; ?>
 									</a>
-									<a href="profile?id=<?= $user_ID ?>&section=lists" class="text-sm text-black-700 font-semibold">listas</a>
+									<a href="profile?id=<?= $user_ID ?>&section=listas" class="text-sm text-black-700 font-semibold">listas</a>
 								</div>
 								<div class="p-4 flex flex-col items-center">
 									<a href="profile?id=<?= $user_ID ?>&section=reviews" class="text-xl text-black-700 font-bold">
