@@ -107,24 +107,25 @@ class Database{
 	
 			if (count($existingUsers) < 10) {
 				$extraUsers = [
-					['username' => 'Ana', 'email' => 'ana@gmail.com', 'password' => password_hash('ana', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Luis', 'email' => 'luis@gmail.com', 'password' => password_hash('luis', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Carlos', 'email' => 'carlos@gmail.com', 'password' => password_hash('carlos', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Laura', 'email' => 'laura@gmail.com', 'password' => password_hash('laura', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Julia', 'email' => 'julia@gmail.com', 'password' => password_hash('julia', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Diego', 'email' => 'diego@gmail.com', 'password' => password_hash('diego', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Sofia', 'email' => 'sofia@gmail.com', 'password' => password_hash('sofia', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Pedro', 'email' => 'pedro@gmail.com', 'password' => password_hash('pedro', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Juan', 'email' => 'juan@gmail.com', 'password' => password_hash('juan', PASSWORD_DEFAULT), 'role' => 'user'],
-					['username' => 'Maria', 'email' => 'maria@gmail.com', 'password' => password_hash('maria', PASSWORD_DEFAULT), 'role' => 'user']
+					['username' => 'Ana', 'email' => 'ana@gmail.com', 'password' => password_hash('ana', PASSWORD_DEFAULT), 'role' => 'user', 'profile_image' => 'public/img/demo_user_pic/cervantes.png'],
+					['username' => 'Luis', 'email' => 'luis@gmail.com', 'password' => password_hash('luis', PASSWORD_DEFAULT), 'role' => 'user', 'profile_image' => 'public/img/demo_user_pic/dostoyevski.png'],
+					['username' => 'Carlos', 'email' => 'carlos@gmail.com', 'password' => password_hash('carlos', PASSWORD_DEFAULT), 'role' => 'user', 'profile_image' => 'public/img/demo_user_pic/espronceda.png'],
+					['username' => 'Laura', 'email' => 'laura@gmail.com', 'password' => password_hash('laura', PASSWORD_DEFAULT), 'role' => 'user', 'profile_image' => 'public/img/demo_user_pic/goldberg.png'],
+					['username' => 'Julia', 'email' => 'julia@gmail.com', 'password' => password_hash('julia', PASSWORD_DEFAULT), 'role' => 'user', 'profile_image' => 'public/img/demo_user_pic/holmes.png'],
+					['username' => 'Diego', 'email' => 'diego@gmail.com', 'password' => password_hash('diego', PASSWORD_DEFAULT), 'role' => 'user', 'profile_image' => 'public/img/demo_user_pic/quevedo.png'],
+					['username' => 'Sofia', 'email' => 'sofia@gmail.com', 'password' => password_hash('sofia', PASSWORD_DEFAULT), 'role' => 'user', 'profile_image' => 'public/img/demo_user_pic/tenthdoc.png'],
+					['username' => 'Pedro', 'email' => 'pedro@gmail.com', 'password' => password_hash('pedro', PASSWORD_DEFAULT), 'role' => 'user', 'profile_image' => 'public/img/demo_user_pic/trajan.png'],
+					['username' => 'Juan', 'email' => 'juan@gmail.com', 'password' => password_hash('juan', PASSWORD_DEFAULT), 'role' => 'user', 'profile_image' => 'public/img/demo_user_pic/turing.png'],
+					['username' => 'Maria', 'email' => 'maria@gmail.com', 'password' => password_hash('maria', PASSWORD_DEFAULT), 'role' => 'user', 'profile_image' => 'public/img/demo_user_pic/vangogh.png']
 				];
 	
-				$stmt = $this->conn->prepare("INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)");
+				$stmt = $this->conn->prepare("INSERT INTO users (username, email, password, role, profile_image) VALUES (:username, :email, :password, :role, :profile_image)");
 				foreach($extraUsers as $user){
 					$stmt->bindParam(':username', $user['username']);
 					$stmt->bindParam(':email', $user['email']);
 					$stmt->bindParam(':password', $user['password']);
 					$stmt->bindParam(':role', $user['role']);
+					$stmt->bindParam(':profile_image', $user['profile_image']);
 					$stmt->execute();
 					$id_user = $this->conn->lastInsertId();
 					$this->createDemoUserBasicLists($id_user);

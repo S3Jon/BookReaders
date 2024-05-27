@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				<div class="flex gap-12 justify-center">
 					<!-- User info and actions -->
 					<aside class="flex flex-col items-center gap-5 w-80 border border-borderGrey px-10 py-12">
-						<img src="<?= !empty($userInfo['profile_image']) ? htmlspecialchars($userInfo['profile_image']) : 'img/maestro.svg' ?>" alt="<?= htmlspecialchars($userInfo['username']) ?>" class="w-56 h-80 object-image rounded-lg">
+						<img src="<?= !empty($userInfo['profile_image']) ? htmlspecialchars($userInfo['profile_image']) : 'img/maestro.svg' ?>" alt="<?= htmlspecialchars($userInfo['username']) ?>" class="w-56 h-auto object-image rounded-lg">
 						<p class="text-center text-3xl text-black font-bold"><?= htmlspecialchars($userInfo['username']) ?></p>
 						<?php if (isset($_SESSION['userData']) && $_SESSION['userData']['id_user'] == $user_ID): ?>
 							<button class="w-4/5 p-2 bg-accent font-semibold rounded-md" onclick="window.location.href = 'modify_account';">Editar perfil</button>
