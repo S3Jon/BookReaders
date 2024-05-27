@@ -126,12 +126,36 @@ class Database{
 					$stmt->bindParam(':password', $user['password']);
 					$stmt->bindParam(':role', $user['role']);
 					$stmt->execute();
+					$id_user = $this->conn->lastInsertId();
+					$this->createDemoUserBasicLists($id_user);
 				}
 			} else {
 				// echo "Ya existen usuarios extra en la base de datos.";
 			}
 		} catch(PDOException $e) {
 			echo "Error al crear los usuarios extra: " . $e->getMessage();
+		}
+	}
+
+	// demo user basic lists
+	private function createDemoUserBasicLists($id_user) {
+		$visDB = 'public';
+		$typeDB = ['favorite', 'read', 'want_to_read', 'reading', 'dropped'];
+		$listNameDB = ['Favoritos', 'Leídos', 'Por Leer', 'Leyendo', 'Abandonados'];
+		try {
+			$query = "INSERT INTO lists (id_user, list_name, type, visibility) VALUES (:id_user, :list_name, :type, :visibility)";
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_user', $id_user);
+			$stmt->bindParam(':visibility', $visDB);
+			for ($i = 0; $i < 5; $i++) {
+				$stmt->bindParam(':list_name', $listNameDB[$i]);
+				$stmt->bindParam(':type', $typeDB[$i]);
+				$stmt->execute();
+			}
+			return true;
+		} catch (PDOException $e) {
+			echo "Error al crear las listas básicas del usuario demo: " . $e->getMessage();
+			return false;
 		}
 	}
 
@@ -235,7 +259,7 @@ class Database{
 
 	public function insertDefaultLists(){
 		try {
-			$stmt = $this->conn->prepare("SELECT * FROM lists");
+			$stmt = $this->conn->prepare("SELECT * FROM lists WHERE type IS NULL");
 			$stmt->execute();
 			$defaultListsExist = $stmt->fetch(PDO::FETCH_ASSOC);
 	
