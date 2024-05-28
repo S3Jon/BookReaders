@@ -191,12 +191,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             <aside class="flex flex-col items-center gap-5 w-56">
                 <img src="<?= $image ?>" alt="<?= $title ?>" class="w-56 h-80 object-image rounded-lg">
 				<form action="" class="w-4/5" method="POST">
-					<input type="hidden" name="favourite_list" value="<?= $favorite['id_list'] ?>">
-					<?php if (isset($favorite) && $favorite['status']) : ?>
-						<button type="submit" name="toggle_favourite" class="w-full p-2 bg-red-400 text-white font-semibold rounded-md">Quitar de favoritos</button>
-					<?php else : ?>
-						<button type="submit" name="toggle_favourite" class="w-full p-2 bg-accent text-white font-semibold rounded-md">Añadir a favoritos</button>
-					<?php endif; ?>
+					<input type="hidden" name="favourite_list" value="<?= $favorite['id_list'] ?>">                    
+                    <button type="submit" name="toggle_favourite" id="toggle_favourite" class="w-full p-2 text-white font-semibold rounded-md <?= $favorite['status'] ? 'bg-red-400' : 'bg-accent' ?>" class="bg-primary text-background font-semibold py-2 rounded-md w-full"><?= $favorite['status'] ? 'Quitar de favoritos' : 'Añadir a favoritos' ?></button>
 				</form>
                 <button id="addToListBtn" class="w-4/5 p-2 bg-primary text-background font-semibold rounded-md">Añadir a una lista</button>
             </aside>
@@ -339,12 +335,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
       <form  action="" method="post" id="addToListForm" class="flex flex-col gap-4">
         <?php foreach ($bookInList as $list) : ?>
             <div class="flex items-center gap-2" id="listCheckbox">
-                <?php echo$list['id_list']; ?>
               <input type="checkbox" name="lists[]" value="<?= $list['id_list'] ?>" id="<?= $list['id_list'] ?>" <?= $list['status'] ? 'checked' : '' ?>>
               <label for="<?= $list['id_list'] ?>"><?= $list['list_name'] ?></label>
             </div>
         <?php endforeach; ?>
-        <button type="submit" name="add_to_list" class="bg-primary text-background font-semibold py-2 rounded-md">Añadir a la lista</button>
+        <!-- <button type="submit" name="add_to_list" class="bg-primary text-background font-semibold py-2 rounded-md">Añadir a la lista</button> -->
       </form>
     </div>
   </div>
@@ -396,6 +391,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             let action = this.checked ? 'add' : 'remove';
 
+            if (idList === '<?= $favorite['id_list'] ?>') {
+                const toggleFavouriteBtn = document.getElementById('toggle_favourite');
+                toggleFavouriteBtn.innerText = this.checked ? 'Quitar de favoritos' : 'Añadir a favoritos';
+                toggleFavouriteBtn.classList.toggle('bg-red-400');
+                toggleFavouriteBtn.classList.toggle('bg-accent');
+            }
+
             fetch('book', {
                 method: 'POST',
                 headers: {
@@ -416,5 +418,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
+
+    
 });
 </script>
