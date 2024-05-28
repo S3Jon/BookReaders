@@ -68,6 +68,11 @@ class BILModel
 	//Llamarla desde la pagina de los libros; a menos que queramos añadir libros desde la lista con un buscador o algo?
 	public function addBook($id_list, $isbn){
 		try {
+			//check if book is already in list
+			if ($this->isBookInList($id_list, $isbn)) {
+				return false;
+			}
+
 			$query = "INSERT INTO " . $this->table_name . " (id_list, isbn) VALUES (:id_list, :isbn)";
 			$stmt = $this->conn->prepare($query);
 			$stmt->bindParam(':id_list', $id_list);
@@ -130,7 +135,7 @@ class BILModel
 			$stmt->bindParam(':id_list', $id_list);
 			$stmt->bindParam(':isbn', $isbn);
 			$stmt->execute();
-			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+			$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 			if ($row) {
 				return true;

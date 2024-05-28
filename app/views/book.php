@@ -162,15 +162,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_list'])) {
     $listIds = $_POST['lists'];
     $isbn = $_GET['isbn'];
     foreach ($listIds as $listId) {
-        if (!$BILController->addBook($listId, $isbn)) {
-            echo 'Error al añadir el libro a la lista con ID: ' . $listId;
-            exit;
-        }
+        $BILController->addBook($listId, $isbn);
     }
     header('Location: book?isbn=' . $isbn);
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    $action = $_POST['action'];
+    $idList = $_POST['idList'];
+    $isbn = $_POST['isbn'];
+
+    if ($action === 'add') {
+        $BILController->addBook($idList, $isbn);
+    } elseif ($action === 'remove') {
+        $BILController->removeBook($idList, $isbn);
+    }
+}
 
 ?>
 
@@ -330,12 +338,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_list'])) {
     <div class="modal-content py-4 text-left px-6">
       <form  action="" method="post" id="addToListForm" class="flex flex-col gap-4">
         <?php foreach ($bookInList as $list) : ?>
-          <?php if (!$list['status']) : ?>
-            <div class="flex items-center gap-2">
-              <input type="checkbox" name="lists[]" value="<?= $list['id_list'] ?>" id="<?= $list['id_list'] ?>">
+            <div class="flex items-center gap-2" id="listCheckbox">
+                <?php echo$list['id_list']; ?>
+              <input type="checkbox" name="lists[]" value="<?= $list['id_list'] ?>" id="<?= $list['id_list'] ?>" <?= $list['status'] ? 'checked' : '' ?>>
               <label for="<?= $list['id_list'] ?>"><?= $list['list_name'] ?></label>
             </div>
-          <?php endif; ?>
         <?php endforeach; ?>
         <button type="submit" name="add_to_list" class="bg-primary text-background font-semibold py-2 rounded-md">Añadir a la lista</button>
       </form>
@@ -381,5 +388,33 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+    const listCheckboxes = document.querySelectorAll('#listCheckbox input[type="checkbox"]');
+    listCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const idList = this.value;
+            const isbn = '<?= $_GET['isbn'] ?>';
+
+            let action = this.checked ? 'add' : 'remove';
+
+            fetch('book', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: action,
+                    idList: idList,
+                    isbn: isbn
+                })
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
 });
 </script>
