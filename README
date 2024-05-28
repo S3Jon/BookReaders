@@ -12,4 +12,6 @@ Una vez instalado XAMPP se ha de ir a su raíz de instalación (directorio gener
 
 Con el archivo en htdocs abriremos el programa XAMPP y se iniciarán los módulos Apache y MySQL. 
 
-Para acceder a la página iremos a http://localhost/BookReaders/ . La base de datos se genera automáticamente y podemos iniciar sesión al usuario admin (admin@gmail.com / admin), o registrar nuevos usuarios. 
+Para acceder a la página iremos a http://localhost/BookReaders/
+
+La base de datos se genera automáticamente y podemos iniciar sesión al usuario admin (admin@gmail.com / admin), o registrar nuevos usuarios. 
