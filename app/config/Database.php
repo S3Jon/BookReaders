@@ -89,6 +89,7 @@ class Database{
                 $stmt->bindParam(':email', $email);
                 $stmt->bindParam(':password', $password);
                 $stmt->execute();
+				$this->createDemoUserBasicLists(1);
 
                 // echo "Usuario administrador creado exitosamente.";
             } else {
