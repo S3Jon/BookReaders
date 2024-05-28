@@ -372,7 +372,7 @@ class ListModel //List está reservado por PHP
 					FROM user_follow_lists
 					GROUP BY id_list
 				) AS followersCount ON l.id_list = followersCount.id_list
-				WHERE l.id_user = :id_user AND l.visibility = "public" AND l.type IS NULL
+				WHERE l.id_user = :id_user AND l.type IS NULL
 				GROUP BY l.id_list
 				ORDER BY followersNum DESC';
 

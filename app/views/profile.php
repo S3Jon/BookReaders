@@ -40,6 +40,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $followedUsers = $UFUController->getFollowedUsers($user_ID);
         $followers = $UFUController->getFollowers($user_ID);
         $reviews = $reviewsController->getUserReviews($user_ID);
+
+		if (isset($_SESSION['userData']) && $_SESSION['userData']['id_user'] != $user_ID) {
+			$reviews = array_filter($reviews, function($review) {
+				return $review['visibility'] == 'public';
+			});
+
+			$createdLists = array_filter($createdLists, function($list) {
+				return $list['visibility'] == 'public';
+			});
+		}
+		
     }
 	else if (isset($_GET['search'])) {
 		$search = $_GET['search'];
