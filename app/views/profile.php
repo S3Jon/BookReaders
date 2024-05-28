@@ -13,6 +13,11 @@ require_once "../app/models/Followers.php";
 require_once "../app/models/Review.php";
 require_once "../app/controllers/ReviewController.php";
 
+if (!isset($_SESSION['userData'])) {
+	header('Location: login');
+	exit();
+}
+
 $user = new models\User();
 $book = new models\Book();
 $list = new models\ListModel();
