@@ -1,9 +1,16 @@
 <?php
 
-session_start();
-
 require_once '../app/controllers/ListController.php';
 require_once '../app/models/List.php';
+require_once '../app/controllers/UserController.php';
+require_once '../app/models/User.php';
+
+session_start();
+
+if (!isset($_SESSION['userData'])) {
+    header('Location: login');
+    exit;
+}
 
 $listController = new controllers\ListController(new models\ListModel());
 

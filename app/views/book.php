@@ -10,7 +10,7 @@ require_once '../app/models/BookInList.php';
 
 session_start();
 if (!isset($_SESSION['userData'])) {
-    header('Location: home');
+    header('Location: login');
     exit;
 }
 

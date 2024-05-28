@@ -7,7 +7,12 @@ require_once '../app/models/Book.php';
 
 session_start();
 //doble comprobación porque se salta la primera por alguna razón
-if (!isset($_SESSION['userData']) || $_SESSION['userData']['role'] !== 'admin') {
+if (!isset($_SESSION['userData'])) {
+    header('Location: login');
+    exit;
+}
+
+if ($_SESSION['userData']['role'] !== 'admin') {
     header('Location: home');
     exit;
 }

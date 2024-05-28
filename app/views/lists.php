@@ -11,6 +11,11 @@ include_once "../app/helpers/format_followers.php";
 
 session_start();
 
+if (!isset($_SESSION['userData'])) {
+	header('Location: login');
+	exit;
+}
+
 $listController = new controllers\ListController(new models\ListModel());
 $userController = new controllers\UserController(new models\User());
 $UFLController = new models\UFLModel();
