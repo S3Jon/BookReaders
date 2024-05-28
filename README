@@ -6,7 +6,7 @@ Requisitos:
 Para poder hacer uso del proyecto se ha de tener instalado XAMPP. 
 
 
-Instalación 
+Instalación:
 
 Una vez instalado XAMPP se ha de ir a su raíz de instalación (directorio general: C:\xampp). Después accederemos a la carpeta htdocs y pegaremos la carpeta BookReaders del archivo zip entregado. 
 
