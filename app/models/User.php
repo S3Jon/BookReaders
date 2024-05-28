@@ -36,7 +36,7 @@ class User
                 return false;
             }
             
-            $query = "INSERT INTO " . $this->table_name . " (username, email, password, role) VALUES (:username, :email, :password, :role)";
+            $query = "INSERT INTO " . $this->table_name . " (username, email, password, role, profile_image) VALUES (:username, :email, :password, :role, :profile_image)";
             
             // Preparamos la sentencia SQL para insertar los datos
             $stmt = $this->conn->prepare($query);
@@ -46,6 +46,9 @@ class User
             $this->email = htmlspecialchars(strip_tags($this->email));
             $this->password = htmlspecialchars(strip_tags($this->password));
             $this->role = htmlspecialchars(strip_tags($this->role));
+
+			//Default profile picture
+			$profile_image = 'public/img/user_placeholder.png';
             
             // Vincular los datos
             $stmt->bindParam(':username', $this->username);
@@ -53,6 +56,7 @@ class User
             $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
             $stmt->bindParam(':password', $password_hash);
             $stmt->bindParam(':role', $this->role);
+			$stmt->bindParam(':profile_image', $profile_image);
 
             // Ejecutar la consulta
             if($stmt->execute()) {
