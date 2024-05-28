@@ -2,8 +2,12 @@
 
 namespace models;
 use PDO;
+use models\ListModel;
+use controllers\ListController;
 
 require_once "../app/config/Database.php";
+require_once "../app/models/List.php";
+require_once "../app/controllers/ListController.php";
 
 use config\Database;
 use PDOException;
@@ -69,6 +73,8 @@ class BILModel
 			$stmt->bindParam(':id_list', $id_list);
 			$stmt->bindParam(':isbn', $isbn);
 			$stmt->execute();
+
+			return true;
 		} catch (PDOException $e){
 			echo "Error al añadir libro a la lista: " . $e->getMessage();
 			die();
@@ -116,5 +122,61 @@ class BILModel
 		}
 	}
 
+	public function isBookInList($id_list, $isbn)
+	{
+		try {
+			$query = "SELECT * FROM " . $this->table_name . " WHERE id_list = :id_list AND isbn = :isbn";
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_list', $id_list);
+			$stmt->bindParam(':isbn', $isbn);
+			$stmt->execute();
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			if ($row) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (PDOException $e) {
+			echo "Error al buscar libro en la lista: " . $e->getMessage();
+			return false;
+		}
+	}
+
+	public function getUserListsWithBookStatus($id_user, $isbn)
+	{
+		try
+		{
+			$listController = new ListController(new ListModel());
+			$lists = $listController->getAllUserLists($id_user);
+			
+			$listsWithStatus = [];
+			
+			foreach ($lists as $list) {
+				$list['status'] = $this->isBookInList($list['id_list'], $isbn);
+				$listsWithStatus[] = $list;
+			}
+	
+			return $listsWithStatus;
+		} 
+		catch (PDOException $e) {
+			echo "Error al buscar libros en la lista: " . $e->getMessage();
+			return [];
+		}
+	}
+
+	public function toggleBookInlist($idList, $isbn)
+	{
+		try {
+			if ($this->isBookInList($idList, $isbn)) {
+				return $this->removeBook($idList, $isbn);
+			} else {
+				return $this->addBook($idList, $isbn);
+			}
+		} catch (PDOException $e) {
+			echo "Error al añadir/eliminar libro de la lista: " . $e->getMessage();
+			return false;
+		}
+	}
 }
 ?>

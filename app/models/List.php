@@ -386,6 +386,19 @@ class ListModel //List está reservado por PHP
 		}
 	}
 
+	public function getAllUserLists($id_user)
+	{
+		try {
+			$query = 'SELECT * FROM ' . $this->table . ' WHERE id_user = :id_user';
+			$stmt = $this->conn->prepare($query);
+			$stmt->bindParam(':id_user', $id_user);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			echo $e->getMessage();
+		}
+	}
+
 	
 	
 	

@@ -105,4 +105,9 @@ class ListController
 	{
 		return $this->listModel->getUserTopLists($id_user);
 	}
+
+	public function getAllUserLists($id_user)
+	{
+		return $this->listModel->getAllUserLists($id_user);
+	}
 }

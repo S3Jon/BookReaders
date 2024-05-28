@@ -6,6 +6,7 @@ require_once '../app/controllers/BookController.php';
 require_once '../app/models/Book.php';
 require_once '../app/controllers/ReviewController.php';
 require_once '../app/models/Review.php';
+require_once '../app/models/BookInList.php';
 
 session_start();
 if (!isset($_SESSION['userData'])) {
@@ -16,9 +17,26 @@ if (!isset($_SESSION['userData'])) {
 $bookController = new controllers\BookController(new models\Book());
 $reviewController = new controllers\ReviewController(new models\Review());
 $userController = new controllers\UserController(new models\User());
+$BILController = new models\BILModel();
 
 $book = $bookController->readBook($_GET['isbn']);
 $reviews = $reviewController->getReviews($_GET['isbn']);
+if (isset($_SESSION['userData'])){
+	$bookInList = $BILController->getUserListsWithBookStatus($_SESSION['userData']['id_user'], $_GET['isbn']);
+	foreach ($bookInList as $list)
+	{
+		if ($list['type'] === 'favorite')
+		{
+			$favorite = $list;
+			break;
+		}
+	}
+	/* var_dump($bookInList);
+	if (isset($favorite))
+	{
+		var_dump($favorite);
+	} */
+}
 
 //reviws visibility control 
 $reviews = array_filter($reviews, function ($review) {
@@ -129,6 +147,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_review'])) {
     }
 }
 
+	if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['toggle_favourite'])) {
+		$favorite = $_POST['favourite_list'];
+		$isbn = $_GET['isbn'];
+		if ($BILController->toggleBookInlist($favorite, $isbn)) {
+			header('Location: book?isbn=' . $isbn);
+			exit;
+		} else {
+			echo 'Error al togglear favorito';
+	}
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_to_list'])) {
+    $listIds = $_POST['lists'];
+    $isbn = $_GET['isbn'];
+    foreach ($listIds as $listId) {
+        if (!$BILController->addBook($listId, $isbn)) {
+            echo 'Error al añadir el libro a la lista con ID: ' . $listId;
+            exit;
+        }
+    }
+    header('Location: book?isbn=' . $isbn);
+    exit;
+}
+
+
 ?>
 
 <?php include_once 'partials/header.php'; ?>
@@ -139,8 +182,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_review'])) {
             <!-- Book image and actions -->
             <aside class="flex flex-col items-center gap-5 w-56">
                 <img src="<?= $image ?>" alt="<?= $title ?>" class="w-56 h-80 object-image rounded-lg">
-                <button class="w-4/5 p-2 bg-accent font-semibold rounded-md">Añadir a favoritos</button>
-                <button class="w-4/5 p-2 bg-primary text-background font-semibold rounded-md">Añadir a una lista</button>
+				<form action="" class="w-4/5" method="POST">
+					<input type="hidden" name="favourite_list" value="<?= $favorite['id_list'] ?>">
+					<?php if (isset($favorite) && $favorite['status']) : ?>
+						<button type="submit" name="toggle_favourite" class="w-full p-2 bg-red-400 text-white font-semibold rounded-md">Quitar de favoritos</button>
+					<?php else : ?>
+						<button type="submit" name="toggle_favourite" class="w-full p-2 bg-accent text-white font-semibold rounded-md">Añadir a favoritos</button>
+					<?php endif; ?>
+				</form>
+                <button id="addToListBtn" class="w-4/5 p-2 bg-primary text-background font-semibold rounded-md">Añadir a una lista</button>
             </aside>
             <!-- Book details -->
             <section class="border border-borderGrey w-2/4 px-10 py-12">
@@ -209,11 +259,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_review'])) {
                             <div class="my-3 border-t border-t-borderGrey p-6 last:pb-0">
                                 <div class="flex justify-between">
                                     <div class="flex gap-3">
-                                        <img src="img/maestro.svg" alt="user" class="w-10">
+                                        <img src="<?= $userController->readByUserID($review['id_user'])['profile_image'] ?>" alt="user" class="w-10">
                                         <div class="flex flex-col">
-                                            <p class="font-bold"><?=
+                                            <a href="profile?id=<?= $review['id_user'] ?>" class="font-bold"><?=
                                                 $userController->readByUserID($review['id_user'])['username']
-                                            ?></p>
+                                            ?></a>
                                             <p class="text-sm"><?= $review['created_at'] ?></p>
                                         </div>
                                     </div>
@@ -268,4 +318,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_review'])) {
     </div>
 </div>
 
+<div id="myModal" class="fixed inset-0 z-50 items-center flex justify-center hidden">
+  <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+  <div class="modal-container bg-white w-5/6 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+    <div class="modal-close absolute top-0 right-0 cursor-pointer flex flex-col items-center mt-4 mr-4 text-white text-sm z-50">
+      <svg class="fill-current text-white" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+        <path d="M10.589 9.293l4.95-4.95a1 1 0 1 0-1.414-1.414l-4.95 4.95-4.95-4.95A1 1 0 1 0 4.05 4.95l4.95 4.95-4.95 4.95a1 1 0 1 0 1.414 1.414l4.95-4.95 4.95 4.95a1 1 0 1 0 1.414-1.414l-4.95-4.95z"/>
+      </svg>
+      <span class="text-sm">(Esc)</span>
+    </div>
+    <div class="modal-content py-4 text-left px-6">
+      <form  action="" method="post" id="addToListForm" class="flex flex-col gap-4">
+        <?php foreach ($bookInList as $list) : ?>
+          <?php if (!$list['status']) : ?>
+            <div class="flex items-center gap-2">
+              <input type="checkbox" name="lists[]" value="<?= $list['id_list'] ?>" id="<?= $list['id_list'] ?>">
+              <label for="<?= $list['id_list'] ?>"><?= $list['list_name'] ?></label>
+            </div>
+          <?php endif; ?>
+        <?php endforeach; ?>
+        <button type="submit" name="add_to_list" class="bg-primary text-background font-semibold py-2 rounded-md">Añadir a la lista</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
 <?php include_once 'partials/footer.php'; ?>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const addToListBtn = document.getElementById('addToListBtn');
+  const modal = document.getElementById('myModal');
+  const closeBtn = document.querySelector('.modal-close');
+  const addToListForm = document.getElementById('addToListForm');
+
+  addToListBtn.addEventListener('click', function () {
+    modal.classList.remove('hidden');
+    closeBtn.addEventListener('click', closeModal);
+    window.addEventListener('click', outsideClick);
+    document.body.classList.add('modal-active');
+  });
+
+  function closeModal() {
+    modal.classList.add('hidden');
+    closeBtn.removeEventListener('click', closeModal);
+    window.removeEventListener('click', outsideClick);
+    document.body.classList.remove('modal-active');
+  }
+
+  function outsideClick(e) {
+    if (e.target === modal) {
+      closeModal();
+    }
+  }
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  });
+
+});
+</script>
