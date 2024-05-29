@@ -180,6 +180,20 @@ class Book
         }
 	}
 
+    // Método para obtener los libros más recientes
+    public function getLast10Books()
+    {
+        try {
+            $query = "SELECT * FROM " . $this->table_name . " ORDER BY id_book DESC LIMIT 10";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error al obtener los 10 libros más recientes: " . $e->getMessage();
+            die();
+        }
+    }
+
 	// Método para obtener los libros más populares
 	public function getTopBooks()
 	{

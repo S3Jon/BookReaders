@@ -39,6 +39,11 @@ class ReviewController {
         return $this->reviewModel->getReviews($isbn);
     }
 
+    public function getLast10Reviews()
+    {
+        return $this->reviewModel->getLast10Reviews();
+    }
+
     public function updateReview($data)
     {
         $this->reviewModel->id_review = $data['id_review'];

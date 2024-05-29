@@ -98,6 +98,28 @@ class Review
         }
     }
 
+    // Get the last 10 reviews
+    public function getLast10Reviews()
+    {
+        try {
+            // Prepare the query to get the last 10 reviews
+            $stmt = $this->conn->prepare("
+                SELECT br.*, b.image, u.username
+                FROM book_reviews br 
+                LEFT JOIN books b ON br.isbn = b.isbn
+                LEFT JOIN users u ON u.id_user = br.id_user
+                ORDER BY br.id_review DESC 
+                LIMIT 10");
+            $stmt->execute();
+
+            // Get all rows of execution results as associative array
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error al obtener las últimas 10 reseñas: " . $e->getMessage();
+            die();
+        }
+    }
+
     // Update a review
     public function update()
     {

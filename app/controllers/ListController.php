@@ -17,6 +17,11 @@ class ListController
 		return $this->listModel->getPublicLists();
 	}
 
+	public function getLast10PublicLists()
+	{
+		return $this->listModel->getLast10PublicLists();
+	}
+
 	public function getListById($id_list)
 	{
 		if ($id_list == null) {
