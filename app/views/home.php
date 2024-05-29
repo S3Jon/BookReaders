@@ -2,8 +2,10 @@
 
 session_start();
 
-//TODO - esto es fix temporal, mejorar sistema
-//mensaje inicio
+if (!isset($_SESSION['userData'])) {
+    header('Location: landing');
+    exit;
+}
 
 if (isset($_SESSION['userData']) && !empty($_SESSION['userData']['username'])) {
 	$sessiont = $_SESSION['userData']['role'] == 'admin' ? 2 : 1;
