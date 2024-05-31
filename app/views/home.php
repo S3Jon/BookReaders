@@ -90,7 +90,9 @@ $activity = array_slice($activity, 0, 10);
                     <?php foreach ($activity as $act) : ?>
                         <?php if (isset($act['id_book'])) : ?>
                             <div class="flex gap-4 items-start mt-4 p-4 bg-primary/15 rounded-lg">
-                                <img src="<?php echo $act['image'] ?>" alt="Book cover" class="w-32 h-40 object-cover rounded-lg">
+                                <a href="book?isbn=<?= $act['isbn'] ?>" class="flex gap-4 items-start">
+                                    <img src="<?php echo $act['image'] ?>" alt="Book cover" class="w-32 h-40 object-cover rounded-lg">
+                                </a>
                                 <div class="flex flex-col gap-4 w-full">
                                     <div class="flex items-center justify-between">
                                         <a href="profile?id=<?= $act['author'] ?>" class="font-bold"><?= $act['author'] ?> ha publicado un libro. <span class="font-normal"><?= timeDifference($act['created_at']) ?></span></a>
@@ -103,7 +105,9 @@ $activity = array_slice($activity, 0, 10);
                             </div>
                         <?php elseif (isset($act['id_review'])) : ?>
                             <div class="flex gap-4 items-start mt-4 p-4 bg-primary/15 rounded-lg">
-                                <img src="<?php echo $act['image'] ?>" alt="Book cover" class="w-32 h-40 object-cover rounded-lg">
+                                <a href="book?isbn=<?= $act['isbn'] ?>" class="flex gap-4 items-start">
+                                    <img src="<?php echo $act['image'] ?>" alt="Book cover" class="w-32 h-40 object-cover rounded-lg">
+                                </a>
                                 <div class="flex flex-col gap-4 w-full">
                                     <div class="flex items-center justify-between">
                                         <a href="profile?id=<?= $act['id_user'] ?>" class="font-bold"><?= $act['username'] ?> ha publicado una reseña. <span class="font-normal"><?= timeDifference($act['created_at']) ?></span></a>
@@ -119,7 +123,9 @@ $activity = array_slice($activity, 0, 10);
                             </div>
                         <?php elseif (isset($act['id_list'])) : ?>
                             <div class="flex gap-4 items-start mt-4 p-4 bg-primary/15 rounded-lg">
-                                <img src="<?php if (isset($act['book_image'])) echo $act['book_image']; else echo 'img/book-placeholder.jpeg'; ?>" alt="Book cover" class="w-32 h-40 object-cover rounded-lg">
+                                <a href="list?id=<?= $act['id_list'] ?>" class="flex gap-4 items-start">
+                                    <img src="<?php if (isset($act['book_image'])) echo $act['book_image']; else echo 'img/book-placeholder.jpeg'; ?>" alt="Book cover" class="w-32 h-40 object-cover rounded-lg">
+                                </a>
                                 <div class="flex flex-col justify-between gap-4 w-full">
                                     <div class="flex items-center justify-between">
                                         <a href="profile?id=<?= $act['id_user'] ?>" class="font-bold"><?= $act['username'] ?> ha creado una lista. <span class="font-normal"><?= timeDifference($act['created_at']) ?></span></a>
