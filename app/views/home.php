@@ -59,12 +59,12 @@ $activity = array_slice($activity, 0, 10);
                 <h1 class="text-3xl font-bold font-serif4 text-center">Libro de la semana</h1>
                 <img src="uploads/kafka.svg" alt="Book cover" class="w-48 h-64 object-cover">
                 <div class="flex flex-col items-center w-full">
-                    <h2 class="font-bold truncate" title="Titulo">Titulo</h2>
-                    <a href="profile?id=1" class="truncate" title="Autor">Autor</a>
+                    <h2 class="font-bold truncate" title="Titulo">The Metamorphosis</h2>
+                    <a href="profile?id=1" class="truncate" title="Autor">Kafka</a>
                     <hr class="mt-2 w-full h-[2px] bg-accent border-accent">
                     <div class="max-h-24 mt-6 overflow-hidden text-ellipsis">
                         <p class="text-center line-clamp-3" title="Descripción">
-                            Descripción
+                            Gregor Samsa, un modesto viajante de comercio, se despierta una mañana convertido en un insecto.
                         </p>
                     </div>
                     <button class="mt-6 w-full p-2 bg-primary text-background font-semibold rounded-md">Ver más</button>
