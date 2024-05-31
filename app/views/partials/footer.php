@@ -16,9 +16,9 @@
                         <li class="mb-4">
                             <a href="contacto" class="hover:underline">Contacto</a>
                         </li>
-                        <li class="mb-4">
+                        <!-- <li class="mb-4">
                             <a href="faq" class="hover:underline">FAQ</a>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
                 <div class="mt-6">
