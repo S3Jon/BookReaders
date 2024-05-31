@@ -23,7 +23,7 @@
 
 					<textarea id="mensaje" name="mensaje" rows="4" cols="50" placeholder="¿Qué nos quieres contar?" class="p-3 rounded-md" required></textarea><br><br>
 
-					<input class="w-auto px-6 ml-7 py-1 mt-2 text-right bg-accent font-semibold rounded-3xl" type="submit" value="Enviar">
+					<input class="w-auto px-6 py-1 mt-2 text-right bg-accent font-semibold rounded-3xl" type="submit" value="Enviar">
                 
 				</form>
 			</div>
