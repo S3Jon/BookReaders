@@ -57,9 +57,6 @@ if (!empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['pass
         <div class="flex items-center flex-col max-w-[42rem] bg-transparent">
             <img src="img/logo_white.svg" class="h-20 pl-4" alt="BookReaders_logo">
             <hr class="border-2 border-white w-[22rem] mb-4">
-            <p class="mt-7 text-xl text-background">
-            ¡Únete a nuestra comunidad de lectores! 
-            </p>
             <div class="mt-7 w-full">
                 <form action="" method="POST">
                     <div class="mb-4">
@@ -81,7 +78,7 @@ if (!empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['pass
                         <input placeholder="Repetir contraseña" type="password" class="p-3 rounded w-full bg-background" id="repeatPassword" name="repeatPassword" required>
                     </div>
                     <div class="flex justify-center">
-                        <button href="register" class="text-xl w-fit font-semibold px-6 py-2 rounded bg-accent text-black hover:text-slate-700">Registrarme</button>
+                        <button href="register" class="text-xl w-fit font-semibold px-6 py-2 rounded bg-accent text-black hover:text-slate-700">Añadir usuario</button>
                     </div>
 
                     <?php
@@ -95,8 +92,7 @@ if (!empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['pass
             </div>
             
             <div class="flex mt-7 flex-col justify-center items-center gap-1">
-                <a href="login" class="text-xl w-fit py-2 rounded text-background ">¿Ya tienes cuenta? <span class="font-semibold hover:underline">Inicia sesión</span></a>
-                <a href="landing" class="text-xl w-fit py-2 rounded text-background hover:underline font-semibold">Volver al inicio</a>
+                <a href="adminpanel" class="text-xl w-fit py-2 rounded text-background hover:underline font-semibold">Volver a adminpanel</a>
             </div>
         </div>
     </div>

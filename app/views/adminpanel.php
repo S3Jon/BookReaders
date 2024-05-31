@@ -26,9 +26,9 @@ $books = $bookController->readAllBooks();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete_user'])) {
-        $user_id = $_POST['user_id'];
+        $id_user = $_POST['id_user'];
         
-        if ($userController->deleteUser($user_id)) {
+        if ($userController->deleteUser($id_user)) {
             echo "Usuario eliminado con éxito.";
             header("Location: adminpanel");
             exit;
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="bg-white p-8 rounded shadow-2xl w-full m-5">
         <h2 class="text-2xl font-bold mb-4">Lista de Usuarios</h2>
 
-        <form action="register" method="post">
+        <form action="createUser" method="post">
             <button type="submit" name="add_user" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Añadir Usuario</button>
         </form>
 
